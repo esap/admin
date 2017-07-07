@@ -35,7 +35,7 @@
 	  <el-menu-item index="/"><a href="https://esap.erp8.net" target="_blank">帮助</a></el-menu-item>
 	  <span class="right" v-show="!!$store.state.userName">
 		{{"欢迎您，" + $store.state.userName}}
-	  <a @click="$store.dispatch('outlogin')">退出登陆</a>
+	  <a @click="loginOut">退出登陆</a>
       </span>
 	</el-menu>
     <router-view></router-view>
@@ -67,6 +67,10 @@ export default {
 			this.form.pwd=md5(this.pwd);
 			this.$store.dispatch('doLogin',this.form)
 			console.log(JSON.stringify(this.form));
+		},
+		loginOut(){
+			this.pwd=''
+			this.$store.dispatch('outlogin')
 		}
 	},
 }

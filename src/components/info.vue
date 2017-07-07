@@ -18,7 +18,7 @@
           <el-input v-model="form.EncodingAesKey" placeholder="统一回调EncodingAesKey，必填"></el-input>
         </el-form-item>
 
-      <div v-if="form.Agents.length" class="hr">多应用 - Agents</div>        
+      <div class="hr">多应用 - Agents</div>        
         <el-form-item v-for="v,k in form.Agents" label="Agentid / Secret" >
           <el-input type="number" v-model="k" placeholder="应用agentid"></el-input>
           <el-input v-model="v" placeholder="应用secret"></el-input>
