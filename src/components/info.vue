@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <el-form :model="form">
+    <el-form v-if="$store.state.userName" :model="form">
       <div class="hr">企业号/公众号 - wechat</div>
         <el-form-item label="企业号ID - corpid" >
           <el-input v-model="form.CorpId" placeholder="必填"></el-input>

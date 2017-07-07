@@ -9,10 +9,10 @@
 		  v-model="loginVisible">
 		  <el-form :model="form">
 		    <el-form-item label="账号">
-		      <el-input v-model="form.userName" auto-complete="off"></el-input>
+		      <el-input v-model="form.user" auto-complete="off"></el-input>
 		    </el-form-item>
 		    <el-form-item label="密码">
-			  <el-input v-model="psw" 
+			  <el-input v-model="pwd" 
 				  type="password" 
 				  auto-complete="off">
 			  </el-input>
@@ -43,17 +43,15 @@
 </template>
 
 <script>
-// import eDialog from './components/e-dialog'
 import md5 from 'md5'
 export default {
   	name: 'app',
-  	// components: { eDialog },
   	data() {
 	  return {
-	  	psw:'',
+	  	pwd:'',
 	    activeIndex: '1',
 	    activeIndex2: '1',
-	    form: { userName: '', psw: '' },
+	    form: { user: '', pwd: '' },
 	  };
 	},
 	computed: {
@@ -66,7 +64,7 @@ export default {
 		console.log(key, keyPath);
 		},
 		doLogin() {
-			this.form.psw=md5(this.psw);
+			this.form.pwd=md5(this.pwd);
 			this.$store.dispatch('doLogin',this.form)
 			console.log(JSON.stringify(this.form));
 		}

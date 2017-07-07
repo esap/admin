@@ -88,11 +88,11 @@ export default new Vuex.Store({
     },
     doLogin({ commit, state }, apiParam) {
       state.loading=true;
-      let apiUrl=state.esPath + 'login';
+      let apiUrl=state.apiPath + 'login';
       axios.post(apiUrl, apiParam)
 	  .then(r => {
         if (r.data.result) { 
-          commit('setUserName', r.data.msg);    
+          commit('setUserName', r.data.msg[0].dispName);    
           state.loading=false;              
         } else {
           Message({
