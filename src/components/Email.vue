@@ -2,7 +2,7 @@
   <div>
     <el-table
       stripe border
-      :data="tableData"
+      :data="list"
       style="width: 100%">
       <el-table-column
         prop="cDate"
@@ -12,16 +12,28 @@
       <el-table-column
         prop="mailTo"
         label="收件人"
-        width="180">
+        width="100">
       </el-table-column>
       <el-table-column
         prop="Subject"
         label="主题"
-        width="180">
+        width="150">
       </el-table-column>
       <el-table-column
         prop="Content"
         label="内容">
+      </el-table-column>
+      <el-table-column
+        prop="Pic"
+        show-overflow-tooltip
+        width="100"
+        label="图片">
+      </el-table-column>
+      <el-table-column
+        prop="Files"
+        show-overflow-tooltip
+        width="100"
+        label="文件">
       </el-table-column>
       <el-table-column
         prop="flag"
@@ -29,10 +41,7 @@
         width="80">
       </el-table-column>
       <el-table-column label="操作">
-        <template scope="scope">
-          <el-button
-            size="small"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+        <template scope="scope">          
           <el-button
             size="small"
             type="danger"
@@ -47,20 +56,27 @@
     export default {
       data() {
         return {
-          tableData: []
+          list: []
         }
       },
       methods: {
         getData() {
-          this.$http.get(this.$store.state.apiPath +"esmail")
-		  	.then(r=> {
-	          this.tableData=r.data;
-	          // console.log(JSON.stringify(this.kc));
-	        })
-			.catch(e => {
-	          this.kc=[];     
-	        })
-        }
+          this.$http.get(this.$store.state.apiPath+"esmail")
+          .then(r=> { this.list=r.data })
+          .catch(e => { console.log(e) })
+        },       
+        handleDelete(i,r) {
+          this.$http.delete(this.$store.state.apiPath+"esmail?id="+r.id)
+          .then(r => { 
+            if (r.data.result){
+              this.$message({ message: '删除成功' })
+              this.list=r.data.data[0]
+            }else{
+              this.$message({  message: r.data.errmsg })
+            }
+          })
+          .catch(e => { this.$message({  message: r.data.errmsg })})
+        }, 
       },
       mounted(){
         this.getData()

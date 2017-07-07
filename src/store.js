@@ -7,7 +7,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-  	apiPath: process.env.NODE_ENV === 'production' ? "/api/" : "http://localhost:9090/api/",
+    apiPath: process.env.NODE_ENV === 'production' ? "/api/" : "http://localhost:9090/api/",
+  	api2Path: process.env.NODE_ENV === 'production' ? "/api2/" : "http://localhost:9090/api2/",
     esPath: process.env.NODE_ENV === 'production' ? "/es/" : "http://localhost:9090/es/",
     appUrl: process.env.NODE_ENV === 'production' ? "/" : "http://localhost:9090/",
     mts: false,

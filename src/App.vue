@@ -23,20 +23,16 @@
 		  </span>
 		</el-dialog>
 	</div>
-  <!-- header导航 -->	
-  <el-menu router theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-	  <el-menu-item index="info">ESAP2</el-menu-item>
-	  <el-submenu index="2">
-	    <template slot="title">微信模块</template>
-	    <el-menu-item index="wxtx">提醒</el-menu-item>
-	    <el-menu-item index="wxcx">查询</el-menu-item>
-	    <el-menu-item index="wxtk">图库</el-menu-item>
-	    <el-menu-item index="wxqd">签到</el-menu-item>
-	    <el-menu-item index="wxyj">意见</el-menu-item>
-	  </el-submenu>
+	<!-- header导航 -->	
+	<el-menu router theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+	  <el-menu-item index="info">ESAP2</el-menu-item>    
+	  <el-menu-item index="wxtx">提醒</el-menu-item>
+	  <el-menu-item index="wxcx">查询</el-menu-item>
+	  <el-menu-item index="wxtk">图库</el-menu-item>
 	  <el-menu-item index="wxtxl">通讯录</el-menu-item>
 	  <el-menu-item index="email">Email</el-menu-item>
-	  <el-menu-item index="5"><a href="https://esap.erp8.net" target="_blank">访问官网</a></el-menu-item>
+	  <el-menu-item index="log">日志</el-menu-item>
+	  <el-menu-item index="/"><a href="https://esap.erp8.net" target="_blank">帮助</a></el-menu-item>
 	  <span class="right" v-show="!!$store.state.userName">
 		{{"欢迎您，" + $store.state.userName}}
 	  <a @click="$store.dispatch('outlogin')">退出登陆</a>
