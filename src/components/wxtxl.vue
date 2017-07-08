@@ -2,7 +2,7 @@
   <div>
     <el-table
       :data="list"
-      
+      v-if="$store.state.userName"
       style="width: 100%">
       <el-table-column
         prop="userid"

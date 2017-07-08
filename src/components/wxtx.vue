@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$store.state.userName">
     <!-- Form -->
     <el-button @click="getData">刷新</el-button>
     <el-button @click="dialogFormVisible = true">+新增</el-button>

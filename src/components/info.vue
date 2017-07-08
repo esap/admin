@@ -1,5 +1,13 @@
 <template>
   <div class="wrap">
+	<el-dialog title="重启ESAP中..." 
+	  :visible.sync="dialogFormVisible"
+	  :close-on-click-modal="false"
+	  :close-on-press-escape="false"
+	  :show-close="false">
+      <el-progress type="circle" :percentage="pct"></el-progress>
+    </el-dialog>
+
     <el-form v-if="$store.state.userName" :model="form">
       <div class="hr">企业号/公众号 - wechat</div>
         <el-form-item label="企业号ID - corpid" >
@@ -85,6 +93,7 @@
         </el-form-item>
 
         <el-form-item>
+          <el-button type="danger" @click="restartSrv">重启服务</el-button>
           <el-button type="primary" @click="onSubmit">保存</el-button>
         </el-form-item>
            
@@ -97,6 +106,9 @@
     data() {
       return {
         form: {},
+		dialogFormVisible: false,
+		tm1:{},
+		pct:0,
         options2:  [{
           value: 'mssql',
           label: 'Sql Server2005+'
@@ -133,14 +145,35 @@
           .then(r => { 
             if (r.data){
               this.$message({ message: '配置成功' })
-              this.dialogFormVisible = false              
               this.form=r.data
             }else{
               this.$message({  message: r.data.errmsg })
             }
           })
           .catch(e => { this.$message({  message: r.data.errmsg })})        
+      },      
+	  restartSrv() {    
+		 this.dialogFormVisible = true      
+         this.$http.post("/restart", this.form)
+         .then(r => { 
+           if (r.data.result){
+             this.$message({ message: '操作成功' })
+             this.tm1 = setInterval(this.gogogo, 300)
+           }else{
+             this.$message({  message: r.data.errmsg })
+           }
+         })
+         .catch(e => { this.$message({  message: r.data.errmsg })})        
       },
+	  gogogo(){
+	      if(this.pct >= 100){
+		    clearInterval(this.tm1)
+		    this.dialogFormVisible = false
+			this.pct=0
+		  }else{			
+		    this.pct = this.pct+5
+		  }
+	  },
       addAgent(){        
         this.form.Agents.x1='xx'
         console.log(this.form.Agents)

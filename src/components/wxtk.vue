@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$store.state.userName">
     <el-button @click="getData">刷新</el-button>
     <el-table
       stripe

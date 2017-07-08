@@ -3,7 +3,7 @@
       <el-button type="danger" @click="clearLog">清除</el-button>
       <el-button type="primary" @click="getData">刷新</el-button>
       <div class="hr">日志 - log</div>
-      <el-input type="textarea" autosize v-model="form" :disabled="true"></el-input>          
+      <el-input v-if="$store.state.userName" type="textarea" autosize v-model="form"></el-input>          
   </div>
 </template>
 

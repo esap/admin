@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-table
+	  v-if="$store.state.userName"
       stripe border
       :data="list"
       style="width: 100%">
