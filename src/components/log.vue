@@ -16,12 +16,12 @@
     },
     methods: {
       getData() {
-        this.$http.get("/log")
+        this.$http.get(this.$store.state.appUrl+"log")
         .then(r=> { this.form=r.data })
         .catch(e => { console.log(e) })
       },
       clearLog() {
-        this.$http.delete("/log")
+        this.$http.delete(this.$store.state.appUrl+"log")
 		  	.then(r=> { this.form=r.data })
 			  .catch(e => { console.log(e) })
       },

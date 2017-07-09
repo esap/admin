@@ -45,11 +45,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="服务器 - Server" >
-          <el-col :span="10">
+          <el-col :span="6">
             <el-input v-model="form.Server" placeholder="本机可填.号"></el-input>
           </el-col>
-          <el-col class="line" :span="4">端口 - DbPort</el-col>
-          <el-col :span="6">
+          <el-col class="line" :span="6">端口 - DbPort</el-col>
+          <el-col :span="3">
           <el-input type="number" v-model="form.DbPort" placeholder=""></el-input>
           </el-col>
         </el-form-item>
@@ -136,12 +136,12 @@
     },
     methods: {
       getData() {
-        this.$http.get("/conf")
+        this.$http.get(this.$store.state.appUrl+"config")
 		  	.then(r=> { this.form=r.data })
 			  .catch(e => { console.log(e) })
       },
       onSubmit() {          
-          this.$http.post("/conf", this.form)
+          this.$http.post(this.$store.state.appUrl+"config", this.form)
           .then(r => { 
             if (r.data){
               this.$message({ message: '配置成功' })
@@ -153,17 +153,17 @@
           .catch(e => { this.$message({  message: r.data.errmsg })})        
       },      
 	  restartSrv() {    
-		 this.dialogFormVisible = true      
-         this.$http.post("/restart", this.form)
+         this.$http.post(this.$store.state.appUrl+"restart", this.form)
          .then(r => { 
            if (r.data.result){
+		         this.dialogFormVisible = true      
              this.$message({ message: '操作成功' })
              this.tm1 = setInterval(this.gogogo, 300)
            }else{
-             this.$message({  message: r.data.errmsg })
+             this.$message({  message: "操作失败，请确认是否install了服务 错误消息-"+r.data.errmsg })
            }
          })
-         .catch(e => { this.$message({  message: r.data.errmsg })})        
+         .catch(e => { this.$message({  message: "操作失败，请确认是否install了服务"+e })})        
       },
 	  gogogo(){
 	      if(this.pct >= 100){

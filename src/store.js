@@ -88,7 +88,7 @@ export default new Vuex.Store({
     },
     doLogin({ commit, state }, apiParam) {
       state.loading=true;
-      let apiUrl=state.apiPath + 'login';
+      let apiUrl=state.apiPath + 'adminlogin';
       axios.post(apiUrl, apiParam)
 	  .then(r => {
         if (r.data.result) { 

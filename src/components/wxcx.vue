@@ -1,8 +1,19 @@
 <template>
   <div v-if="$store.state.userName">
-    <!-- Form -->
+    
     <el-button @click="getData">刷新</el-button>
     <el-button @click="dialogFormVisible = true">+新增</el-button>
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="list.length">
+      </el-pagination>
+    </div>
 
     <el-dialog title="新增微信查询" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -45,7 +56,7 @@
 
     <el-table
       stripe 
-      :data="list"
+      :data="listShow"
       style="width: 100%">   
       <el-table-column
         label="菜单"
@@ -114,7 +125,19 @@
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
-    </el-table>    
+    </el-table>   
+
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="list.length">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -123,6 +146,8 @@
       data() {
         return {
           list: [],
+          pagesize:10,
+          currentPage:1,
           dialogFormVisible: false,
           form: {
             uid: '@all',  
@@ -137,7 +162,18 @@
         formLabelWidth: '100px'
         }
       },
+      computed:{
+        listShow() {
+          return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize)
+        }
+      },
       methods: {
+        handleSizeChange(val) {
+          this.pagesize=val
+        },
+        handleCurrentChange(val) {
+          this.currentPage=val
+        },
         getData() {
           this.$http.get(this.$store.state.apiPath +"wxcx")
   		  	.then(r => { this.list=r.data })
