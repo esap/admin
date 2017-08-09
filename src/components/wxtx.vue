@@ -172,12 +172,12 @@
           this.currentPage=val
         },
         getData() {
-          this.$http.get(this.$store.state.apiPath +"wxtx.admin")
-  		  	.then(r=> { this.list=r.data })
+          this.$http.get(this.$store.state.api2Path +"wxtx.admin"+this.$store.getters.token)
+  		  	.then(r=> { this.list=r.data.data[0] })
           .catch(e => { console.log(e) })
         },
         handleDelete(i,r) {
-          this.$http.delete(this.$store.state.apiPath+"wxtx?id="+r.id)
+          this.$http.delete(this.$store.state.api2Path+"wxtx"+"?id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })
@@ -189,7 +189,7 @@
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },      
         handleSave(i,r) {
-          this.$http.put(this.$store.state.apiPath+"wxtx?id="+r.id, r)
+          this.$http.put(this.$store.state.api2Path+"wxtx?id="+r.id, r)
           .then(r => { 
             if (r.data.result){
               this.$message({message: '保存成功'})

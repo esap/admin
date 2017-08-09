@@ -19,17 +19,23 @@ export default new Vuex.Store({
     loading:false,
     topNav:"/login",
     userName:'',
+	token:''
   },
   getters: {
     showData: s => s.tableData.slice((s.cPage-1)*s.pSize,s.pSize*s.cPage),
     mtstr: s => s.mts?'multiple':'single',
     isLogin: s => !!s.userName,
-    isAdmin: s=> s.userName=="Admin"
+    isAdmin: s=> s.userName=="Admin",
+	token: s=> "?token="+s.token,
+	tokens: s=> 'Bearer '+s.token
   },
   mutations: {
+	setToken(state, p) {
+	  state.token=p.token
+	},
     mtsChg (state) {
       state.mts=!state.mts
-    },      
+    },
     sizeChange(state, v) {
       state.pSize=v;
     },
@@ -93,7 +99,8 @@ export default new Vuex.Store({
 	  .then(r => {
         if (r.data.result) { 
           commit('setUserName', r.data.msg[0].dispName);    
-          state.loading=false;              
+          state.loading=false; 
+		  commit('setToken',r.data) 
         } else {
           Message({
             showClose: true,
