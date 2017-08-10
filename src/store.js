@@ -11,6 +11,7 @@ export default new Vuex.Store({
   	api2Path: process.env.NODE_ENV === 'production' ? "/api2/" : "http://localhost:9090/api2/",
     esPath: process.env.NODE_ENV === 'production' ? "/es/" : "http://localhost:9090/es/",
     appUrl: process.env.NODE_ENV === 'production' ? "/" : "http://localhost:9090/",
+    adminUrl: process.env.NODE_ENV === 'production' ? "/" : "http://localhost:9090/admin/",
     mts: false,
     pSize:15,
     cPage:1,
@@ -27,7 +28,7 @@ export default new Vuex.Store({
     isLogin: s => !!s.userName,
     isAdmin: s=> s.userName=="Admin",
 	token: s=> "?token="+s.token,
-	tokens: s=> 'Bearer '+s.token
+	tokens: s=> '&token='+s.token
   },
   mutations: {
 	setToken(state, p) {
@@ -94,7 +95,7 @@ export default new Vuex.Store({
     },
     doLogin({ commit, state }, apiParam) {
       state.loading=true;
-      let apiUrl=state.apiPath + 'adminlogin';
+      let apiUrl=state.appUrl + 'login';
       axios.post(apiUrl, apiParam)
 	  .then(r => {
         if (r.data.result) { 

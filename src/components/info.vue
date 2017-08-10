@@ -10,21 +10,24 @@
 
     <el-form v-if="$store.state.userName" :model="form">
       <div class="hr">企业号/公众号 - wechat</div>
-        <el-form-item label="企业号ID - corpid" >
-          <el-input v-model="form.CorpId" placeholder="必填"></el-input>
-        </el-form-item>
-        <el-form-item label="应用密钥 - Secret" >
-          <el-input v-model="form.Secret" placeholder="app首页应用Secret或管理组Secret，必填"></el-input>
-        </el-form-item>
-        <el-form-item label="通讯录密钥 - TxlSecret" >
-          <el-input v-model="form.TxlSecret" placeholder="通讯录同步Secret或管理组Secret，必填"></el-input>
-        </el-form-item>
-        <el-form-item label="回调令牌 - Token" >
-          <el-input v-model="form.Token" placeholder="统一回调Token，必填"></el-input>
-        </el-form-item>           
-        <el-form-item label="回调密钥 - EncodingAesKey" >
-          <el-input v-model="form.EncodingAesKey" placeholder="统一回调EncodingAesKey，必填"></el-input>
-        </el-form-item>
+
+        <template v-for="v in form.Apps">          
+          <el-form-item label="企业号ID - corpid" >
+            <el-input v-model="v.AppId" placeholder="必填"></el-input>
+          </el-form-item>
+          <el-form-item label="应用密钥 - Secret" >
+            <el-input v-model="v.Secret" placeholder="app首页应用Secret或管理组Secret，必填"></el-input>
+          </el-form-item>
+          <el-form-item label="关闭状态 - Disabled" >
+            <el-input v-model="v.Disabled" placeholder="通讯录同步Secret或管理组Secret，必填"></el-input>
+          </el-form-item>
+          <el-form-item label="回调令牌 - Token" >
+            <el-input v-model="v.Token" placeholder="统一回调Token，必填"></el-input>
+          </el-form-item>           
+          <el-form-item label="回调密钥 - EncodingAesKey" >
+            <el-input v-model="v.EncodingAesKey" placeholder="统一回调EncodingAesKey，必填"></el-input>
+          </el-form-item>
+        </template>
 
       <div class="hr">多应用 - Agents</div>        
         <el-form-item v-for="v,k in form.Agents" label="Agentid / Secret" >
@@ -136,12 +139,12 @@
     },
     methods: {
       getData() {
-        this.$http.get(this.$store.state.appUrl+"config")
+        this.$http.get(this.$store.state.adminUrl+"config"+this.$store.getters.token)
 		  	.then(r=> { this.form=r.data })
 			  .catch(e => { console.log(e) })
       },
       onSubmit() {          
-          this.$http.post(this.$store.state.appUrl+"config", this.form)
+          this.$http.post(this.$store.state.adminUrl+"config"+this.$store.getters.token, this.form)
           .then(r => { 
             if (r.data){
               this.$message({ message: '配置成功' })
@@ -153,7 +156,7 @@
           .catch(e => { this.$message({  message: r.data.errmsg })})        
       },      
 	  restartSrv() {    
-         this.$http.post(this.$store.state.appUrl+"restart", this.form)
+         this.$http.post(this.$store.state.adminUrl+"restart"+this.$store.getters.token, this.form)
          .then(r => { 
            if (r.data.result){
 		         this.dialogFormVisible = true      
@@ -187,7 +190,7 @@
 
 <style scoped>
 .wrap {
-  margin: 0 20%;
+  margin: 0 5%;
 }
 .right {
   float: right;
