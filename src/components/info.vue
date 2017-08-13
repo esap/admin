@@ -53,8 +53,8 @@
 		<template v-for="v in form.Dbs"> 
 		  <Row>
 	        <Col :span="4">
-	          <Form-item label="数据源名 - DbName" >
-	            <Input v-model="v.DbName" placeholder="唯一标识，必填"></Input>
+	          <Form-item label="数据源名 - DsName" >
+	            <Input v-model="v.DsName" placeholder="唯一标识，必填"></Input>
 	          </Form-item>
 	        </Col>
 			<Col :span="4">
@@ -81,8 +81,8 @@
 	          </Form-item>
 	        </Col>
 	        <Col :span="3">
-	        <Form-item label="账号 - UserId" >
-	          <Input v-model="v.UserId" placeholder=""></Input>
+	        <Form-item label="账号 - User" >
+	          <Input v-model="v.User" placeholder=""></Input>
 	        </Form-item>
 			</Col>
 	        <Col :span="3">
@@ -158,12 +158,11 @@
         </Form-item>
 		</Col>
 		</Row>
-
-      <Button type="success" @click="getData">刷新</Button>
-      <Button type="danger" @click="restartSrv">重启服务</Button>
-      <Button type="primary" @click="onSubmit">保存</Button>
            
     </Form>
+      <Button type="success" @click="getData">刷新 Refresh</Button>
+      <Button type="warning" @click="restartSrv">重启服务 Restart</Button>
+      <Button type="primary" @click="onSubmit">保存 Save</Button>
   </div>
 </template>
 
@@ -269,7 +268,7 @@
 
 <style scoped>
 .wrap {
-  margin: 0 15px;
+  margin: 0 15px 15px;
 }
 .hr {
   box-shadow: 3px 3px 3px #999;
