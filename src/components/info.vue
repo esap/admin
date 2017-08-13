@@ -8,109 +8,160 @@
     </Modal>
 
     <Form :model="form" :label-width="80">
-      <div class="hr">应用 - wechat</div>
+      <Alert type="info" class="hr" show-icon>应用 - wechat</Alert>
         <template v-for="v in form.Apps">    
 		  <Row> 
-			<Col span="4">
-	          <Form-item label="应用ID - corpid" >
+			<Col span="3">
+	          <Form-item label="应用名 - appName" >
+	            <Input v-model="v.AppName" placeholder="应用名称，唯一,必填"></Input>
+	          </Form-item>
+			</Col>
+			<Col span="3">
+	          <Form-item :label-width="50" label="appId" >
 	            <Input v-model="v.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
 	          </Form-item>
 			</Col>
-			<Col span="10">
+			<Col span="3">
+	          <Form-item :label-width="60" label="agentId" >
+	            <Input v-model="v.AgentId" placeholder="企业号填agentid,公众号填0"></Input>
+	          </Form-item>
+			</Col>
+			<Col span="4">
 	          <Form-item label="应用密钥 - Secret" >
-	            <Input v-model="v.Secret" placeholder="app首页应用Secret或管理组Secret，必填"></Input>
+	            <Input v-model="v.Secret" placeholder="应用或管理组Secret，必填"></Input>
 	          </Form-item>
 			</Col>
-			<Col span="4">
-	          <Form-item label="关闭状态 - Disabled" >
-	            <i-switch v-model="v.Disabled"></i-switch>
-	          </Form-item>
-			</Col>
-		  </Row>
-		  <Row>
-			<Col span="4">
+			<Col span="3">
 	          <Form-item label="回调令牌 - Token" >
-	            <Input v-model="v.Token" placeholder="统一回调Token，必填"></Input>
+	            <Input v-model="v.Token" placeholder="回调Token"></Input>
 	          </Form-item> 
 			</Col>
-			<Col span="10">          
-	          <Form-item label="回调密钥 - EncodingAesKey" >
-	            <Input v-model="v.EncodingAesKey" placeholder="统一回调EncodingAesKey，必填"></Input>
+			<Col span="4">          
+	          <Form-item label="回调密钥 - AesKey" >
+	            <Input v-model="v.EncodingAesKey" placeholder="回调EncodingAesKey"></Input>
+	          </Form-item>
+			</Col>
+			<Col span="2">
+	          <Form-item label="关闭应用 - Disabled" >
+	            <i-switch v-model="v.Disabled"></i-switch>
 	          </Form-item>
 			</Col>
 		  </Row>
         </template>
 
-      <div class="hr">多应用 - Agents</div>        
-        <Form-item v-for="v,k in form.Agents" label="Agentid / Secret" >
-          <Input type="number" v-model="k" placeholder="应用agentid"></Input>
-          <Input v-model="v" placeholder="应用secret"></Input>
-        </Form-item>
+      <Alert type="info" class="hr" show-icon>数据库 - database</Alert>
+		<template v-for="v in form.Dbs"> 
+		  <Row>
+	        <Col :span="4">
+	          <Form-item label="数据源名 - DbName" >
+	            <Input v-model="v.DbName" placeholder="唯一标识，必填"></Input>
+	          </Form-item>
+	        </Col>
+			<Col :span="4">
+		        <Form-item label="驱动 - DbDriver" >
+		          <Select v-model="v.DbDriver" placeholder="请选择">
+		            <i-option
+		              v-for="item in options2"
+		              :key="item.value"
+		              :label="item.label"
+		              :value="item.value"
+		              :disabled="item.disabled">
+		            </i-option>
+		          </Select>
+		        </Form-item>
+			</Col>
+			<Col :span="3">
+	          <Form-item label="服务器 - Server" >
+	            <Input v-model="v.Server" placeholder="本机可填.号"></Input>
+	          </Form-item>
+	        </Col>
+	        <Col :span="3">
+			  <Form-item label="端口 - DbPort">
+	            <Input type="number" v-model="v.DbPort" placeholder=""></Input>
+	          </Form-item>
+	        </Col>
+	        <Col :span="3">
+	        <Form-item label="账号 - UserId" >
+	          <Input v-model="v.UserId" placeholder=""></Input>
+	        </Form-item>
+			</Col>
+	        <Col :span="3">
+	        <Form-item label="密码 - Pwd" >
+	          <Input v-model="v.Pwd" placeholder=""></Input>
+	        </Form-item>
+			</Col>
+	        <Col :span="3">
+	        <Form-item label="数据库名 - Db" >
+	          <Input v-model="v.DbName" placeholder=""></Input>
+	        </Form-item>
+			</Col>
+		  </Row>
+		</template>
+		
+	  <Alert type="info" class="hr" show-icon>计划任务 - task</Alert>
+		<template v-for="v in form.Tasks"> 
+		  <Row>
+	        <Col :span="4">
+	          <Form-item label="计划Id - taskid" >
+	            <Input v-model="v.TaskID" placeholder="唯一标识，必填"></Input>
+	          </Form-item>
+	        </Col>
+			<Col :span="4">
+		        <Form-item label="计划类型 - handlername" >
+		          <Select v-model="v.HandlerName" placeholder="请选择">
+		            <i-option
+		              v-for="item in options3"
+		              :key="item.value"
+		              :label="item.label"
+		              :value="item.value"
+		              :disabled="item.disabled">
+		            </i-option>
+		          </Select>
+		        </Form-item>
+			</Col>
+			<Col :span="5">
+	          <Form-item label="周期 - express" >
+	            <Input v-model="v.Express" placeholder="本机可填.号"></Input>
+	          </Form-item>
+	        </Col>
+	        <Col span="2">
+	          <Form-item label="开关 - isrun" >
+	            <i-switch v-model="v.IsRun"></i-switch>
+	          </Form-item>
+			</Col>
+		  </Row>
+		</template>
 
-      <div class="hr">数据库 - database</div>
-        <Form-item label="驱动 - DbDriver" >
-          <i-select class="right" v-model="form.DbDriver" placeholder="请选择">
-            <i-option
-              v-for="item in options2"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled">
-            </i-option>
-          </i-select>
-        </Form-item>
-        <Form-item label="服务器 - Server" >
-          <Col :span="6">
-            <Input v-model="form.Server" placeholder="本机可填.号"></Input>
-          </Col>
-          <Col class="line" :span="6">端口 - DbPort</Col>
-          <Col :span="3">
-          <Input type="number" v-model="form.DbPort" placeholder=""></Input>
-          </Col>
-        </Form-item>
-        <Form-item label="账号 - UserId" >
-          <Input v-model="form.UserId" placeholder=""></Input>
-        </Form-item>
-        <Form-item label="密码 - Pwd" >
-          <Input v-model="form.Pwd" placeholder=""></Input>
-        </Form-item>
-        <Form-item label="默认数据库名称 - DbName" >
-          <Input v-model="form.DbName" placeholder=""></Input>
-        </Form-item>
-
-      <div class="hr">其他 - other</div>
-        <Form-item label="外网域名(：端口) - Host" >
+      <Alert type="info" class="hr">其他 - other</Alert>
+        <Form-item label="外网域名 - Host" >
           <Input v-model="form.Host" placeholder=""></Input>
         </Form-item>
-        <Form-item label="ESWEB外网地址 - Esweb" >
-          <Input v-model="form.Esweb" placeholder=""></Input>
-        </Form-item>
-        <Form-item label="微信提醒标题 - WxtxTitle" >
-          <Input v-model="form.WxtxTitle" placeholder=""></Input>
-        </Form-item>
-        <Form-item label="微信签到标题 - WxqdTitle" >
-          <Input v-model="form.WxqdTitle" placeholder=""></Input>
-        </Form-item>
-        <Form-item label="微信提醒重试 - ReTryMsg" >
+		<Row>
+	    <Col :span="3">
+        <Form-item label="提醒重试 - ReTryMsg" >
           <i-switch class="right" v-model="form.ReTryMsg" placeholder=""></i-switch>
         </Form-item>
-        <Form-item label="微信查询功能清单 - ShowFuncList" >
-          <i-switch class="right" v-model="form.ShowFuncList" placeholder=""></i-switch>
-        </Form-item>
-        <Form-item label="微信查询进入提示 - ShowFuncListEnter" >
+		</Col>
+	    <Col :span="3">
+        <Form-item label="进入提示 - EnterMsg" >
           <i-switch class="right" v-model="form.ShowFuncListEnter" placeholder=""></i-switch>
         </Form-item>
-        <Form-item label="APP身份自动认证 - NeedWxOAuth2" >
+		</Col>
+	    <Col :span="3">
+        <Form-item label="自动认证 - NeedWxOAuth2" >
           <i-switch class="right" v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
         </Form-item>
+		</Col>
+	    <Col :span="3">
         <Form-item label="调试模式 - Debug" >
           <i-switch class="right" v-model="form.Debug"></i-switch>
         </Form-item>
+		</Col>
+		</Row>
 
-        <Form-item>
-          <i-button type="danger" @click="restartSrv">重启服务</i-button>
-          <i-button type="primary" @click="onSubmit">保存</i-button>
-        </Form-item>
+      <Button type="success" @click="getData">刷新</Button>
+      <Button type="danger" @click="restartSrv">重启服务</Button>
+      <Button type="primary" @click="onSubmit">保存</Button>
            
     </Form>
   </div>
@@ -126,10 +177,10 @@
 		pct:0,
         options2:  [{
           value: 'mssql',
-          label: 'Sql Server2005+'
+          label: 'Sql2005+'
         }, {
-          value: 'mssql2000',
-          label: 'Sql Server2000'
+          value: 'Sql2000',
+          label: 'Sql2000'
         }, {
           value: 'mysql',
           label: 'mysql'
@@ -146,6 +197,22 @@
         }, {
           value: 'excel',
           label: 'excel'
+        }],
+		options3:  [{
+          value: 'WxdkTask',
+          label: '微信打卡'
+        }, {
+          value: 'WxspTask',
+          label: '微信审批'
+        }, {
+          value: 'EmailTask',
+          label: '邮件'
+        }, {
+          value: 'WxtxTask',
+          label: '微信提醒'
+        }, {
+          value: 'WxtxlTask',
+          label: '通讯录同步'
         }],
       }
     },
@@ -202,14 +269,9 @@
 
 <style scoped>
 .wrap {
-  margin: 0 5%;
-}
-.right {
-  float: right;
+  margin: 0 15px;
 }
 .hr {
-  padding: 12px 0;
-  background-color: #eee;
   box-shadow: 3px 3px 3px #999;
 }
 </style>

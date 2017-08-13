@@ -25,7 +25,7 @@
 	</div>
 	<!-- header导航 -->	
 	<el-menu router theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-	  <el-menu-item index="info">ESAP2</el-menu-item>    
+	  <el-menu-item index="info">ESAP3.0</el-menu-item>    
 	  <el-menu-item index="wxtx">提醒</el-menu-item>
 	  <el-menu-item index="wxcx">查询</el-menu-item>
 	  <el-menu-item index="wxtk">图库</el-menu-item>
