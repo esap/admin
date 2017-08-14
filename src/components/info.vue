@@ -1,10 +1,17 @@
 <template>
   <div class="wrap">
-	<Modal title="重启ESAP中..." 
+	<Modal width="280"
+	  title="重启ESAP中..." 
+	  style="text-align:center"
 	  v-model="dialogFormVisible"
 	  :closable="false"
 	  :mask-closable="false">
-      <i-circle :percent="pct" class="demo-i-circle-inner">{{pct}}</i-circle>
+      <i-circle :percent="pct" stroke-color="#5cb85c" 
+	class="demo-i-circle-inner">
+	    <div style="font-size:24px" v-if="pct<100">{{pct}}%</div>
+	    <Icon v-if="pct==100" type="ios-checkmark-empty" size="60" style="color:#5cb85c"></Icon>
+	  </i-circle>
+	  <div slot="footer"></div>
     </Modal>
 
     <Form :model="form" :label-width="80">
@@ -237,7 +244,7 @@
          this.$http.post(this.$store.state.adminUrl+"restart"+this.$store.getters.token, this.form)
          .then(r => { 
            if (r.data.result){
-		         //this.dialogFormVisible = true      
+		         this.dialogFormVisible = true      
              this.$Message.info('操作成功')
 			 this.$Loading.start()
              this.tm1 = setInterval(this.gogogo, 300)
@@ -249,10 +256,10 @@
       },
 	  gogogo(){
 	      if(this.pct >= 100){
-		    clearInterval(this.tm1)
 		    this.dialogFormVisible = false
-			this.pct=0
 			this.$Loading.finish()
+		    clearInterval(this.tm1)
+			this.pct=0
 		  }else{			
 		    this.pct = this.pct+5
 		  }
