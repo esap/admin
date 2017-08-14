@@ -1,10 +1,10 @@
 <template>
   <div class="wrap">
 	<Modal title="重启ESAP中..." 
-	  v-if="dialogFormVisible"
+	  v-model="dialogFormVisible"
 	  :closable="false"
 	  :mask-closable="false">
-      <i-circle :percent="pct"></i-circle>
+      <i-circle :percent="pct" class="demo-i-circle-inner">{{pct}}</i-circle>
     </Modal>
 
     <Form :model="form" :label-width="80">
@@ -101,12 +101,12 @@
 	  <Alert type="info" class="hr" show-icon>计划任务 - task</Alert>
 		<template v-for="v in form.Tasks"> 
 		  <Row>
-	        <Col :span="4">
+	        <Col :span="5">
 	          <Form-item label="计划Id - taskid" >
 	            <Input v-model="v.TaskID" placeholder="唯一标识，必填"></Input>
 	          </Form-item>
 	        </Col>
-			<Col :span="4">
+			<Col :span="5">
 		        <Form-item label="计划类型 - handlername" >
 		          <Select v-model="v.HandlerName" placeholder="请选择">
 		            <i-option
@@ -137,22 +137,22 @@
           <Input v-model="form.Host" placeholder=""></Input>
         </Form-item>
 		<Row>
-	    <Col :span="3">
+	    <Col :span="4">
         <Form-item label="提醒重试 - ReTryMsg" >
           <i-switch class="right" v-model="form.ReTryMsg" placeholder=""></i-switch>
         </Form-item>
 		</Col>
-	    <Col :span="3">
+	    <Col :span="4">
         <Form-item label="进入提示 - EnterMsg" >
           <i-switch class="right" v-model="form.ShowFuncListEnter" placeholder=""></i-switch>
         </Form-item>
 		</Col>
-	    <Col :span="3">
+	    <Col :span="4">
         <Form-item label="自动认证 - NeedWxOAuth2" >
           <i-switch class="right" v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
         </Form-item>
 		</Col>
-	    <Col :span="3">
+	    <Col :span="4">
         <Form-item label="调试模式 - Debug" >
           <i-switch class="right" v-model="form.Debug"></i-switch>
         </Form-item>
@@ -162,7 +162,7 @@
     </Form>
       <Button type="success" @click="getData">刷新 Refresh</Button>
       <Button type="warning" @click="restartSrv">重启服务 Restart</Button>
-      <Button type="primary" @click="onSubmit">保存 Save</Button>
+      <Button type="primary" @click="saveData">保存 Save</Button>
   </div>
 </template>
 
@@ -218,15 +218,15 @@
     methods: {
       getData() {
         this.$http.get(this.$store.state.adminUrl+"config"+this.$store.getters.token)
-		  	.then(r=> { this.form=r.data })
+		  	.then(r=> { this.form=r.data.data })
 			.catch(e => { console.log(e) })
       },
-      onSubmit() {          
+      saveData() {          
           this.$http.post(this.$store.state.adminUrl+"config"+this.$store.getters.token, this.form)
-          .then(r => { 
-            if (r.data){
+          .then(r => {
+            if (r.data.result){
               this.$message({ message: '配置成功' })
-              this.form=r.data
+              this.form=r.data.data
             }else{
               this.$message({  message: r.data.errmsg })
             }
@@ -237,20 +237,22 @@
          this.$http.post(this.$store.state.adminUrl+"restart"+this.$store.getters.token, this.form)
          .then(r => { 
            if (r.data.result){
-		         this.dialogFormVisible = true      
-             this.$message({ message: '操作成功' })
+		         //this.dialogFormVisible = true      
+             this.$Message.info('操作成功')
+			 this.$Loading.start()
              this.tm1 = setInterval(this.gogogo, 300)
            }else{
-             this.$message({  message: "操作失败，请确认是否install了服务 错误消息-"+r.data.errmsg })
+             this.$Message.info("操作失败，请确认是否install了服务 "+r.data.errmsg)
            }
          })
-         .catch(e => { this.$message({  message: "操作失败，请确认是否install了服务"+e })})        
+         .catch(e => { this.$Message.info("操作失败，请确认是否install了服务 "+e)})        
       },
 	  gogogo(){
 	      if(this.pct >= 100){
 		    clearInterval(this.tm1)
 		    this.dialogFormVisible = false
 			this.pct=0
+			this.$Loading.finish()
 		  }else{			
 		    this.pct = this.pct+5
 		  }
