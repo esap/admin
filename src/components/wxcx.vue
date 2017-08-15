@@ -50,7 +50,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addRec">确 定</el-button>
+        <el-button type="primary" @click="addData">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -118,11 +118,11 @@
         <template scope="scope">
           <el-button
             size="small"
-            @click="handleSave(scope.$index, scope.row)">保存</el-button>
+            @click="saveData(scope.$index, scope.row)">保存</el-button>
           <el-button
             size="small"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="deleteData(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>   
@@ -175,12 +175,12 @@
           this.currentPage=val
         },
         getData() {
-          this.$http.get(this.$store.state.apiPath +"wxcx")
+          this.$http.get(this.$store.state.apiPath +"wxcx"+this.$store.getters.token)
   		  	.then(r => { this.list=r.data })
   			  .catch(e => { console.log(e) })
         },
-        handleDelete(i,r) {
-          this.$http.delete(this.$store.state.apiPath+"wxcx?id="+r.ID)
+        deleteData(i,r) {
+          this.$http.delete(this.$store.state.apiPath+"wxcx"+this.$store.getters.token+"&id="+r.ID)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })
@@ -191,8 +191,8 @@
           })
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },      
-        handleSave(i,r) {
-          this.$http.put(this.$store.state.apiPath+"wxcx?id="+r.ID, r)
+        saveData(i,r) {
+          this.$http.put(this.$store.state.apiPath+"wxcx"+this.$store.getters.token+"&id="+r.ID, r)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '保存成功' })             
@@ -203,8 +203,8 @@
           })
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },
-        addRec(){          
-          this.$http.post(this.$store.state.apiPath+"wxcx", this.form)
+        addData(){          
+          this.$http.post(this.$store.state.apiPath+"wxcx"+this.$store.getters.token, this.form)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '新增成功' })            

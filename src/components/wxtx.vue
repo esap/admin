@@ -36,7 +36,7 @@
         <el-form-item label="图片" :label-width="formLabelWidth">
           <el-upload
             class="avatar-uploader"
-            :action="$store.state.apiPath+'upload'"
+            :action="$store.state.uploadUrl+'upload'+this.$store.getters.token"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
@@ -102,7 +102,7 @@
         width="100">
       </el-table-column>
       <el-table-column
-        prop="jg"
+        prop="ret"
         label="发送结果"
         show-overflow-tooltip
         width="100">
@@ -117,7 +117,7 @@
           <el-button
             size="small"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="deleteData(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -176,29 +176,29 @@
   		  	.then(r=> { this.list=r.data.data[0] })
           .catch(e => { console.log(e) })
         },
-        handleDelete(i,r) {
-          this.$http.delete(this.$store.state.api2Path+"wxtx"+"?id="+r.id)
+        deleteData(i,r) {
+          this.$http.delete(this.$store.state.api2Path+"wxtx"+this.$store.getters.token+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
-              this.$message({ message: '删除成功' })
+              this.$Message.info('删除成功')
               this.list=r.data.data[0]
             }else{
-              this.$message({  message: r.data.errmsg })
+              this.$Message.info(r.data.errmsg)
             }
           })
-          .catch(e => { this.$message({  message: r.data.errmsg })})
+          .catch(e => { this.$Message.info(r.data.errmsg)})
         },      
-        handleSave(i,r) {
-          this.$http.put(this.$store.state.api2Path+"wxtx?id="+r.id, r)
+        saveData(i,r) {
+          this.$http.put(this.$store.state.api2Path+"wxtx"+this.$store.getters.token+"&id="+r.id, r)
           .then(r => { 
             if (r.data.result){
-              this.$message({message: '保存成功'})
+              this.$Message.info('保存成功')
               this.list=r.data.data[0]
             } else{
-              this.$message({  message: r.data.errmsg })
+              this.$Message.info(r.data.errmsg)
             }
           })
-          .catch(e => { this.$message({  message: r.data.errmsg })})          
+          .catch(e => { this.$Message.info(r.data.errmsg)})          
         },
         handleAvatarSuccess(res, file) {
           this.imageUrl = res.fileurl;
@@ -211,10 +211,10 @@
           const isLt2M = file.size / 1024 / 1024 < 2
 
           if (!isJPG) {
-            this.$message.error('上传头像图片只能是 JPG/PNG 格式!')
+            this.$Message.error('上传头像图片只能是 JPG/PNG 格式!')
           }
           if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!')
+            this.$Message.error('上传头像图片大小不能超过 2MB!')
           }
           return isJPG && isLt2M
         },
@@ -224,14 +224,14 @@
           this.$http.post(this.$store.state.apiPath+"wxtx", this.form)
           .then(r => { 
             if (r.data.result){
-              this.$message({ message: '新增成功' })
+              this.$Message.info('新增成功')
               this.dialogFormVisible = false              
               this.getData()
             }else{
-              this.$message({  message: r.data.errmsg })
+              this.$Message.info(r.data.errmsg)
             }
           })
-          .catch(e => { this.$message({  message: r.data.errmsg })})
+          .catch(e => { this.$Message.info(r.data.errmsg)})
         }
       },
       mounted(){

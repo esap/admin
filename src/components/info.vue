@@ -1,13 +1,12 @@
 <template>
   <div class="wrap">
-	<Modal width="280"
+	<Modal width="240"
 	  title="重启ESAP中..." 
 	  style="text-align:center"
-	  v-model="dialogFormVisible"
+	  v-model="modal1"
 	  :closable="false"
 	  :mask-closable="false">
-      <i-circle :percent="pct" stroke-color="#5cb85c" 
-	class="demo-i-circle-inner">
+      <i-circle :percent="pct" stroke-color="#5cb85c">
 	    <div style="font-size:24px" v-if="pct<100">{{pct}}%</div>
 	    <Icon v-if="pct==100" type="ios-checkmark-empty" size="60" style="color:#5cb85c"></Icon>
 	  </i-circle>
@@ -15,12 +14,12 @@
     </Modal>
 
     <Form :model="form" :label-width="80">
-      <Alert type="info" class="hr" show-icon>应用 - wechat</Alert>
-        <template v-for="v in form.Apps">    
+      <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
+        <template v-for="v,k in form.Apps">    
 		  <Row> 
 			<Col span="3">
 	          <Form-item label="应用名 - appName" >
-	            <Input v-model="v.AppName" placeholder="应用名称，唯一,必填"></Input>
+	            <Input v-model="v.AppName" placeholder="唯一,必填"></Input>
 	          </Form-item>
 			</Col>
 			<Col span="3">
@@ -30,7 +29,7 @@
 			</Col>
 			<Col span="3">
 	          <Form-item :label-width="60" label="agentId" >
-	            <Input v-model="v.AgentId" placeholder="企业号填agentid,公众号填0"></Input>
+				<Input-number :max="9999999" :min="0" v-model="v.AgentId" placeholder="企业号填agentid,公众号填0"></Input-number>
 	          </Form-item>
 			</Col>
 			<Col span="4">
@@ -48,20 +47,27 @@
 	            <Input v-model="v.EncodingAesKey" placeholder="回调EncodingAesKey"></Input>
 	          </Form-item>
 			</Col>
-			<Col span="2">
+			<Col span="1">
 	          <Form-item label="关闭应用 - Disabled" >
 	            <i-switch v-model="v.Disabled"></i-switch>
 	          </Form-item>
 			</Col>
+			<Col :span="1">
+			  <Form-item :label-width="0">
+			  <Button shape="circle" type="text" size="small" @click.native="form.Apps.splice(k,1)">
+			    <Icon :size="20" type="minus-circled" ></Icon>
+			  </Button>
+			  </Form-item>
+			</Col>
 		  </Row>
         </template>
 
-      <Alert type="info" class="hr" show-icon>数据库 - database</Alert>
-		<template v-for="v in form.Dbs"> 
+      <Alert class="hr" show-icon>数据库 - database<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Dbs.push({})"></Icon></Alert>
+		<template v-for="v,k in form.Dbs"> 
 		  <Row>
-	        <Col :span="4">
-	          <Form-item label="数据源名 - DsName" >
-	            <Input v-model="v.DsName" placeholder="唯一标识，必填"></Input>
+	        <Col :span="3">
+	          <Form-item label="数据源名 - DbName" >
+	            <Input v-model="v.DbName" placeholder="唯一标识，必填"></Input>
 	          </Form-item>
 	        </Col>
 			<Col :span="4">
@@ -99,14 +105,20 @@
 			</Col>
 	        <Col :span="3">
 	        <Form-item label="数据库名 - Db" >
-	          <Input v-model="v.DbName" placeholder=""></Input>
+	          <Input v-model="v.DbName" placeholder="">
+			  </Input>
 	        </Form-item>
+			</Col>
+			<Col :span="1">
+			  <Button shape="circle" type="text" @click.native="form.Dbs.splice(k,1)">
+			    <Icon :size="20" type="minus-circled" ></Icon>
+			  </Button>
 			</Col>
 		  </Row>
 		</template>
 		
-	  <Alert type="info" class="hr" show-icon>计划任务 - task</Alert>
-		<template v-for="v in form.Tasks"> 
+	  <Alert class="hr" show-icon><Icon type="ios-timer-outline"></Icon> 计划任务 - task<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Tasks.push({})"></Icon></Alert>
+		<template v-for="v,k in form.Tasks"> 
 		  <Row>
 	        <Col :span="5">
 	          <Form-item label="计划Id - taskid" >
@@ -131,15 +143,22 @@
 	            <Input v-model="v.Express" placeholder="本机可填.号"></Input>
 	          </Form-item>
 	        </Col>
-	        <Col span="2">
+	        <Col span="1">
 	          <Form-item label="开关 - isrun" >
 	            <i-switch v-model="v.IsRun"></i-switch>
 	          </Form-item>
 			</Col>
+			<Col :span="1">
+			  <Form-item :label-width="0">
+			  <Button shape="circle" type="text" @click.native="form.Tasks.splice(k,1)">
+			    <Icon :size="20" type="minus-circled" ></Icon>
+			  </Button>
+			  </Form-item>
+			</Col>
 		  </Row>
 		</template>
 
-      <Alert type="info" class="hr">其他 - other</Alert>
+      <Alert class="hr">其他 - other</Alert>
         <Form-item label="外网域名 - Host" >
           <Input v-model="form.Host" placeholder=""></Input>
         </Form-item>
@@ -167,9 +186,9 @@
 		</Row>
            
     </Form>
-      <Button type="success" @click="getData">刷新 Refresh</Button>
-      <Button type="warning" @click="restartSrv">重启服务 Restart</Button>
-      <Button type="primary" @click="saveData">保存 Save</Button>
+      <Button type="success" @click="getData"><Icon :size="20" type="ios-reload" /> 刷新</Button>
+      <Button type="warning" @click="restartSrv"><Icon :size="20" type="ios-loop" /> 重启服务</Button>
+      <Button type="primary" @click="saveData"><Icon :size="20" type="ios-download-outline" /> 保存</Button>
   </div>
 </template>
 
@@ -178,7 +197,7 @@
     data() {
       return {
         form: {},
-		dialogFormVisible: false,
+		modal1: false,
 		tm1:{},
 		pct:0,
         options2:  [{
@@ -226,28 +245,28 @@
       getData() {
         this.$http.get(this.$store.state.adminUrl+"config"+this.$store.getters.token)
 		  	.then(r=> { this.form=r.data.data })
-			.catch(e => { console.log(e) })
+			.catch(e=> { console.log(e) })
       },
       saveData() {          
           this.$http.post(this.$store.state.adminUrl+"config"+this.$store.getters.token, this.form)
           .then(r => {
             if (r.data.result){
-              this.$message({ message: '配置成功' })
+              this.$Message.info('配置成功')
               this.form=r.data.data
             }else{
-              this.$message({  message: r.data.errmsg })
+              this.$Message.info(r.data.errmsg)
             }
           })
-          .catch(e => { this.$message({  message: r.data.errmsg })})        
+          .catch(e=> { this.$Message.info(r.data.errmsg)})        
       },      
 	  restartSrv() {    
          this.$http.post(this.$store.state.adminUrl+"restart"+this.$store.getters.token, this.form)
          .then(r => { 
            if (r.data.result){
-		         this.dialogFormVisible = true      
+		         this.modal1 = true      
              this.$Message.info('操作成功')
-			 this.$Loading.start()
-             this.tm1 = setInterval(this.gogogo, 300)
+			 this.pct=0
+             this.tm1 = setInterval(this.gogogo, 200)
            }else{
              this.$Message.info("操作失败，请确认是否install了服务 "+r.data.errmsg)
            }
@@ -256,10 +275,8 @@
       },
 	  gogogo(){
 	      if(this.pct >= 100){
-		    this.dialogFormVisible = false
-			this.$Loading.finish()
+		    this.modal1 = false
 		    clearInterval(this.tm1)
-			this.pct=0
 		  }else{			
 		    this.pct = this.pct+5
 		  }

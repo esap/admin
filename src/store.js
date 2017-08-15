@@ -11,6 +11,7 @@ export default new Vuex.Store({
   	api2Path: process.env.NODE_ENV === 'production' ? "/api2/" : "http://localhost:9090/api2/",
     esPath: process.env.NODE_ENV === 'production' ? "/es/" : "http://localhost:9090/es/",
     appUrl: process.env.NODE_ENV === 'production' ? "/" : "http://localhost:9090/",
+    uploadUrl: process.env.NODE_ENV === 'production' ? "/upload" : "http://localhost:9090/upload",
     adminUrl: process.env.NODE_ENV === 'production' ? "/" : "http://localhost:9090/admin/",
     mts: false,
     pSize:15,
