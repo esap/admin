@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-  	<!-- login window -->
+  	<!-- 登陆 -->
 	<Modal title="登陆"
 	  :closable="false"
   	  :mask-closable="false"
-	  v-model="loginVisible">
+	  v-model="notLogin">
 	  <Form :model="form">
 	    <Form-item label="账号">
 	      <Input v-model="form.user" autofocus @on-enter="doLogin">
@@ -21,22 +21,24 @@
 	    <Button type="primary" @click.native="doLogin">确 定</Button>
 	  </span>
 	</Modal>
-	<!-- header导航 -->	
-	<el-menu router theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-	  <el-menu-item index="info">ESAP3.0</el-menu-item>    
-	  <el-menu-item index="wxtx">提醒</el-menu-item>
-	  <el-menu-item index="wxcx">查询</el-menu-item>
-	  <el-menu-item index="wxtk">图库</el-menu-item>
-	  <el-menu-item index="wxtxl">通讯录</el-menu-item>
-	  <el-menu-item index="email">Email</el-menu-item>
-	  <el-menu-item index="log">日志</el-menu-item>
-	  <el-menu-item index="/"><a href="https://esap.erp8.net" target="_blank">帮助</a></el-menu-item>
-	  <span class="right" v-show="!!$store.state.userName">
-		{{"欢迎您，" + $store.state.userName}}
-	  <a @click="loginOut">退出登陆</a>
-      </span>
-	</el-menu>
-    <router-view></router-view>
+	<!-- 内容 -->	
+	<div v-if="$store.getters.isLogin">
+		<el-menu router theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+		  <el-menu-item index="info">ESAP3.0</el-menu-item>    
+		  <el-menu-item index="wxtx">提醒</el-menu-item>
+		  <el-menu-item index="wxcx">查询</el-menu-item>
+		  <el-menu-item index="wxtk">图库</el-menu-item>
+		  <el-menu-item index="wxtxl">通讯录</el-menu-item>
+		  <el-menu-item index="email">Email</el-menu-item>
+		  <el-menu-item index="log">日志</el-menu-item>
+		  <el-menu-item index="/"><a href="https://esap.erp8.net" target="_blank">帮助</a></el-menu-item>
+		  <span class="right" v-show="!!$store.state.userName">
+			{{"欢迎您，" + $store.state.userName}}
+		  <a @click="loginOut">退出登陆</a>
+	      </span>
+		</el-menu>
+	    <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -50,22 +52,17 @@ export default {
 	    activeIndex: '1',
 	    activeIndex2: '1',
 	    form: { user: '', pwd: '' },
-	  };
+	  }
 	},
 	computed: {
-		loginVisible() {
-			return !this.$store.getters.isLogin
-		}
+		notLogin() { return !this.$store.getters.isLogin }
 	},
 	methods: {
-		handleSelect(key, keyPath) {
-		console.log(key, keyPath);
-		},
 		doLogin() {
-			this.form.pwd=md5(this.pwd);
+			this.form.pwd=md5(this.pwd)
 			this.$store.dispatch('doLogin',this.form)
 		},
-		loginOut(){
+		loginOut() {
 			this.pwd=''
 			this.$store.dispatch('outlogin')
 		}

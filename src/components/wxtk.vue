@@ -1,17 +1,14 @@
 <template>
   <div v-if="$store.state.userName">
-    <el-button @click="getData">刷新</el-button>
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="list.length">
-      </el-pagination>
-    </div>
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+      <Button @click="getData"><Icon :size="14" type="ios-reload" />刷新</Button>
+    </Page>
 
     <el-table
       stripe
@@ -41,22 +38,19 @@
           <el-button
             size="small"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="deleteData(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="list.length">
-      </el-pagination>
-    </div>
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+    </Page>
   </div>
 </template>
 
@@ -70,27 +64,20 @@
         }
       },
       computed:{
-        listShow() {
-          return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize)
-        }
+        listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
       },
       methods: {
-        handleSizeChange(val) {
-          this.pagesize=val
-        },
-        handleCurrentChange(val) {
-          this.currentPage=val
-        },
+        token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
+        handleSizeChange(v) { this.pagesize=v },
+        handleCurrentChange(v) { this.currentPage=v },
+        picHand(index) { return this.$store.state.appUrl+"p/"+this.list[index].pic },
         getData() {
-          this.$http.get(this.$store.state.apiPath+"wxtk")
-  		  	.then(r=> { this.list=r.data })
+          this.$http.get(this.token("wxtk"))
+          .then(r=> { this.list=r.data.data[0] })
           .catch(e => { console.log(e) })
         },
-        picHand(index){
-          return this.$store.state.appUrl+"p/"+this.list[index].pic
-        },
-        handleDelete(i,r) {
-          this.$http.delete(this.$store.state.apiPath+"wxtk?id="+r.id)
+        deleteData(i,r) {
+          this.$http.delete(this.token("wxtk")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })

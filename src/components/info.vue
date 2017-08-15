@@ -17,6 +17,13 @@
       <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
         <template v-for="v,k in form.Apps">    
 		  <Row> 
+			<Col :span="1">
+			  <Form-item :label-width="1">
+			  <Button shape="circle" type="text" size="small" @click.native="form.Apps.splice(k,1)">
+			    <Icon :size="20" type="minus-circled" ></Icon>
+			  </Button>
+			  </Form-item>
+			</Col>
 			<Col span="3">
 	          <Form-item label="应用名 - appName" >
 	            <Input v-model="v.AppName" placeholder="唯一,必填"></Input>
@@ -52,19 +59,17 @@
 	            <i-switch v-model="v.Disabled"></i-switch>
 	          </Form-item>
 			</Col>
-			<Col :span="1">
-			  <Form-item :label-width="0">
-			  <Button shape="circle" type="text" size="small" @click.native="form.Apps.splice(k,1)">
-			    <Icon :size="20" type="minus-circled" ></Icon>
-			  </Button>
-			  </Form-item>
-			</Col>
 		  </Row>
         </template>
 
       <Alert class="hr" show-icon>数据库 - database<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Dbs.push({})"></Icon></Alert>
 		<template v-for="v,k in form.Dbs"> 
 		  <Row>
+			<Col :span="1">
+			  <Button shape="circle" type="text" @click.native="form.Dbs.splice(k,1)">
+			    <Icon :size="20" type="minus-circled" ></Icon>
+			  </Button>
+			</Col>
 	        <Col :span="3">
 	          <Form-item label="数据源名 - DbName" >
 	            <Input v-model="v.DbName" placeholder="唯一标识，必填"></Input>
@@ -90,7 +95,7 @@
 	        </Col>
 	        <Col :span="3">
 			  <Form-item label="端口 - DbPort">
-	            <Input type="number" v-model="v.DbPort" placeholder=""></Input>
+	            <Input-number v-model="v.DbPort" placeholder=""></Input-number>
 	          </Form-item>
 	        </Col>
 	        <Col :span="3">
@@ -109,17 +114,19 @@
 			  </Input>
 	        </Form-item>
 			</Col>
-			<Col :span="1">
-			  <Button shape="circle" type="text" @click.native="form.Dbs.splice(k,1)">
-			    <Icon :size="20" type="minus-circled" ></Icon>
-			  </Button>
-			</Col>
 		  </Row>
 		</template>
 		
 	  <Alert class="hr" show-icon><Icon type="ios-timer-outline"></Icon> 计划任务 - task<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Tasks.push({})"></Icon></Alert>
 		<template v-for="v,k in form.Tasks"> 
 		  <Row>
+		  	<Col :span="1">
+			  <Form-item :label-width="1">
+			  <Button shape="circle" type="text" @click.native="form.Tasks.splice(k,1)">
+			    <Icon :size="20" type="minus-circled" ></Icon>
+			  </Button>
+			  </Form-item>
+			</Col>
 	        <Col :span="5">
 	          <Form-item label="计划Id - taskid" >
 	            <Input v-model="v.TaskID" placeholder="唯一标识，必填"></Input>
@@ -147,13 +154,6 @@
 	          <Form-item label="开关 - isrun" >
 	            <i-switch v-model="v.IsRun"></i-switch>
 	          </Form-item>
-			</Col>
-			<Col :span="1">
-			  <Form-item :label-width="0">
-			  <Button shape="circle" type="text" @click.native="form.Tasks.splice(k,1)">
-			    <Icon :size="20" type="minus-circled" ></Icon>
-			  </Button>
-			  </Form-item>
 			</Col>
 		  </Row>
 		</template>
@@ -185,10 +185,10 @@
 		</Col>
 		</Row>
            
+      <Button type="success" @click="getData"><Icon :size="14" type="ios-reload" /> 刷新</Button>
+      <Button type="warning" @click="restartSrv"><Icon :size="14" type="ios-loop" /> 重启服务</Button>
+      <Button type="primary" @click="saveData"><Icon :size="14" type="ios-download-outline" /> 保存</Button>
     </Form>
-      <Button type="success" @click="getData"><Icon :size="20" type="ios-reload" /> 刷新</Button>
-      <Button type="warning" @click="restartSrv"><Icon :size="20" type="ios-loop" /> 重启服务</Button>
-      <Button type="primary" @click="saveData"><Icon :size="20" type="ios-download-outline" /> 保存</Button>
   </div>
 </template>
 
@@ -242,13 +242,14 @@
       }
     },
     methods: {
+      token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
       getData() {
-        this.$http.get(this.$store.state.adminUrl+"config"+this.$store.getters.token)
+        this.$http.get(this.token("config"))
 		  	.then(r=> { this.form=r.data.data })
 			.catch(e=> { console.log(e) })
       },
       saveData() {          
-          this.$http.post(this.$store.state.adminUrl+"config"+this.$store.getters.token, this.form)
+          this.$http.post(this.token("config"), this.form)
           .then(r => {
             if (r.data.result){
               this.$Message.info('配置成功')
@@ -260,7 +261,7 @@
           .catch(e=> { this.$Message.info(r.data.errmsg)})        
       },      
 	  restartSrv() {    
-         this.$http.post(this.$store.state.adminUrl+"restart"+this.$store.getters.token, this.form)
+         this.$http.post(this.token("restart"), this.form)
          .then(r => { 
            if (r.data.result){
 		         this.modal1 = true      

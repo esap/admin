@@ -1,9 +1,8 @@
 <template>
   <div>
-      <el-button type="danger" @click="clearLog">清除</el-button>
-      <el-button type="primary" @click="getData">刷新</el-button>
-      <div class="hr">日志 - log</div>
-      <el-input v-if="$store.state.userName" type="textarea" autosize v-model="form"></el-input>          
+    <Button type="error" @click="clearLog">清除</Button>
+    <Button type="primary" @click="getData">刷新</Button>
+    <Input v-if="$store.state.userName" type="textarea" autosize v-model="form"></Input>          
   </div>
 </template>
 
@@ -15,13 +14,15 @@
       }
     },
     methods: {
+      token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
       getData() {
-        this.$http.get(this.$store.state.appUrl+"log")
+        this.$http.get(this.token("log"))
         .then(r=> { this.form=r.data })
         .catch(e => { console.log(e) })
       },
       clearLog() {
-        this.$http.delete(this.$store.state.appUrl+"log")
+        this.$util
+        this.$http.delete(this.token("log"))
 		  	.then(r=> { this.form=r.data })
 			  .catch(e => { console.log(e) })
       },

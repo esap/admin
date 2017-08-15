@@ -8,9 +8,9 @@ import 'element-ui/lib/theme-default/index.css'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 
-//axios.defaults.baseURL = store.state.appUrl;
+//axios.defaults.baseURL = store.state.appUrl
 Vue.prototype.$http = axios
-axios.defaults.headers={'Authorization':store.getters.tokens};
+axios.defaults.headers={'Authorization':store.getters.tokens}
 Vue.use(ElementUI)
 Vue.use(iView)
 

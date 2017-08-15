@@ -27,7 +27,7 @@
       },
       methods: {
         getData() {
-          this.$http.get("/userlist")
+          this.$http.get(this.$store.state.adminUrl +"userlist?token="+sessionStorage.getItem("token"))
   		  	.then(r=> { this.list=r.data.UserList })
   			  .catch(e => { console.log(e) })
         }

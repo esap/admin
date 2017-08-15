@@ -1,5 +1,15 @@
 <template>
   <div>
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+      <Button @click="getData"><Icon :size="14" type="ios-reload" />刷新</Button>
+    </Page>
+
     <el-table
 	  v-if="$store.state.userName"
       stripe border
@@ -46,10 +56,19 @@
           <el-button
             size="small"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click="deleteData(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+    </Page>
   </div>
 </template>
 
@@ -57,17 +76,22 @@
     export default {
       data() {
         return {
-          list: []
+          list: [],
+          pagesize: 10,
+          currentPage: 1
         }
       },
       methods: {
+        token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
+        handleSizeChange(v) { this.pagesize=v },
+        handleCurrentChange(v) { this.currentPage=v },
         getData() {
-          this.$http.get(this.$store.state.apiPath+"esmail")
-          .then(r=> { this.list=r.data })
+          this.$http.get(this.token("esmail"))
+          .then(r=> { this.list=r.data.data[0] })
           .catch(e => { console.log(e) })
         },       
-        handleDelete(i,r) {
-          this.$http.delete(this.$store.state.apiPath+"esmail?id="+r.id)
+        deleteData(i,r) {
+          this.$http.delete(this.token("esmail")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })

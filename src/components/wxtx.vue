@@ -1,69 +1,61 @@
 <template>
   <div v-if="$store.state.userName">
-    <!-- Form -->
-    <el-button @click="getData">刷新</el-button>
-    <el-button @click="dialogFormVisible = true">+新增</el-button>
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="list.length">
-      </el-pagination>
-    </div>
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+      <Button @click="getData"><Icon :size="14" type="ios-reload" />刷新</Button>
+      <Button @click="dialogFormVisible = true"><Icon :size="14" type="plus-circled" />新增</Button>
+    </Page>
 
-    <el-dialog title="新增微信提醒" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="发送日期" :label-width="formLabelWidth">
-          <el-date-picker
-            v-model="form.cdate"
-            type="datetime"
-            placeholder="选择发送日期,选填">
-          </el-date-picker>
-        </el-form-item>        
-        <el-form-item label="接收人" :label-width="formLabelWidth">
-          <el-input v-model="form.touser" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></el-input>
-        </el-form-item>         
-        <el-form-item label="接收应用" :label-width="formLabelWidth">
-          <el-input type="number" v-model="form.toagent" placeholder="默认为0,即小助手,选填" auto-complete="off"></el-input>
-        </el-form-item>            
-        <el-form-item label="内容" :label-width="formLabelWidth">
-          <el-input type="textarea" autosize v-model="form.content" placeholder="填入消息内容,选填" auto-complete="off"></el-input>
-        </el-form-item>          
-        <el-form-item label="图片" :label-width="formLabelWidth">
+    <Modal title="新增微信提醒" v-model="dialogFormVisible">
+      <Form :model="form" :label-width="80">
+        <Form-item label="发送日期">
+          <Date-picker v-model="form.cdate" type="datetime" placeholder="选择发送日期,选填"></Date-picker>
+        </Form-item>        
+        <Form-item label="接收人">
+          <Input v-model="form.touser" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填"></Input>
+        </Form-item>         
+        <Form-item label="接收应用">
+          <Input v-model="form.app" placeholder="默认为esap, 选填" auto-complete="off"></Input>
+        </Form-item>            
+        <Form-item label="内容">
+          <Input type="textarea" autosize v-model="form.content" placeholder="填入消息内容,选填"></Input>
+        </Form-item>          
+        <Form-item label="图片">
           <el-upload
             class="avatar-uploader"
-            :action="$store.state.uploadUrl+'upload'+this.$store.getters.token"
+            :action="$store.state.uploadUrl+this.$store.getters.token"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-        </el-form-item>              
-        <el-form-item label="附件" :label-width="formLabelWidth">
+        </Form-item>              
+        <Form-item label="附件">
           <el-upload
             class="upload-demo"
             drag
             :on-success="handleAvatarSuccess2"
-            :action="$store.state.apiPath+'upload'">
+            :action="$store.state.uploadUrl+this.$store.getters.token">
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖入，或<em>点击上传</em></div>
             <div class="el-upload__tip" slot="tip">文件不超过20MB</div>
           </el-upload>
-        </el-form-item>    
-        <el-form-item label="保密消息" :label-width="formLabelWidth">
-          <el-input type="number" v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></el-input>
-        </el-form-item>        
-      </el-form>
+        </Form-item>    
+        <Form-item label="保密消息">
+          <Input-number v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
+        </Form-item>        
+      </Form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addRec">确 定</el-button>
+        <Button @click="dialogFormVisible = false">取 消</Button>
+        <Button type="primary" @click="addData">确 定</Button>
       </div>
-    </el-dialog>
+    </Modal>
 
     <el-table
       stripe
@@ -80,7 +72,7 @@
         width="100">
       </el-table-column>
       <el-table-column
-        prop="toAgent"
+        prop="app"
         label="接收应用"
         width="100">
       </el-table-column>
@@ -114,154 +106,141 @@
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template scope="scope">   
-          <el-button
+          <Button
             size="small"
-            type="danger"
-            @click="deleteData(scope.$index, scope.row)">删除</el-button>
+            type="error"
+            @click="deleteData(scope.$index, scope.row)">删除</Button>
         </template>
       </el-table-column>
     </el-table>
 
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="list.length">
-      </el-pagination>
-    </div>
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+    </Page>
   </div>
 </template>
 
-  <script>
-    export default {
-      data() {
-        return {
-          list: [],
-          pagesize:10,
-          currentPage:1,
-          imageUrl: '',
-          fileUrl: '',
-          dialogFormVisible: false,
-          form: {
-            cdate: '',  
-            touser: '@all',
-            content: '',
-            toagent: 0,
-            pic: '',
-            safe: 0,
-            fh: '',
-          },
-          form2: [{}],
-          formLabelWidth: '70px'
-        }
-      },
-      computed:{
-        listShow() {
-          return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize)
-        }
-      },
-      methods: {
-        handleSizeChange(val) {
-          this.pagesize=val
+<script>
+  export default {
+    data() {
+      return {
+        list: [],
+        currentPage:1,
+        pagesize:10,
+        imageUrl: '',
+        fileUrl: '',
+        dialogFormVisible: false,
+        form: {
+          cdate: '',  
+          touser: '@all',
+          content: '',
+          app: 'esap',
+          pic: '',
+          safe: 0,
+          fh: '',
         },
-        handleCurrentChange(val) {
-          this.currentPage=val
-        },
-        getData() {
-          this.$http.get(this.$store.state.api2Path +"wxtx.admin"+this.$store.getters.token)
-  		  	.then(r=> { this.list=r.data.data[0] })
-          .catch(e => { console.log(e) })
-        },
-        deleteData(i,r) {
-          this.$http.delete(this.$store.state.api2Path+"wxtx"+this.$store.getters.token+"&id="+r.id)
-          .then(r => { 
-            if (r.data.result){
-              this.$Message.info('删除成功')
-              this.list=r.data.data[0]
-            }else{
-              this.$Message.info(r.data.errmsg)
-            }
-          })
-          .catch(e => { this.$Message.info(r.data.errmsg)})
-        },      
-        saveData(i,r) {
-          this.$http.put(this.$store.state.api2Path+"wxtx"+this.$store.getters.token+"&id="+r.id, r)
-          .then(r => { 
-            if (r.data.result){
-              this.$Message.info('保存成功')
-              this.list=r.data.data[0]
-            } else{
-              this.$Message.info(r.data.errmsg)
-            }
-          })
-          .catch(e => { this.$Message.info(r.data.errmsg)})          
-        },
-        handleAvatarSuccess(res, file) {
-          this.imageUrl = res.fileurl;
-        },   
-        handleAvatarSuccess2(res, file) {
-          this.fileUrl = res.fileurl;
-        },
-        beforeAvatarUpload(file) {
-          const isJPG = (file.type === 'image/jpeg'||file.type === 'image/png')
-          const isLt2M = file.size / 1024 / 1024 < 2
-
-          if (!isJPG) {
-            this.$Message.error('上传头像图片只能是 JPG/PNG 格式!')
-          }
-          if (!isLt2M) {
-            this.$Message.error('上传头像图片大小不能超过 2MB!')
-          }
-          return isJPG && isLt2M
-        },
-        addRec(){
-          this.form['pic']=this.imageUrl     
-          this.form['fh']=this.fileUrl     
-          this.$http.post(this.$store.state.apiPath+"wxtx", this.form)
-          .then(r => { 
-            if (r.data.result){
-              this.$Message.info('新增成功')
-              this.dialogFormVisible = false              
-              this.getData()
-            }else{
-              this.$Message.info(r.data.errmsg)
-            }
-          })
-          .catch(e => { this.$Message.info(r.data.errmsg)})
-        }
-      },
-      mounted(){
-        this.getData()
+        form2: [{}],
       }
-    }
-  </script>
+    },
+    computed:{
+      listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
+    },
+    methods: {
+      token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
+      handleSizeChange(v) { this.pagesize=v },
+      handleCurrentChange(v) { this.currentPage=v },
+      getData() {
+        this.$http.get(this.token("wxtx"))
+		  	.then(r=> { this.list=r.data.data[0] })
+        .catch(e => { console.log(e) })
+      },
+      deleteData(i,r) {
+        this.$http.delete(this.token("wxtx")+"&id="+r.id)
+        .then(r => { 
+          if (r.data.result){
+            this.$Message.info('删除成功')
+            this.list=r.data.data[0]
+          }else{
+            this.$Message.info(r.data.errmsg)
+          }
+        })
+        .catch(e => { this.$Message.info(r.data.errmsg)})
+      },
+      saveData(i,r) {
+        this.$http.put(this.token("wxtx")+"&id="+r.id, r)
+        .then(r => { 
+          if (r.data.result){
+            this.$Message.info('保存成功')
+            this.list=r.data.data[0]
+          } else{
+            this.$Message.info(r.data.errmsg)
+          }
+        })
+        .catch(e => { this.$Message.info(r.data.errmsg)})          
+      },
+      handleAvatarSuccess(res, file) { this.imageUrl = res.fileurl },   
+      handleAvatarSuccess2(res, file) { this.fileUrl = res.fileurl },
+      beforeAvatarUpload(file) {
+        const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png')
+        const isLt2M = file.size / 1024 / 1024 < 2
 
-  <style scoped>
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+        if (!isJPG) {
+          this.$Message.error('上传头像图片只能是 JPG/PNG 格式!')
+        }
+        if (!isLt2M) {
+          this.$Message.error('上传头像图片大小不能超过 2MB!')
+        }
+        return isJPG && isLt2M
+      },
+      addData() {
+        this.form['pic']=this.imageUrl     
+        this.form['fh']=this.fileUrl     
+        this.$http.post(this.token("wxtx"), this.form)
+        .then(r => { 
+          if (r.data.result){
+            this.$Message.info('新增成功')
+            this.dialogFormVisible = false              
+            this.getData()
+          }else{
+            this.$Message.info(r.data.errmsg)
+          }
+        })
+        .catch(e => { this.$Message.info(r.data.errmsg)})
+      }
+    },
+    mounted() {
+      this.getData()
+    }
   }
-  .avatar-uploader .el-upload:hover {
-    border-color: #20a0ff;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
+</script>
+
+<style scoped>
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #20a0ff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 </style>
