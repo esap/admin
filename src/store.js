@@ -84,8 +84,8 @@ export default new Vuex.Store({
       axios.post(apiUrl, apiParam)
   	  .then(r => {
         if (r.data.result) { 
-          commit('setUserName', r.data.msg[0].dispName)
-          sessionStorage.setItem("user", r.data.msg[0].dispName)
+          commit('setUserName', apiParam.user)
+          sessionStorage.setItem("user", apiParam.user)
           sessionStorage.setItem("token", r.data.token)
           state.loading=false
         } else {

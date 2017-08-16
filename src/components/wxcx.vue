@@ -186,7 +186,7 @@
   			  .catch(e => { console.log(e) })
         },
         deleteData(i,r) {
-          this.$http.delete(this.token("wxcx")+"&id="+r.ID)
+          this.$http.delete(this.token("wxcx")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })
@@ -198,7 +198,7 @@
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },      
         saveData(i,r) {
-          this.$http.put(this.token("wxcx")+"&id="+r.ID, r)
+          this.$http.put(this.token("wxcx")+"&id="+r.id, r)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '保存成功' })             

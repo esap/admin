@@ -13,7 +13,7 @@
 	  <div slot="footer"></div>
     </Modal>
 
-    <Form :model="form" :label-width="80">
+    <Form :model="form" :label-width="60">
       <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
         <template v-for="v,k in form.Apps">    
 		  <Row> 
@@ -25,37 +25,42 @@
 			  </Form-item>
 			</Col>
 			<Col span="3">
-	          <Form-item label="应用名 - appName" >
+	          <Form-item label="应用名 - appName">
 	            <Input v-model="v.AppName" placeholder="唯一,必填"></Input>
 	          </Form-item>
 			</Col>
 			<Col span="3">
-	          <Form-item :label-width="50" label="appId" >
+	          <Form-item label="类型 - appType">
+	            <Input v-model="v.AppType" placeholder="公众号填pub"></Input>
+	          </Form-item>
+			</Col>
+			<Col span="3">
+	          <Form-item :label-width="50" label="appId">
 	            <Input v-model="v.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
 	          </Form-item>
 			</Col>
 			<Col span="3">
-	          <Form-item :label-width="60" label="agentId" >
+	          <Form-item :label-width="60" label="agentId">
 				<Input-number :max="9999999" :min="0" v-model="v.AgentId" placeholder="企业号填agentid,公众号填0"></Input-number>
 	          </Form-item>
 			</Col>
-			<Col span="4">
-	          <Form-item label="应用密钥 - Secret" >
+			<Col span="3">
+	          <Form-item label="Secret">
 	            <Input v-model="v.Secret" placeholder="应用或管理组Secret，必填"></Input>
 	          </Form-item>
 			</Col>
 			<Col span="3">
-	          <Form-item label="回调令牌 - Token" >
+	          <Form-item label="Token">
 	            <Input v-model="v.Token" placeholder="回调Token"></Input>
 	          </Form-item> 
 			</Col>
-			<Col span="4">          
-	          <Form-item label="回调密钥 - AesKey" >
+			<Col span="3">          
+	          <Form-item label="AesKey">
 	            <Input v-model="v.EncodingAesKey" placeholder="回调EncodingAesKey"></Input>
 	          </Form-item>
 			</Col>
 			<Col span="1">
-	          <Form-item label="关闭应用 - Disabled" >
+	          <Form-item label="关闭 - Disabled">
 	            <i-switch v-model="v.Disabled"></i-switch>
 	          </Form-item>
 			</Col>
@@ -71,12 +76,12 @@
 			  </Button>
 			</Col>
 	        <Col :span="3">
-	          <Form-item label="数据源名 - DbName" >
+	          <Form-item label="数据源名 - DbName">
 	            <Input v-model="v.DbName" placeholder="唯一标识，必填"></Input>
 	          </Form-item>
 	        </Col>
 			<Col :span="4">
-		        <Form-item label="驱动 - DbDriver" >
+		        <Form-item label="驱动 - DbDriver">
 		          <Select v-model="v.DbDriver" placeholder="请选择">
 		            <i-option
 		              v-for="item in options2"
@@ -89,7 +94,7 @@
 		        </Form-item>
 			</Col>
 			<Col :span="3">
-	          <Form-item label="服务器 - Server" >
+	          <Form-item label="服务器 - Server">
 	            <Input v-model="v.Server" placeholder="本机可填.号"></Input>
 	          </Form-item>
 	        </Col>
@@ -99,17 +104,17 @@
 	          </Form-item>
 	        </Col>
 	        <Col :span="3">
-	        <Form-item label="账号 - User" >
+	        <Form-item label="账号 - User">
 	          <Input v-model="v.User" placeholder=""></Input>
 	        </Form-item>
 			</Col>
 	        <Col :span="3">
-	        <Form-item label="密码 - Pwd" >
+	        <Form-item label="密码 - Pwd">
 	          <Input v-model="v.Pwd" placeholder=""></Input>
 	        </Form-item>
 			</Col>
 	        <Col :span="3">
-	        <Form-item label="数据库名 - Db" >
+	        <Form-item label="数据库名 - Db">
 	          <Input v-model="v.DbName" placeholder="">
 			  </Input>
 	        </Form-item>
@@ -128,7 +133,7 @@
 			  </Form-item>
 			</Col>
 	        <Col :span="5">
-	          <Form-item label="计划Id - taskid" >
+	          <Form-item label="计划Id - taskid">
 	            <Input v-model="v.TaskID" placeholder="唯一标识，必填"></Input>
 	          </Form-item>
 	        </Col>
@@ -146,12 +151,12 @@
 		        </Form-item>
 			</Col>
 			<Col :span="5">
-	          <Form-item label="周期 - express" >
+	          <Form-item label="周期 - express">
 	            <Input v-model="v.Express" placeholder="本机可填.号"></Input>
 	          </Form-item>
 	        </Col>
 	        <Col span="1">
-	          <Form-item label="开关 - isrun" >
+	          <Form-item label="开关 - isrun">
 	            <i-switch v-model="v.IsRun"></i-switch>
 	          </Form-item>
 			</Col>
@@ -159,30 +164,39 @@
 		</template>
 
       <Alert class="hr">其他 - other</Alert>
-        <Form-item label="外网域名 - Host" >
-          <Input v-model="form.Host" placeholder=""></Input>
-        </Form-item>
+        <Row>
+		    <Col :span="12">
+		        <Form-item label="外网域名 - Host">
+		          <Input v-model="form.Host" placeholder=""></Input>
+		        </Form-item>  
+	        </Col>
+		    <Col :span="12">      
+		        <Form-item label="Admin密码 - Pwd">
+		          <Input type="password" v-model="form.Pwd1" placeholder=""></Input>
+		        </Form-item>
+		    </Col>
+		</Row>
 		<Row>
-	    <Col :span="4">
-        <Form-item label="提醒重试 - ReTryMsg" >
-          <i-switch class="right" v-model="form.ReTryMsg" placeholder=""></i-switch>
-        </Form-item>
-		</Col>
-	    <Col :span="4">
-        <Form-item label="进入提示 - EnterMsg" >
-          <i-switch class="right" v-model="form.ShowFuncListEnter" placeholder=""></i-switch>
-        </Form-item>
-		</Col>
-	    <Col :span="4">
-        <Form-item label="自动认证 - NeedWxOAuth2" >
-          <i-switch class="right" v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
-        </Form-item>
-		</Col>
-	    <Col :span="4">
-        <Form-item label="调试模式 - Debug" >
-          <i-switch class="right" v-model="form.Debug"></i-switch>
-        </Form-item>
-		</Col>
+		    <Col :span="4">
+		        <Form-item label="提醒重试 - ReTryMsg">
+		          <i-switch class="right" v-model="form.ReTryMsg" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+		    <Col :span="4">
+		        <Form-item label="进入提示 - EnterMsg">
+		          <i-switch class="right" v-model="form.ShowFuncListEnter" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+		    <Col :span="4">
+		        <Form-item label="自动认证 - NeedWxOAuth2">
+		          <i-switch class="right" v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+		    <Col :span="4">
+		        <Form-item label="调试模式 - Debug">
+		          <i-switch class="right" v-model="form.Debug"></i-switch>
+		        </Form-item>
+			</Col>
 		</Row>
            
       <Button type="success" @click="getData"><Icon :size="14" type="ios-reload" /> 刷新</Button>
@@ -193,104 +207,110 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        form: {},
+import md5 from 'md5'
+export default {
+	data() {
+	  return {
+	    form: {},
 		modal1: false,
 		tm1:{},
 		pct:0,
-        options2:  [{
-          value: 'mssql',
-          label: 'Sql2005+'
-        }, {
-          value: 'Sql2000',
-          label: 'Sql2000'
-        }, {
-          value: 'mysql',
-          label: 'mysql'
-        }, {
-          value: 'postgres',
-          label: 'postgresql'
-        }, {
-          value: 'sqlite',
-          label: 'sqlite',
-          disabled: true
-        }, {
-          value: 'access',
-          label: 'access'
-        }, {
-          value: 'excel',
-          label: 'excel'
-        }],
+	    options2:  [{
+	      value: 'mssql',
+	      label: 'Sql2005+'
+	    }, {
+	      value: 'Sql2000',
+	      label: 'Sql2000'
+	    }, {
+	      value: 'mysql',
+	      label: 'mysql'
+	    }, {
+	      value: 'postgres',
+	      label: 'postgresql'
+	    }, {
+	      value: 'sqlite',
+	      label: 'sqlite',
+	      disabled: true
+	    }, {
+	      value: 'access',
+	      label: 'access'
+	    }, {
+	      value: 'excel',
+	      label: 'excel'
+	    }],
 		options3:  [{
-          value: 'WxdkTask',
-          label: '微信打卡'
-        }, {
-          value: 'WxspTask',
-          label: '微信审批'
-        }, {
-          value: 'EmailTask',
-          label: '邮件'
-        }, {
-          value: 'WxtxTask',
-          label: '微信提醒'
-        }, {
-          value: 'WxtxlTask',
-          label: '通讯录同步'
-        }],
-      }
-    },
-    methods: {
-      token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
-      getData() {
-        this.$http.get(this.token("config"))
+	      value: 'WxdkTask',
+	      label: '微信打卡'
+	    }, {
+	      value: 'WxspTask',
+	      label: '微信审批'
+	    }, {
+	      value: 'EmailTask',
+	      label: '邮件'
+	    }, {
+	      value: 'WxtxTask',
+	      label: '微信提醒'
+	    }, {
+	      value: 'WxtxlTask',
+	      label: '通讯录同步'
+	    }],
+	  }
+	},
+	methods: {
+	  token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
+	  getData() {
+	    this.$http.get(this.token("config"))
 		  	.then(r=> { this.form=r.data.data })
 			.catch(e=> { console.log(e) })
-      },
-      saveData() {          
-          this.$http.post(this.token("config"), this.form)
-          .then(r => {
-            if (r.data.result){
-              this.$Message.info('配置成功')
-              this.form=r.data.data
-            }else{
-              this.$Message.info(r.data.errmsg)
-            }
-          })
-          .catch(e=> { this.$Message.info(r.data.errmsg)})        
-      },      
-	  restartSrv() {    
-         this.$http.post(this.token("restart"), this.form)
-         .then(r => { 
-           if (r.data.result){
-		         this.modal1 = true      
-             this.$Message.info('操作成功')
+	  },
+	  saveData() {
+	  	  if(this.form.Pwd1) {
+	  	  	this.form.Pwd=md5(this.form.Pwd1)
+	  	  	this.form.Pwd1=""
+	  	  }
+	      this.$http.post(this.token("config"), this.form)
+	      .then(r => {
+	        if (r.data.result){
+	          this.$Message.info('配置成功')
+	          this.form=r.data.data
+	          this.form.Pwd=""
+	        }else{
+	          this.$Message.info(r.data.errmsg)
+	        }
+	      })
+	      .catch(e=> { this.$Message.info(r.data.errmsg)})
+	  },      
+	  restartSrv() {
+	     this.$http.post(this.token("restart"), this.form)
+	     .then(r => {
+	       if (r.data.result){
+		         this.modal1 = true
+	         this.$Message.info('操作成功')
 			 this.pct=0
-             this.tm1 = setInterval(this.gogogo, 200)
-           }else{
-             this.$Message.info("操作失败，请确认是否install了服务 "+r.data.errmsg)
-           }
-         })
-         .catch(e => { this.$Message.info("操作失败，请确认是否install了服务 "+e)})        
-      },
+	         this.tm1 = setInterval(this.gogogo, 200)
+	       }else{
+	         this.$Message.info("操作失败，请确认是否install了服务 "+r.data.errmsg)
+	       }
+	     })
+	     .catch(e => { this.$Message.info("操作失败，请确认是否install了服务 "+e)})        
+	  },
 	  gogogo(){
 	      if(this.pct >= 100){
 		    this.modal1 = false
 		    clearInterval(this.tm1)
-		  }else{			
+		  }else{
 		    this.pct = this.pct+5
 		  }
 	  },
-      addAgent(){        
-        this.form.Agents.x1='xx'
-        console.log(this.form.Agents)
-      }
-    },
-    mounted(){
-      this.getData()
-    }
-  }
+	  addAgent(){
+	    this.form.Agents.x1='xx'
+	    console.log(this.form.Agents)
+	  }
+	},
+	mounted(){
+	  this.getData()
+	}
+}
 </script>
 
 <style scoped>
