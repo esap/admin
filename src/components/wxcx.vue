@@ -129,13 +129,8 @@
       </el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
-          <Button
-            size="small"
-            @click="saveData(scope.$index, scope.row)">保存</Button>
-          <Button
-            size="small"
-            type="error"
-            @click="deleteData(scope.$index, scope.row)">删除</Button>
+          <Button size="small" @click="saveData(scope.$index, scope.row)">保存</Button>
+          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
         </template>
       </el-table-column>
     </el-table>   

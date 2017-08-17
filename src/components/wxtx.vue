@@ -16,12 +16,18 @@
         <Form-item label="发送日期">
           <Date-picker v-model="form.cdate" type="datetime" placeholder="选择发送日期,选填"></Date-picker>
         </Form-item>        
-        <Form-item label="接收人">
-          <Input v-model="form.touser" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填"></Input>
-        </Form-item>         
         <Form-item label="接收应用">
           <Input v-model="form.app" placeholder="默认为esap, 选填" auto-complete="off"></Input>
         </Form-item>            
+        <Form-item label="接收人">
+          <Input v-model="form.touser" placeholder="@all表示全体，可用逗号分隔多个用户，选填"></Input>
+        </Form-item>            
+        <Form-item label="接收部门">
+          <Input v-model="form.toparty" placeholder="@all表示全体，可用逗号分隔多个部门，选填"></Input>
+        </Form-item>            
+        <Form-item label="接收标签">
+          <Input v-model="form.totag" placeholder="@all表示全体，可用逗号分隔多个标签，选填"></Input>
+        </Form-item>         
         <Form-item label="内容">
           <Input type="textarea" autosize v-model="form.content" placeholder="填入消息内容,选填"></Input>
         </Form-item>          
@@ -61,55 +67,20 @@
       stripe
       :data="listShow"
       style="width: 100%">
-      <el-table-column
-        prop="cDate"
-        label="日期"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="toUser"
-        label="接收人"
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="app"
-        label="接收应用"
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="content"
-        show-overflow-tooltip
-        label="内容">
-      </el-table-column>
-      <el-table-column
-        prop="pic"
-        label="图片"
-        show-overflow-tooltip
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="fh"
-        label="文件"
-        show-overflow-tooltip
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="ret"
-        label="发送结果"
-        show-overflow-tooltip
-        width="100">
-      </el-table-column>
-      <el-table-column
-        prop="flag"
-        label="标记"
-        width="80">
-      </el-table-column>
-      <el-table-column label="操作" width="100">
-        <template scope="scope">   
-          <Button
-            size="small"
-            type="error"
-            @click="deleteData(scope.$index, scope.row)">删除</Button>
+      <el-table-column prop="cDate" label="日期" width="180"></el-table-column>
+      <el-table-column prop="app" label="接收应用" width="100"></el-table-column>
+      <el-table-column prop="toUser" label="接收人" width="100"></el-table-column>
+      <el-table-column prop="toParty" label="接收部门" width="100"></el-table-column>
+      <el-table-column prop="toTag" label="接收标签" width="100"></el-table-column>
+      <el-table-column prop="content" show-overflow-tooltip label="内容"></el-table-column>
+      <el-table-column prop="pic" label="图片" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="fh" label="文件" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="ret" label="发送结果" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="flag" label="标记" width="80"></el-table-column>
+      <el-table-column label="操作" width="150">
+        <template scope="scope">
+          <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>
+          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
         </template>
       </el-table-column>
     </el-table>
@@ -135,15 +106,7 @@
         imageUrl: '',
         fileUrl: '',
         dialogFormVisible: false,
-        form: {
-          cdate: '',  
-          touser: '@all',
-          content: '',
-          app: 'esap',
-          pic: '',
-          safe: 0,
-          fh: '',
-        },
+        form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '' },
         form2: [{}],
       }
     },
@@ -172,6 +135,7 @@
         .catch(e => { this.$Message.info(r.data.errmsg)})
       },
       saveData(i,r) {
+        r.flag=0
         this.$http.put(this.token("wxtx")+"&id="+r.id, r)
         .then(r => { 
           if (r.data.result){

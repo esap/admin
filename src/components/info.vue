@@ -15,57 +15,58 @@
 
     <Form :model="form" :label-width="60">
       <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
-        <template v-for="v,k in form.Apps">    
-		  <Row> 
-			<Col :span="1">
-			  <Form-item :label-width="1">
-			  <Button shape="circle" type="text" size="small" @click.native="form.Apps.splice(k,1)">
-			    <Icon :size="20" type="minus-circled" ></Icon>
-			  </Button>
-			  </Form-item>
-			</Col>
-			<Col span="3">
-	          <Form-item label="应用名 - appName">
-	            <Input v-model="v.AppName" placeholder="唯一,必填"></Input>
-	          </Form-item>
-			</Col>
-			<Col span="3">
-	          <Form-item label="类型 - appType">
-	            <Input v-model="v.AppType" placeholder="公众号填pub"></Input>
-	          </Form-item>
-			</Col>
-			<Col span="3">
-	          <Form-item :label-width="50" label="appId">
-	            <Input v-model="v.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
-	          </Form-item>
-			</Col>
-			<Col span="3">
-	          <Form-item :label-width="60" label="agentId">
-				<Input-number :max="9999999" :min="0" v-model="v.AgentId" placeholder="企业号填agentid,公众号填0"></Input-number>
-	          </Form-item>
-			</Col>
-			<Col span="3">
-	          <Form-item label="Secret">
-	            <Input v-model="v.Secret" placeholder="应用或管理组Secret，必填"></Input>
-	          </Form-item>
-			</Col>
-			<Col span="3">
-	          <Form-item label="Token">
-	            <Input v-model="v.Token" placeholder="回调Token"></Input>
-	          </Form-item> 
-			</Col>
-			<Col span="3">          
-	          <Form-item label="AesKey">
-	            <Input v-model="v.EncodingAesKey" placeholder="回调EncodingAesKey"></Input>
-	          </Form-item>
-			</Col>
-			<Col span="1">
-	          <Form-item label="关闭 - Disabled">
-	            <i-switch v-model="v.Disabled"></i-switch>
-	          </Form-item>
-			</Col>
-		  </Row>
-        </template>
+        <!-- <Table stripe :columns="columns1" :data="form.Apps"></Table> -->
+        <el-table
+	      stripe
+	      :data="form.Apps"
+	      style="width: 100%">
+	      <el-table-column prop="app" label="应用名" width="100">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.AppName"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="app" label="类型" width="100">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.AppType"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="app" label="AppId" width="150">	      	
+	        <template scope="scope">
+	        <Input v-model="scope.row.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="app" label="AgentId" width="100">	      	
+	        <template scope="scope">
+	        <Input-number :max="9999999" :min="0" v-model="scope.row.AgentId" placeholder="企业号填agentid,公众号填0"></Input-number>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="app" label="Secret" width="200">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.Secret" show-overflow-tooltip placeholder="应用或管理组Secret，必填"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="app" label="Token" width="100">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.Token" placeholder="回调Token"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="app" label="EncodingAesKey" width="200">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.EncodingAesKey" show-overflow-tooltip placeholder="回调EncodingAesKey"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="app" label="关闭" width="80">	      	
+	        <template scope="scope">
+	          <i-switch v-model="scope.row.Disabled"></i-switch>
+	        </template>
+	      </el-table-column>	      
+	      <el-table-column label="操作" width="150">
+	        <template scope="scope">
+	          <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>
+	          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+	        </template>
+	      </el-table-column>
+	    </el-table>
 
       <Alert class="hr" show-icon>数据库 - database<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Dbs.push({})"></Icon></Alert>
 		<template v-for="v,k in form.Dbs"> 
@@ -215,6 +216,45 @@ export default {
 		modal1: false,
 		tm1:{},
 		pct:0,
+        columns1: [
+            { title: '应用名', key: 'AppName' },
+            { title: '类型 ', key: 'AppType' },
+            { title: 'AppId', key: 'AppId', width: 180 },
+            { title: 'AgentId', key: 'AgentId'},
+            { title: 'Token', key: 'Token' },
+            { title: 'Secret', key: 'Secret', width: 200 },
+            { title: 'EncodingAesKey', key: 'EncodingAesKey', width: 200 },
+            { title: 'Disabled', key: 'Disabled' },           
+            { title: '操作', key: 'action', width: 150, align: 'center', render: (h, params) => {
+            	return h('div', [
+                    h('Button', {
+                        props: {
+                            type: 'primary',
+                            size: 'small'
+                        },
+                        style: {
+                            marginRight: '5px'
+                        },
+                        on: {
+                            click: () => {
+                                this.show(params.index)
+                            }
+                        }
+                    }, '查看'),
+                    h('Button', {
+                        props: {
+                            type: 'error',
+                            size: 'small'
+                        },
+                        on: {
+                            click: () => {
+                                this.remove(params.index)
+                            }
+                        }
+                    }, '删除')
+                ]);
+            } }            
+        ],
 	    options2:  [{
 	      value: 'mssql',
 	      label: 'Sql2005+'
@@ -257,11 +297,17 @@ export default {
 	  }
 	},
 	methods: {
+      show(index) {
+        this.$Modal.info({
+            title: '用户信息',
+            content: `名：${this.form.Apps[index].AppName}<br>类：${this.form.Apps[index].AppType}<br>号：${this.form.Apps[index].AppId}`
+        })
+      },
 	  token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
 	  getData() {
 	    this.$http.get(this.token("config"))
-		  	.then(r=> { this.form=r.data.data })
-			.catch(e=> { console.log(e) })
+		.then(r=> { this.form=r.data.data })
+		.catch(e=> { console.log(e) })
 	  },
 	  saveData() {
 	  	  if(this.form.Pwd1) {
@@ -279,7 +325,7 @@ export default {
 	        }
 	      })
 	      .catch(e=> { this.$Message.info(r.data.errmsg)})
-	  },      
+	  },
 	  restartSrv() {
 	     this.$http.post(this.token("restart"), this.form)
 	     .then(r => {
@@ -287,7 +333,7 @@ export default {
 		         this.modal1 = true
 	         this.$Message.info('操作成功')
 			 this.pct=0
-	         this.tm1 = setInterval(this.gogogo, 200)
+	         this.tm1 = setInterval(this.gogogo, 250)
 	       }else{
 	         this.$Message.info("操作失败，请确认是否install了服务 "+r.data.errmsg)
 	       }
