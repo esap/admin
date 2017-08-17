@@ -1,18 +1,5 @@
 <template>
   <div class="wrap">
-	<Modal width="240"
-	  title="重启ESAP中..." 
-	  style="text-align:center"
-	  v-model="modal1"
-	  :closable="false"
-	  :mask-closable="false">
-      <i-circle :percent="pct" stroke-color="#5cb85c">
-	    <div style="font-size:24px" v-if="pct<100">{{pct}}%</div>
-	    <Icon v-if="pct==100" type="ios-checkmark-empty" size="60" style="color:#5cb85c"></Icon>
-	  </i-circle>
-	  <div slot="footer"></div>
-    </Modal>
-
     <Form :model="form" :label-width="60">
       <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
         <!-- <Table stripe :columns="columns1" :data="form.Apps"></Table> -->
@@ -20,50 +7,52 @@
 	      stripe
 	      :data="form.Apps"
 	      style="width: 100%">
-	      <el-table-column prop="app" label="应用名" width="100">	      	
+	      <el-table-column prop="AppName" label="应用名" width="100">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.AppName"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="app" label="类型" width="100">	      	
+	      <el-table-column prop="AppType" label="类型" width="100">	      	
 	        <template scope="scope">
-	          <Input v-model="scope.row.AppType"></Input>
+	          <Tooltip content="公众号填pub,可选"> 
+	            <Input v-model="scope.row.AppType"></Input>
+	          </Tooltip>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="app" label="AppId" width="150">	      	
+	      <el-table-column prop="AppId" label="AppId" width="150">	      	
 	        <template scope="scope">
 	        <Input v-model="scope.row.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="app" label="AgentId" width="100">	      	
+	      <el-table-column prop="AgentId" label="AgentId" width="100">	      	
 	        <template scope="scope">
 	        <Input-number :max="9999999" :min="0" v-model="scope.row.AgentId" placeholder="企业号填agentid,公众号填0"></Input-number>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="app" label="Secret" width="200">	      	
+	      <el-table-column prop="Secret" label="Secret" width="200">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.Secret" show-overflow-tooltip placeholder="应用或管理组Secret，必填"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="app" label="Token" width="100">	      	
+	      <el-table-column prop="Token" label="Token" width="100">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.Token" placeholder="回调Token"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="app" label="EncodingAesKey" width="200">	      	
+	      <el-table-column prop="EncodingAesKey" label="EncodingAesKey" width="200">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.EncodingAesKey" show-overflow-tooltip placeholder="回调EncodingAesKey"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="app" label="关闭" width="80">	      	
+	      <el-table-column prop="Disabled" label="关闭" width="80">	      	
 	        <template scope="scope">
 	          <i-switch v-model="scope.row.Disabled"></i-switch>
 	        </template>
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
-	          <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>
-	          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+	          <Button size="small" @click="getMenu(scope.row)">菜单</Button>
+	          <Button size="small" type="error" @click="form.Apps.splice(scope.$index, 1)">删除</Button>
 	        </template>
 	      </el-table-column>
 	    </el-table>
@@ -72,7 +61,7 @@
 		<template v-for="v,k in form.Dbs"> 
 		  <Row>
 			<Col :span="1">
-			  <Button shape="circle" type="text" @click.native="form.Dbs.splice(k,1)">
+			  <Button shape="circle" type="text" @click.native="form.Dbs.splice(k, 1)">
 			    <Icon :size="20" type="minus-circled" ></Icon>
 			  </Button>
 			</Col>
@@ -82,8 +71,8 @@
 	          </Form-item>
 	        </Col>
 			<Col :span="4">
-		        <Form-item label="驱动 - DbDriver">
-		          <Select v-model="v.DbDriver" placeholder="请选择">
+		        <Form-item label="驱动 - Driver">
+		          <Select v-model="v.Driver" placeholder="请选择">
 		            <i-option
 		              v-for="item in options2"
 		              :key="item.value"
@@ -100,25 +89,25 @@
 	          </Form-item>
 	        </Col>
 	        <Col :span="3">
-			  <Form-item label="端口 - DbPort">
-	            <Input-number v-model="v.DbPort" placeholder=""></Input-number>
+			  <Form-item label="端口 - Port">
+	            <Input-number v-model="v.Port" placeholder=""></Input-number>
 	          </Form-item>
 	        </Col>
 	        <Col :span="3">
-	        <Form-item label="账号 - User">
-	          <Input v-model="v.User" placeholder=""></Input>
-	        </Form-item>
+		        <Form-item label="账号 - User">
+		          <Input v-model="v.User" placeholder=""></Input>
+		        </Form-item>
 			</Col>
 	        <Col :span="3">
-	        <Form-item label="密码 - Pwd">
-	          <Input v-model="v.Pwd" placeholder=""></Input>
-	        </Form-item>
+		        <Form-item label="密码 - Pwd">
+		          <Input v-model="v.Pwd" placeholder=""></Input>
+		        </Form-item>
 			</Col>
 	        <Col :span="3">
-	        <Form-item label="数据库名 - Db">
-	          <Input v-model="v.DbName" placeholder="">
-			  </Input>
-	        </Form-item>
+		        <Form-item label="数据库名 - Db">
+		          <Input v-model="v.DbName" placeholder="">
+				  </Input>
+		        </Form-item>
 			</Col>
 		  </Row>
 		</template>
@@ -139,8 +128,8 @@
 	          </Form-item>
 	        </Col>
 			<Col :span="5">
-		        <Form-item label="计划类型 - handlername" >
-		          <Select v-model="v.HandlerName" placeholder="请选择">
+		        <Form-item label="类型 - Handler" >
+		          <Select v-model="v.Handler" placeholder="请选择">
 		            <i-option
 		              v-for="item in options3"
 		              :key="item.value"
@@ -172,7 +161,7 @@
 		        </Form-item>  
 	        </Col>
 		    <Col :span="12">      
-		        <Form-item label="Admin密码 - Pwd">
+		        <Form-item label="管理密码 - Pwd">
 		          <Input type="password" v-model="form.Pwd1" placeholder=""></Input>
 		        </Form-item>
 		    </Col>
@@ -204,6 +193,30 @@
       <Button type="warning" @click="restartSrv"><Icon :size="14" type="ios-loop" /> 重启服务</Button>
       <Button type="primary" @click="saveData"><Icon :size="14" type="ios-download-outline" /> 保存</Button>
     </Form>
+
+    <Modal width="240"
+	  title="重启ESAP中..." 
+	  style="text-align:center"
+	  v-model="modal1"
+	  :closable="false"
+	  :mask-closable="false">
+      <i-circle :percent="pct" stroke-color="#5cb85c">
+	    <div style="font-size:24px" v-if="pct<100">{{pct}}%</div>
+	    <Icon v-if="pct==100" type="ios-checkmark-empty" size="60" style="color:#5cb85c"></Icon>
+	  </i-circle>
+	  <div slot="footer"></div>
+    </Modal>
+
+	<Modal width="640"
+	  title="设置菜单" 
+	  style="text-align:center"
+	  v-model="modal2">
+		<Input type="textarea" :autosize="true" v-model="menu"></Input>
+		<div slot="footer" style="color: red">{{menuErr}}
+		  <Button @click="deleteMenu" type="error">删除</Button>
+		  <Button @click="saveMenu" type="primary">保存</Button>
+		</div>
+    </Modal>
   </div>
 </template>
 
@@ -214,47 +227,12 @@ export default {
 	  return {
 	    form: {},
 		modal1: false,
-		tm1:{},
-		pct:0,
-        columns1: [
-            { title: '应用名', key: 'AppName' },
-            { title: '类型 ', key: 'AppType' },
-            { title: 'AppId', key: 'AppId', width: 180 },
-            { title: 'AgentId', key: 'AgentId'},
-            { title: 'Token', key: 'Token' },
-            { title: 'Secret', key: 'Secret', width: 200 },
-            { title: 'EncodingAesKey', key: 'EncodingAesKey', width: 200 },
-            { title: 'Disabled', key: 'Disabled' },           
-            { title: '操作', key: 'action', width: 150, align: 'center', render: (h, params) => {
-            	return h('div', [
-                    h('Button', {
-                        props: {
-                            type: 'primary',
-                            size: 'small'
-                        },
-                        style: {
-                            marginRight: '5px'
-                        },
-                        on: {
-                            click: () => {
-                                this.show(params.index)
-                            }
-                        }
-                    }, '查看'),
-                    h('Button', {
-                        props: {
-                            type: 'error',
-                            size: 'small'
-                        },
-                        on: {
-                            click: () => {
-                                this.remove(params.index)
-                            }
-                        }
-                    }, '删除')
-                ]);
-            } }            
-        ],
+		modal2: false,
+		tm1: {},
+		menu: '',
+		menuApp: '',
+		menuErr: '',
+		pct: 0,
 	    options2:  [{
 	      value: 'mssql',
 	      label: 'Sql2005+'
@@ -297,13 +275,48 @@ export default {
 	  }
 	},
 	methods: {
-      show(index) {
-        this.$Modal.info({
-            title: '用户信息',
-            content: `名：${this.form.Apps[index].AppName}<br>类：${this.form.Apps[index].AppType}<br>号：${this.form.Apps[index].AppId}`
-        })
-      },
 	  token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
+	  getMenu(obj) {
+	  	this.modal2=true
+	  	this.menu=''
+	  	this.menuErr=''
+	  	this.menuApp=obj.AppName
+	  	this.$http.get(this.token("menu")+"&app="+obj.AppName)
+	  	.then(r=>{ 
+	  	  if (r.data.result){
+	  	  	  this.menu=JSON.stringify(r.data.data, null, 4)
+	  	  } else {
+	  	  	this.menuErr=r.data.errmsg
+	  	  } 
+	  	})
+	  	.catch(e=> { console.log(e) })
+	  },
+	  saveMenu() {
+	  	this.$http.post(this.token("menu")+"&app="+this.menuApp, JSON.parse(this.menu))
+	  	.then(r=>{
+		  	if (r.data.result){
+	  		  this.modal2=false
+	          this.$Message.info('保存成功')
+	          JSON.stringify(r.data.data, null, 4)
+	        }else{
+	          this.menuErr=r.data.errmsg
+	        }
+	     })
+	  	.catch(e=> { console.log(e) })
+	  },
+	  deleteMenu() {
+	  	this.$http.delete(this.token("menu")+"&app="+this.menuApp)
+	  	.then(r=>{
+			if (r.data.result){
+	  		  this.modal2=false
+	          this.$Message.info('删除成功')
+	          JSON.stringify(r.data.data, null, 4)
+	        }else{
+	          this.menuErr=r.data.errmsg
+	        }
+	     })
+	  	.catch(e=> { console.log(e) })
+	  },
 	  getData() {
 	    this.$http.get(this.token("config"))
 		.then(r=> { this.form=r.data.data })

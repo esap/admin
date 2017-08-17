@@ -23,10 +23,10 @@
           <Input v-model="form.touser" placeholder="@all表示全体，可用逗号分隔多个用户，选填"></Input>
         </Form-item>            
         <Form-item label="接收部门">
-          <Input v-model="form.toparty" placeholder="@all表示全体，可用逗号分隔多个部门，选填"></Input>
+          <Input v-model="form.toparty" placeholder="可用逗号分隔多个部门，选填"></Input>
         </Form-item>            
         <Form-item label="接收标签">
-          <Input v-model="form.totag" placeholder="@all表示全体，可用逗号分隔多个标签，选填"></Input>
+          <Input v-model="form.totag" placeholder="可用逗号分隔多个标签，选填"></Input>
         </Form-item>         
         <Form-item label="内容">
           <Input type="textarea" autosize v-model="form.content" placeholder="填入消息内容,选填"></Input>
