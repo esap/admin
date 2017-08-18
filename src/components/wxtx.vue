@@ -166,11 +166,11 @@
         this.form['fh']=this.fileUrl     
         this.$http.post(this.token("wxtx"), this.form)
         .then(r => { 
-          if (r.data.result){
+          if (r.data.result) {
             this.$Message.info('新增成功')
             this.dialogFormVisible = false              
             this.getData()
-          }else{
+          } else {
             this.$Message.info(r.data.errmsg)
           }
         })

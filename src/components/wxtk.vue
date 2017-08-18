@@ -25,6 +25,11 @@
         width="180">
       </el-table-column>
       <el-table-column
+        prop="app"
+        label="应用"
+        width="180">
+      </el-table-column>
+      <el-table-column
         prop="pDesc"
         label="描述">
       </el-table-column> 

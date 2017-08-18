@@ -14,42 +14,46 @@
     <Modal title="新增微信查询" v-model="dialogFormVisible">
       <Form :model="form" :label-width="80">
         <Form-item label="查询名称">
-          <Input v-model="form.qname" placeholder="查询关键字，必填" auto-complete="off"></Input>
+          <Input v-model="form.name" placeholder="查询关键字，必填" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="菜单key">
           <Input v-model="form.mkey" placeholder="微信自定义菜单key,选填" auto-complete="off"></Input>
         </Form-item>
-        <Form-item label="权限">
-          <Input v-model="form.uid" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
+        <Form-item label="用户权限">
+          <Input v-model="form.aclUser" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="部门权限">
+          <Input v-model="form.aclDept" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="标签权限">
+          <Input v-model="form.aclTag" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
         </Form-item>
         <Row>
           <Col :span="8">
-            <Form-item label="仅媒体">
-              <Input-number v-model="form.mediaonly" placeholder="填1时仅返回图片或文件,选填" auto-complete="off"></Input-number>
+            <Form-item label="模式">
+              <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
+                <Input-number v-model="form.mode"></Input-number>
+              </Tooltip>
             </Form-item>
-          </Col>
-          <Col :span="8">
-          <Form-item label="表单模式">
-            <el-tooltip class="item" effect="dark" content="=2，新建表单模式，SQL为模版名称。=3，打开表单模式，SQL必须返回两个字段,第二个为rcid" placement="top-start">
-              <Input-number v-model="form.isupdate" placeholder="选填" auto-complete="off"></Input-number>
-            </el-tooltip>
-          </Form-item>
-          </Col>
+          </Col>      
           <Col :span="8">
           <Form-item label="保密消息">
             <Input-number v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
           </Form-item>
           </Col> 
         </Row>
-        <Form-item label="描述(提示)">
-          <el-tooltip class="item" effect="dark" content="进入提示，可使用sql,选填" placement="top-start">      
-            <Input type="textarea" autosize v-model="form.qcmts" placeholder="选填" auto-complete="off"></Input>
+        <Form-item label="进入提示">
+          <el-tooltip class="item" effect="dark" content="可使用sql,选填" placement="top-start">      
+            <Input type="textarea" autosize v-model="form.entermsg" placeholder="选填" auto-complete="off"></Input>
           </el-tooltip>
         </Form-item>
-        <Form-item label="sql">
+        <Form-item label="模板">
           <el-tooltip class="item" effect="dark" content="支持多重select查询，必填" placement="top-start">      
-            <Input type="textarea" autosize v-model="form.sqlstr" placeholder="必填" auto-complete="off"></Input>
+            <Input type="textarea" autosize v-model="form.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
+        </Form-item>
+        <Form-item label="应用">
+            <Input v-model="form.app" placeholder="数据源配置，选填" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="数据源">
             <Input v-model="form.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
@@ -58,7 +62,7 @@
             <Input v-model="form.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
         </Form-item> 
         <Form-item label="图片链接">
-            <Input v-model="form.url" placeholder="文章封面图片链接，选填" auto-complete="off"></Input>
+            <Input v-model="form.pic" placeholder="文章封面图片链接，选填" auto-complete="off"></Input>
         </Form-item>      
       </Form>
       <div slot="footer" class="dialog-footer">
@@ -82,42 +86,81 @@
         label="功能"
         width="150">
         <template scope="scope">
-          <Input v-model="scope.row.qName"></Input>
+          <Input v-model="scope.row.name"></Input>
         </template>
       </el-table-column>
       <el-table-column
-        label="描述"
+        label="进入提醒"
         width="240">
         <template scope="scope">
-          <Input type="textarea" autosize v-model="scope.row.qCmts"></Input>
+          <Input type="textarea" autosize v-model="scope.row.entermsg"></Input>
         </template>
       </el-table-column>
       <el-table-column
-        label="sql"
+        label="模板"
         width="360">
         <template scope="scope">
-          <Input type="textarea" autosize v-model="scope.row.sqlStr"></Input>
+          <Input type="textarea" autosize v-model="scope.row.tmpl"></Input>
         </template>
       </el-table-column>
       <el-table-column
-        label="权限"
+        label="用户权限"
         width="100">
         <template scope="scope">
-          <Input v-model="scope.row.uid"></Input>
+          <Input v-model="scope.row.aclUser"></Input>
         </template>
       </el-table-column>
       <el-table-column
-        label="仅媒体"
+      <el-table-column
+        label="部门权限"
         width="100">
         <template scope="scope">
-          <Input-number v-model="scope.row.mediaOnly"></Input-number>
+          <Input v-model="scope.row.aclDept"></Input>
         </template>
       </el-table-column>
       <el-table-column
-        label="表单模式"
+      <el-table-column
+        label="标签权限"
         width="100">
         <template scope="scope">
-          <Input-number v-model="scope.row.isUpdate"></Input-number>
+          <Input v-model="scope.row.aclTag"></Input>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="模式"
+        width="100">
+        <template scope="scope">
+          <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
+            <Input-number :max="9999999" :min="0" v-model="scope.row.mode"></Input-number>
+          </Tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="专用查询"
+        width="100">
+        <template scope="scope">
+          <Input v-model="scope.row.app"></Input>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="数据源"
+        width="100">
+        <template scope="scope">
+          <Input v-model="scope.row.db"></Input>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="原文链接"
+        width="100">
+        <template scope="scope">
+          <Input v-model="scope.row.url"></Input>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="原文封面"
+        width="100">
+        <template scope="scope">
+          <Input v-model="scope.row.pic"></Input>
         </template>
       </el-table-column>
       <el-table-column
@@ -155,14 +198,19 @@
           currentPage:1,
           dialogFormVisible: false,
           form: {
-            uid: '@all',  
-            qname: '',
             mkey: '',
-            mediaonly: 0,
-            isupdate: 0,
-            safe: 0,
-            qcmts: '',
-            sqlstr: ''
+            name: '',
+            entermsg: '',
+            tmpl: '',
+            mode: 0,
+            aclUser: '@all',  
+            aclDept: '',  
+            aclTag: '',  
+            app: '',
+            db: '',
+            url: '',
+            pic: '',
+            safe: 0
           }
         }
       },

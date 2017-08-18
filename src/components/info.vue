@@ -2,7 +2,6 @@
   <div class="wrap">
     <Form :model="form" :label-width="60">
       <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
-        <!-- <Table stripe :columns="columns1" :data="form.Apps"></Table> -->
         <el-table
 	      stripe
 	      :data="form.Apps"
@@ -26,7 +25,9 @@
 	      </el-table-column>
 	      <el-table-column prop="AgentId" label="AgentId" width="100">	      	
 	        <template scope="scope">
-	        <Input-number :max="9999999" :min="0" v-model="scope.row.AgentId" placeholder="企业号填agentid,公众号填0"></Input-number>
+	          <Tooltip content="通讯录填9999999(7个9)，公众号填0">
+	            <Input-number :max="9999999" :min="0" v-model="scope.row.AgentId" placeholder="企业号填agentid,公众号填0"></Input-number>
+	          </Tooltip>
 	        </template>
 	      </el-table-column>
 	      <el-table-column prop="Secret" label="Secret" width="200">	      	
@@ -162,29 +163,34 @@
 	        </Col>
 		    <Col :span="12">      
 		        <Form-item label="管理密码 - Pwd">
-		          <Input type="password" v-model="form.Pwd1" placeholder=""></Input>
+		          <Input type="password" v-model="Pwd1" placeholder=""></Input>
 		        </Form-item>
 		    </Col>
 		</Row>
 		<Row>
-		    <Col :span="4">
+		    <Col :span="3">
+		        <Form-item label="使用ES库 - IsEs">
+		          <i-switch v-model="form.IsEs" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+		    <Col :span="3">
 		        <Form-item label="提醒重试 - ReTryMsg">
-		          <i-switch class="right" v-model="form.ReTryMsg" placeholder=""></i-switch>
+		          <i-switch v-model="form.ReTryMsg" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
-		    <Col :span="4">
+		    <Col :span="3">
 		        <Form-item label="进入提示 - EnterMsg">
-		          <i-switch class="right" v-model="form.ShowFuncListEnter" placeholder=""></i-switch>
+		          <i-switch v-model="form.ShowFuncListEnter" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
-		    <Col :span="4">
+		    <Col :span="3">
 		        <Form-item label="自动认证 - NeedWxOAuth2">
-		          <i-switch class="right" v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
+		          <i-switch v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
-		    <Col :span="4">
+		    <Col :span="3">
 		        <Form-item label="调试模式 - Debug">
-		          <i-switch class="right" v-model="form.Debug"></i-switch>
+		          <i-switch v-model="form.Debug"></i-switch>
 		        </Form-item>
 			</Col>
 		</Row>
@@ -212,7 +218,10 @@
 	  style="text-align:center"
 	  v-model="modal2">
 		<Input type="textarea" :autosize="true" v-model="menu"></Input>
-		<div slot="footer" style="color: red">{{menuErr}}
+		<div slot="footer" style="color: red">		  
+		  <Alert v-show="menuErr" style="text-align:left" type="error">{{menuErr}}</Alert>
+		  <Button type="success"><a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141013" target="_blank">公众号帮助</a></Button>
+		  <Button type="success"><a href="https://work.weixin.qq.com/api/doc#10786" target="_blank">企业号帮助</a></Button>
 		  <Button @click="deleteMenu" type="error">删除</Button>
 		  <Button @click="saveMenu" type="primary">保存</Button>
 		</div>
@@ -229,6 +238,7 @@ export default {
 		modal1: false,
 		modal2: false,
 		tm1: {},
+		Pwd1: '',
 		menu: '',
 		menuApp: '',
 		menuErr: '',
@@ -286,7 +296,7 @@ export default {
 	  	  if (r.data.result){
 	  	  	  this.menu=JSON.stringify(r.data.data, null, 4)
 	  	  } else {
-	  	  	this.menuErr=r.data.errmsg
+	  	  	this.menuErr='获取'+r.data.errmsg
 	  	  } 
 	  	})
 	  	.catch(e=> { console.log(e) })
@@ -299,7 +309,7 @@ export default {
 	          this.$Message.info('保存成功')
 	          JSON.stringify(r.data.data, null, 4)
 	        }else{
-	          this.menuErr=r.data.errmsg
+	          this.menuErr='保存'+r.data.errmsg
 	        }
 	     })
 	  	.catch(e=> { console.log(e) })
@@ -312,7 +322,7 @@ export default {
 	          this.$Message.info('删除成功')
 	          JSON.stringify(r.data.data, null, 4)
 	        }else{
-	          this.menuErr=r.data.errmsg
+	          this.menuErr='删除'+r.data.errmsg
 	        }
 	     })
 	  	.catch(e=> { console.log(e) })
@@ -323,9 +333,8 @@ export default {
 		.catch(e=> { console.log(e) })
 	  },
 	  saveData() {
-	  	  if(this.form.Pwd1) {
-	  	  	this.form.Pwd=md5(this.form.Pwd1)
-	  	  	this.form.Pwd1=""
+	  	  if(this.Pwd1) {
+	  	  	this.form.Pwd=md5(this.Pwd1)
 	  	  }
 	      this.$http.post(this.token("config"), this.form)
 	      .then(r => {
@@ -378,5 +387,8 @@ export default {
 }
 .hr {
   box-shadow: 3px 3px 3px #999;
+}
+a {
+	color: #fff;
 }
 </style>
