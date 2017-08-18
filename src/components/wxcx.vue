@@ -17,7 +17,7 @@
           <Input v-model="form.name" placeholder="查询关键字，必填" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="菜单key">
-          <Input v-model="form.mkey" placeholder="微信自定义菜单key,选填" auto-complete="off"></Input>
+          <Input v-model="form.mKey" placeholder="微信自定义菜单key,选填" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="用户权限">
           <Input v-model="form.aclUser" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
@@ -48,7 +48,7 @@
           </el-tooltip>
         </Form-item>
         <Form-item label="模板">
-          <el-tooltip class="item" effect="dark" content="支持多重select查询，必填" placement="top-start">      
+          <el-tooltip class="item" effect="dark" content="支持多重select/update/insert/delete，必填" placement="top-start">      
             <Input type="textarea" autosize v-model="form.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
         </Form-item>
@@ -198,7 +198,7 @@
           currentPage:1,
           dialogFormVisible: false,
           form: {
-            mkey: '',
+            mKey: '',
             name: '',
             entermsg: '',
             tmpl: '',

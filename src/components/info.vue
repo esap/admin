@@ -52,7 +52,7 @@
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
-	          <Button size="small" @click="getMenu(scope.row)">菜单</Button>
+	          <Button v-show="scope.row.AgentId<3000000" size="small" @click="getMenu(scope.row)">菜单</Button>
 	          <Button size="small" type="error" @click="form.Apps.splice(scope.$index, 1)">删除</Button>
 	        </template>
 	      </el-table-column>
@@ -169,11 +169,6 @@
 		</Row>
 		<Row>
 		    <Col :span="3">
-		        <Form-item label="使用ES库 - IsEs">
-		          <i-switch v-model="form.IsEs" placeholder=""></i-switch>
-		        </Form-item>
-			</Col>
-		    <Col :span="3">
 		        <Form-item label="提醒重试 - ReTryMsg">
 		          <i-switch v-model="form.ReTryMsg" placeholder=""></i-switch>
 		        </Form-item>
@@ -186,6 +181,11 @@
 		    <Col :span="3">
 		        <Form-item label="自动认证 - NeedWxOAuth2">
 		          <i-switch v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+		    <Col :span="3">
+		        <Form-item label="使用ES库 - IsEs">
+		          <i-switch v-model="form.IsEs" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
 		    <Col :span="3">
