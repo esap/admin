@@ -267,8 +267,17 @@ export default {
 	      label: 'excel'
 	    }],
 		options3:  [{
+	      value: 'QueryTask',
+	      label: '查询任务'
+	    }, {
+	      value: 'QueryNewsTask',
+	      label: '新闻任务' 
+	    }, {
+	      value: 'ExecTask',
+	      label: '执行任务' 
+	    }, {
 	      value: 'WxdkTask',
-	      label: '微信打卡'
+	      label: '微信打卡' 
 	    }, {
 	      value: 'WxspTask',
 	      label: '微信审批'
