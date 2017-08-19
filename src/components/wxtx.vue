@@ -67,16 +67,16 @@
       stripe
       :data="listShow"
       style="width: 100%">
-      <el-table-column prop="cDate" label="日期" width="180"></el-table-column>
-      <el-table-column prop="app" label="接收应用" width="100"></el-table-column>
-      <el-table-column prop="toUser" label="接收人" width="100"></el-table-column>
-      <el-table-column prop="toParty" label="接收部门" width="100"></el-table-column>
-      <el-table-column prop="toTag" label="接收标签" width="100"></el-table-column>
+      <el-table-column sortable prop="cDate" label="日期" width="180"></el-table-column>
+      <el-table-column sortable prop="app" label="接收应用" width="120"></el-table-column>
+      <el-table-column sortable prop="toUser" label="接收人" width="100"></el-table-column>
+      <el-table-column sortable prop="toParty" label="接收部门" width="120"></el-table-column>
+      <el-table-column sortable prop="toTag" label="接收标签" width="120"></el-table-column>
       <el-table-column prop="content" show-overflow-tooltip label="内容"></el-table-column>
       <el-table-column prop="pic" label="图片" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="fh" label="文件" show-overflow-tooltip width="100"></el-table-column>
-      <el-table-column prop="ret" label="发送结果" show-overflow-tooltip width="100"></el-table-column>
-      <el-table-column prop="flag" label="标记" width="80"></el-table-column>
+      <el-table-column sortable prop="ret" label="发送结果" show-overflow-tooltip width="120"></el-table-column>
+      <el-table-column sortable prop="flag" label="标记" width="100"></el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
           <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>

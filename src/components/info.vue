@@ -45,7 +45,7 @@
 	          <Input v-model="scope.row.EncodingAesKey" show-overflow-tooltip placeholder="回调EncodingAesKey"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="Disabled" label="关闭" width="80">	      	
+	      <el-table-column prop="Disabled" label="禁用" width="80">	      	
 	        <template scope="scope">
 	          <i-switch v-model="scope.row.Disabled"></i-switch>
 	        </template>
@@ -71,7 +71,7 @@
 	            <Input v-model="v.DbName" placeholder="唯一标识，必填"></Input>
 	          </Form-item>
 	        </Col>
-			<Col :span="4">
+			<Col :span="3">
 		        <Form-item label="驱动 - Driver">
 		          <Select v-model="v.Driver" placeholder="请选择">
 		            <i-option
@@ -101,26 +101,31 @@
 			</Col>
 	        <Col :span="3">
 		        <Form-item label="密码 - Pwd">
-		          <Input v-model="v.Pwd" placeholder=""></Input>
+		          <Input type="password" v-model="v.Pwd" placeholder=""></Input>
 		        </Form-item>
 			</Col>
-	        <Col :span="3">
+	        <Col :span="2">
 		        <Form-item label="数据库名 - Db">
-		          <Input v-model="v.DbName" placeholder="">
+		          <Input v-model="v.Db" placeholder="">
 				  </Input>
 		        </Form-item>
 			</Col>
+	        <Col span="1">
+	          <Form-item label="禁用 - Disabled">
+	            <i-switch v-model="v.Disabled"></i-switch>
+	          </Form-item>
+			</Col>
 		  </Row>
-		</template>
+		</template>q
 		
 	  <Alert class="hr" show-icon><Icon type="ios-timer-outline"></Icon> 计划任务 - task<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Tasks.push({})"></Icon></Alert>
 		<template v-for="v,k in form.Tasks"> 
 		  <Row>
 		  	<Col :span="1">
 			  <Form-item :label-width="1">
-			  <Button shape="circle" type="text" @click.native="form.Tasks.splice(k,1)">
-			    <Icon :size="20" type="minus-circled" ></Icon>
-			  </Button>
+				  <Button shape="circle" type="text" @click.native="form.Tasks.splice(k,1)">
+				    <Icon :size="20" type="minus-circled" ></Icon>
+				  </Button>
 			  </Form-item>
 			</Col>
 	        <Col :span="5">
@@ -161,10 +166,17 @@
 		          <Input v-model="form.Host" placeholder=""></Input>
 		        </Form-item>  
 	        </Col>
-		    <Col :span="12">      
+		    <Col :span="6">      
 		        <Form-item label="管理密码 - Pwd">
 		          <Input type="password" v-model="Pwd1" placeholder=""></Input>
 		        </Form-item>
+		    </Col>
+		    <Col :span="6"> 
+			  <Tooltip content="同步计划的队列间隔，最低100毫秒">      
+		        <Form-item label="同步间隔(毫秒)">
+		          <Input-number :min="100" v-model="form.SyncDelay"></Input-number>
+		        </Form-item>
+			  </Tooltip>
 		    </Col>
 		</Row>
 		<Row>
