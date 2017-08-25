@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.userName">
+  <div>
     <Page
       @on-page-size-change="handleSizeChange"
       @on-change="handleCurrentChange"
@@ -7,8 +7,8 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-      <Button @click="getData"><Icon :size="14" type="ios-reload" />刷新</Button>
-      <Button @click="dialogFormVisible = true"><Icon :size="14" type="plus-circled" />新增</Button>
+      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+      <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
     </Page>
 
     <Modal title="新增微信提醒" v-model="dialogFormVisible">
@@ -104,6 +104,7 @@
         currentPage:1,
         pagesize:10,
         imageUrl: '',
+        loading: false,
         fileUrl: '',
         dialogFormVisible: false,
         form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '' },
@@ -114,16 +115,21 @@
       listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
     },
     methods: {
-      token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
       handleSizeChange(v) { this.pagesize=v },
       handleCurrentChange(v) { this.currentPage=v },
       getData() {
-        this.$http.get(this.token("wxtx"))
-		  	.then(r=> { this.list=r.data.data[0] })
-        .catch(e => { console.log(e) })
+        this.$Loading.start()
+        this.loading = true
+        this.$http.get(this.$tokenadmin("wxtx"))
+		  	.then(r=> { 
+            if (r.data.result)this.list=r.data.data[0]
+            this.loading = false
+            this.$Loading.finish();
+          })
+          .catch(e => { this.$Loading.error(); this.loading = false })
       },
       deleteData(i,r) {
-        this.$http.delete(this.token("wxtx")+"&id="+r.id)
+        this.$http.delete(this.$tokenadmin("wxtx")+"&id="+r.id)
         .then(r => { 
           if (r.data.result){
             this.$Message.info('删除成功')
@@ -136,7 +142,7 @@
       },
       saveData(i,r) {
         r.flag=0
-        this.$http.put(this.token("wxtx")+"&id="+r.id, r)
+        this.$http.put(this.$tokenadmin("wxtx")+"&id="+r.id, r)
         .then(r => { 
           if (r.data.result){
             this.$Message.info('保存成功')
@@ -164,7 +170,7 @@
       addData() {
         this.form['pic']=this.imageUrl     
         this.form['fh']=this.fileUrl     
-        this.$http.post(this.token("wxtx"), this.form)
+        this.$http.post(this.$tokenadmin("wxtx"), this.form)
         .then(r => { 
           if (r.data.result) {
             this.$Message.info('新增成功')

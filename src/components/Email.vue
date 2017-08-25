@@ -7,56 +7,30 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-      <Button @click="getData"><Icon :size="14" type="ios-reload" />刷新</Button>
+      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
     </Page>
 
-    <el-table
-	  v-if="$store.state.userName"
+    <el-table v-if="$store.state.userName"
       stripe border
       :data="list"
       style="width: 100%">
-      <el-table-column
-        prop="cDate"
-        label="日期"
-        width="180">
+      <el-table-column prop="cDate" label="日期" width="180">
       </el-table-column>
-      <el-table-column
-        prop="mailTo"
-        label="收件人"
-        width="100">
+      <el-table-column prop="mailTo" label="收件人" width="100">
       </el-table-column>
-      <el-table-column
-        prop="Subject"
-        label="主题"
-        width="150">
+      <el-table-column prop="Subject" label="主题" width="150">
       </el-table-column>
-      <el-table-column
-        prop="Content"
-        label="内容">
+      <el-table-column prop="Content" label="内容">
       </el-table-column>
-      <el-table-column
-        prop="Pic"
-        show-overflow-tooltip
-        width="100"
-        label="图片">
+      <el-table-column prop="Pic" show-overflow-tooltip width="100" label="图片">
       </el-table-column>
-      <el-table-column
-        prop="Files"
-        show-overflow-tooltip
-        width="100"
-        label="文件">
+      <el-table-column prop="Files" show-overflow-tooltip width="100" label="文件">
       </el-table-column>
-      <el-table-column
-        prop="flag"
-        label="标记"
-        width="80">
+      <el-table-column prop="flag" label="标记" width="80">
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">          
-          <el-button
-            size="small"
-            type="danger"
-            @click="deleteData(scope.$index, scope.row)">删除</el-button>
+          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,20 +52,26 @@
         return {
           list: [],
           pagesize: 10,
+          loading: false,
           currentPage: 1
         }
       },
       methods: {
-        token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
         handleSizeChange(v) { this.pagesize=v },
         handleCurrentChange(v) { this.currentPage=v },
         getData() {
-          this.$http.get(this.token("esmail"))
-          .then(r=> { this.list=r.data.data[0] })
-          .catch(e => { console.log(e) })
-        },       
+          this.$Loading.start()
+          this.loading = false
+          this.$http.get(this.$tokenadmin("esmail"))
+          .then(r=> { 
+            if (r.data.result)this.list=r.data.data[0]
+            this.$Loading.finish()
+            this.loading = false
+          })
+          .catch(e => { this.$Loading.error(); this.loading = false })
+        },          
         deleteData(i,r) {
-          this.$http.delete(this.token("esmail")+"&id="+r.id)
+          this.$http.delete(this.$tokenadmin("esmail")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })

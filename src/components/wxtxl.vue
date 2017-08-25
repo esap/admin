@@ -7,7 +7,7 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-	  <Button @click="getData"><Icon :size="14" type="ios-reload" />刷新</Button>
+      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
     </Page>
 
     <el-table
@@ -38,18 +38,25 @@
       data() {
         return {
           list: [],
-		  currentPage:1,
+		      currentPage:1,
           pagesize:10,
+          loading: false,
         }
       },
       methods: {
-		handleSizeChange(v) { this.pagesize=v },
+		    handleSizeChange(v) { this.pagesize=v },
       	handleCurrentChange(v) { this.currentPage=v },
         getData() {
-          this.$http.get(this.$store.state.adminUrl +"userlist?token="+sessionStorage.getItem("token"))
-  		  	.then(r=> { this.list=r.data.UserList })
-  			  .catch(e => { console.log(e) })
-        }
+          this.$Loading.start()
+          this.loading = true
+          this.$http.get(this.$tokenadmin("userlist"))
+          .then(r=> { 
+            this.list=r.data.UserList
+            this.$Loading.finish()
+            this.loading = false
+          })
+          .catch(e => { this.$Loading.error(); this.loading = false })
+        },
       },
       mounted(){
         this.getData()

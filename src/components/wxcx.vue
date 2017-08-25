@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.state.userName">
+  <div>
     <Page
       @on-page-size-change="handleSizeChange"
       @on-change="handleCurrentChange"
@@ -7,8 +7,8 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-      <Button @click="getData"><Icon :size="14" type="ios-reload" />刷新</Button>
-      <Button @click="dialogFormVisible = true"><Icon :size="14" type="plus-circled" />新增</Button>
+      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+      <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
     </Page>
 
     <Modal title="新增微信查询" v-model="dialogFormVisible">
@@ -75,97 +75,69 @@
       stripe 
       :data="listShow"
       style="width: 100%">   
-      <el-table-column
-        label="菜单"
-        width="100">
+      <el-table-column label="菜单" width="100">
         <template scope="scope">
           <Input v-model="scope.row.mKey"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="功能"
-        width="150">
+      <el-table-column label="功能" width="150">
         <template scope="scope">
           <Input v-model="scope.row.name"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="进入提醒"
-        width="240">
+      <el-table-column label="进入提醒" width="240">
         <template scope="scope">
           <Input type="textarea" autosize v-model="scope.row.entermsg"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="模板"
-        width="360">
+      <el-table-column label="模板" width="360">
         <template scope="scope">
           <Input type="textarea" autosize v-model="scope.row.tmpl"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="用户权限"
-        width="100">
+      <el-table-column label="用户权限" width="100">
         <template scope="scope">
           <Input v-model="scope.row.aclUser"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-      <el-table-column
-        label="部门权限"
-        width="100">
+      <el-table-column label="部门权限" width="100">
         <template scope="scope">
           <Input v-model="scope.row.aclDept"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-      <el-table-column
-        label="标签权限"
-        width="100">
+      <el-table-column label="标签权限" width="100">
         <template scope="scope">
           <Input v-model="scope.row.aclTag"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="模式"
-        width="100">
+      <el-table-column label="模式" width="100">
         <template scope="scope">
           <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
             <Input-number :max="9999999" :min="0" v-model="scope.row.mode"></Input-number>
           </Tooltip>
         </template>
       </el-table-column>
-      <el-table-column
-        label="专用查询"
-        width="100">
+      <el-table-column label="专用查询" width="100">
         <template scope="scope">
           <Input v-model="scope.row.app"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="数据源"
-        width="100">
+      <el-table-column label="数据源" width="100">
         <template scope="scope">
           <Input v-model="scope.row.db"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="原文链接"
-        width="100">
+      <el-table-column label="原文链接" width="100">
         <template scope="scope">
           <Input v-model="scope.row.url"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="原文封面"
-        width="100">
+      <el-table-column label="原文封面" width="100">
         <template scope="scope">
           <Input v-model="scope.row.pic"></Input>
         </template>
       </el-table-column>
-      <el-table-column
-        label="保密"
-        width="100">
+      <el-table-column label="保密" width="100">
         <template scope="scope">
           <Input-number v-model="scope.row.safe"></Input-number>
         </template>
@@ -197,6 +169,7 @@
           pagesize:10,
           currentPage:1,
           dialogFormVisible: false,
+          loading: false,
           form: {
             mKey: '',
             name: '',
@@ -215,21 +188,24 @@
         }
       },
       computed:{
-        listShow() {
-          return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize)
-        }
+        listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
       },
       methods: {
-        token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
         handleSizeChange(val) { this.pagesize=val },
         handleCurrentChange(val) { this.currentPage=val },
         getData() {
-          this.$http.get(this.token("wxcx"))
-  		  	.then(r => { this.list=r.data.data[0] })
-  			  .catch(e => { console.log(e) })
+          this.$Loading.start()
+          this.loading = true
+          this.$http.get(this.$tokenadmin("wxcx"))
+  		  	.then(r=> { 
+            if (r.data.result)this.list=r.data.data[0]
+            this.loading = false
+            this.$Loading.finish();
+          })
+          .catch(e => { this.$Loading.error(); this.loading = false })
         },
         deleteData(i,r) {
-          this.$http.delete(this.token("wxcx")+"&id="+r.id)
+          this.$http.delete(this.$tokenadmin("wxcx")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })
@@ -241,7 +217,7 @@
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },      
         saveData(i,r) {
-          this.$http.put(this.token("wxcx")+"&id="+r.id, r)
+          this.$http.put(this.$tokenadmin("wxcx")+"&id="+r.id, r)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '保存成功' })             
@@ -253,7 +229,7 @@
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },
         addData(){          
-          this.$http.post(this.token("wxcx"), this.form)
+          this.$http.post(this.$tokenadmin("wxcx"), this.form)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '新增成功' })            

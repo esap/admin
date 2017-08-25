@@ -1,9 +1,9 @@
 <template>
-  <div id="app">
-  	<!-- 登陆 -->
-	<Modal title="登陆"
+<div id="app" class="layout" :class="{'layout-hide-text': spanLeft < 5}">
+	<!-- 登陆 -->
+	<Modal title="登陆ESAP云平台[3.0]"
 	  :closable="false"
-  	  :mask-closable="false"
+	  :mask-closable="false"
 	  v-model="notLogin">
 	  <Form :model="form">
 	    <Form-item label="账号">
@@ -18,28 +18,72 @@
 	    </Form-item>
 	  </Form>
 	  <span slot="footer">
-	    <Button type="primary" @click.native="doLogin">确 定</Button>
+	    <Button type="primary" @click="doLogin">确 定</Button>
 	  </span>
 	</Modal>
-	<!-- 内容 -->	
-	<div v-if="$store.getters.isLogin">
-		<el-menu router theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-		  <el-menu-item index="info">ESAP3.0</el-menu-item>    
-		  <el-menu-item index="wxtx">提醒</el-menu-item>
-		  <el-menu-item index="wxcx">查询</el-menu-item>
-		  <el-menu-item index="wxtk">图库</el-menu-item>
-		  <el-menu-item index="wxtxl">通讯录</el-menu-item>
-		  <el-menu-item index="email">Email</el-menu-item>
-		  <el-menu-item index="log">日志</el-menu-item>
-		  <el-menu-item index="/"><a href="https://esap.erp8.net" target="_blank">帮助</a></el-menu-item>
-		  <span class="right" v-show="!!$store.state.userName">
-			{{"欢迎您，" + $store.state.userName}}
-		  <a @click="loginOut">退出登陆</a>
-	      </span>
-		</el-menu>
-	    <router-view></router-view>
-    </div>
-  </div>
+	<Modal title="关于"	v-model="modal2">
+	  <Form :model="updateInfo">
+	    <Form-item>
+	      <Input disabled v-model="updateInfo.desc"></Input>
+	    </Form-item>
+	    <Form-item>
+		  <Input disabled v-model="updateInfo.ver"></Input>
+	    </Form-item>
+	  </Form>
+	</Modal>
+	<!-- 内容 -->		
+	<Row>
+	  <div v-if="$store.getters.isLogin">
+		<Col :span="spanLeft" class="layout-menu-left">
+		<Button type="text" @click="toggleClick"><Icon type="navicon" color="#fff" size="30"></Icon></Button>
+		<span style="color: white;font-size: 14px" v-show="spanLeft>1">ESAP3.0</span>
+		<Menu active-name="info" theme="dark" width="auto" @on-select="go">
+		  <Menu-item name="info"><Icon type="settings" :size="iconSize"></Icon><span v-show="spanLeft>1">设置</span></Menu-item>
+		  <Menu-item name="wxtx"><Icon type="paper-airplane" :size="iconSize"></Icon><span v-show="spanLeft>1">提醒</span></Menu-item>
+		  <Menu-item name="wxcx"><Icon type="social-chrome-outline" :size="iconSize"></Icon><span v-show="spanLeft>1">查询</span></Menu-item>
+		  <Menu-item name="wxtk"><Icon type="image" :size="iconSize"></Icon><span v-show="spanLeft>1">图库</span></Menu-item>
+		  <Menu-item name="wxtxl"><Icon type="ios-people" :size="iconSize"></Icon><span v-show="spanLeft>1">通讯录</span></Menu-item>
+		  <Menu-item name="email"><Icon type="email" :size="iconSize"></Icon><span v-show="spanLeft>1">Email</span></Menu-item>
+		  <Menu-item name="wxlog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">日志</span></Menu-item>
+		</Menu>
+		<hr />
+		<div class="menu-util">
+		  <a style="color: #fff" href="https://esap.erp8.net" target="_blank">
+		    <Icon type="help" :size="iconSize"></Icon>
+		    <span v-show="spanLeft>1">帮助</span>
+		  </a>
+		</div>
+		<div class="menu-util" v-show="!!$store.state.userName">
+		  <a style="color: #fff" @click="about">
+		    <Icon type="android-person" :size="iconSize"></Icon>
+			<span v-show="spanLeft>1" style="color: #fff">关于</span>
+		  </a>
+	    </div>			
+	    <div class="menu-util" v-show="!!$store.state.userName" >
+	      <a style="color: #fff" @click="loginOut">
+		    <Icon type="android-walk" :size="iconSize"></Icon>
+		    <span v-show="spanLeft>1">注销 [{{$store.state.userName}}]</span>
+		  </a>
+	    </div>	
+		</Col>
+	    <Col :span="spanRight">       
+           <!--  <div class="layout-breadcrumb">
+                <Breadcrumb>
+                    <Breadcrumb-item href="#">首页</Breadcrumb-item>
+                    <Breadcrumb-item href="#">应用中心</Breadcrumb-item>
+                    <Breadcrumb-item>某应用</Breadcrumb-item>
+                </Breadcrumb>
+            </div> -->
+            <div class="layout-content">	   			
+                <div class="layout-content-main"><router-view></router-view></div>
+            </div>          
+        </Col>
+	  </div>
+	  </Row>
+	  <Back-top :height="100" :bottom="200">
+        <div class="top">返回顶端</div>
+      </Back-top>
+</div>
 </template>
 
 <script>
@@ -49,13 +93,16 @@ export default {
   	data() {
 	  return {
 	  	pwd:'',
-	    activeIndex: '1',
-	    activeIndex2: '1',
 	    form: { user: '', pwd: '' },
+	    updateInfo: { ver: '', desc: '' },
+	    spanLeft: 3,
+        spanRight: 21,
+        modal2: false
 	  }
 	},
 	computed: {
-		notLogin() { return !this.$store.getters.isLogin }
+		notLogin() { return !this.$store.getters.isLogin },
+		iconSize () { return this.spanLeft === 3 ? 14 : 24 }
 	},
 	methods: {
 		doLogin() {
@@ -65,7 +112,38 @@ export default {
 		loginOut() {
 			this.pwd=''
 			this.$store.dispatch('outlogin')
-		}
+		},
+		about2() {
+		  this.modal2 = true
+		  this.$http.get(this.$tokenadmin("getreg"))
+		  	.then(r=> { 
+		    if (r.data.result)this.updateInfo=r.data
+		  })
+		  .catch(e => { console.log(e)})
+		},
+		about() {
+		  this.$http.get(this.$tokenadmin("getreg"))
+		  	.then(r=> { 
+		    if (r.data.result)this.updateInfo=r.data
+	    	this.$Modal.info({
+                title: '关于',
+                content: '<p>会员等级：'+r.data.desc+'</p><p>当前版本：'+r.data.cver+'</p><p>最新版本：'+r.data.ver+'</p><div class="layout-copy">2015-2017 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div><div>Powered by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>'
+            });
+		  })
+		  .catch(e => { console.log(e)})
+		},
+		go(name) {
+			this.$router.push(name)
+		},
+	    toggleClick () {
+            if (this.spanLeft === 3) {
+                this.spanLeft = 1;
+                this.spanRight = 23;
+            } else {
+                this.spanLeft = 3;
+                this.spanRight = 21;
+            }
+        }
 	},
 }
 </script>
@@ -75,17 +153,61 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
-  text-align: center
-  color: #2c3e50
-  // margin-top: 10px
+a
+  color: #fff
 .right 
-	margin: 15px
+	margin: 0 15px
 	float: right
 	color: #fff
-	font-size: 14px
 	a 
-		font-size: 12px
-		color: #69f
+		color: #fff
 		cursor: pointer
 		margin: 0 5px
+.menu-util
+	color: #fff
+	padding: 12px 24px
+.layout
+    border: 1px solid #d7dde4
+    background: #f5f7f9
+    position: relative
+    border-radius: 4px
+    overflow: hidden
+.layout-breadcrumb
+    padding: 10px 15px 0
+.layout-content
+    min-height: 200px
+    margin: 5px
+    overflow: hidden
+    background: #fff
+    border-radius: 4px
+.layout-content-main
+    padding: 5px
+.layout-copy
+    // text-align: center
+    padding: 40px 0 10px
+    color: #9ea7b4
+.layout-menu-left
+    background: #464c5b
+.layout-header
+    height: 40px
+    background: #fff
+    box-shadow: 0 1px 1px rgba(0,0,0,.1)
+.layout-logo-left
+    width: 90%
+    height: 30px
+    background: #5b6270
+    border-radius: 3px
+    margin: 15px auto
+.layout-ceiling-main a
+    color: #9ba7b5
+.layout-hide-text .layout-text
+    display: none
+.ivu-col
+    transition: width .2s ease-in-out
+.top
+	padding: 10px
+	background: rgba(0, 153, 229, .7)
+	color: #fff
+	text-align: center
+	border-radius: 2px
 </style>

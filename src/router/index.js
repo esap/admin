@@ -10,14 +10,14 @@ function include(v) {
 
 export default new Router({
   routes: [  
-    include("email"),    
-    include("wxtx"),    
-    include("wxcx"),    
-    include("wxtk"),    
-    include("wxtxl"),    
-    include("log"),    
-    include("info"),    
-    include("test"),     
-    { path: '*', name: 'info', component: info }, 
+    include("email"),
+    include("wxtx"),
+    include("wxcx"),
+    include("wxtk"),
+    include("wxtxl"),
+    include("wxlog"),
+    include("info"),
+    include("test"),
+    { path: '*', name: 'info', component: info },
   ]
 })

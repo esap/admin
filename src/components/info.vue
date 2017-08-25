@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div>
     <Form :model="form" :label-width="60">
       <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
         <el-table
@@ -116,10 +116,10 @@
 	          </Form-item>
 			</Col>
 		  </Row>
-		</template>q
+		</template>
 		
 	  <Alert class="hr" show-icon><Icon type="ios-timer-outline"></Icon> 计划任务 - task<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Tasks.push({})"></Icon></Alert>
-		<template v-for="v,k in form.Tasks"> 
+		<template v-for="v,k in form.Tasks">
 		  <Row>
 		  	<Col :span="1">
 			  <Form-item :label-width="1">
@@ -207,9 +207,9 @@
 			</Col>
 		</Row>
            
-      <Button type="success" @click="getData"><Icon :size="14" type="ios-reload" /> 刷新</Button>
-      <Button type="warning" @click="restartSrv"><Icon :size="14" type="ios-loop" /> 重启服务</Button>
-      <Button type="primary" @click="saveData"><Icon :size="14" type="ios-download-outline" /> 保存</Button>
+      <Button type="success" @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+      <Button type="warning" @click="restartSrv" icon="ios-loop">重启服务</Button>
+      <Button type="primary" @click="saveData" icon="ios-download-outline">保存</Button>
     </Form>
 
     <Modal width="240"
@@ -249,6 +249,7 @@ export default {
 	    form: {},
 		modal1: false,
 		modal2: false,
+		loading: false,
 		tm1: {},
 		Pwd1: '',
 		menu: '',
@@ -306,13 +307,12 @@ export default {
 	  }
 	},
 	methods: {
-	  token(action) { return this.$store.state.adminUrl + action + "?token=" + sessionStorage.getItem("token") },
 	  getMenu(obj) {
 	  	this.modal2=true
 	  	this.menu=''
 	  	this.menuErr=''
 	  	this.menuApp=obj.AppName
-	  	this.$http.get(this.token("menu")+"&app="+obj.AppName)
+	  	this.$http.get(this.$tokenadmin("menu")+"&app="+obj.AppName)
 	  	.then(r=>{ 
 	  	  if (r.data.result){
 	  	  	  this.menu=JSON.stringify(r.data.data, null, 4)
@@ -323,7 +323,7 @@ export default {
 	  	.catch(e=> { console.log(e) })
 	  },
 	  saveMenu() {
-	  	this.$http.post(this.token("menu")+"&app="+this.menuApp, JSON.parse(this.menu))
+	  	this.$http.post(this.$tokenadmin("menu")+"&app="+this.menuApp, JSON.parse(this.menu))
 	  	.then(r=>{
 		  	if (r.data.result){
 	  		  this.modal2=false
@@ -336,7 +336,7 @@ export default {
 	  	.catch(e=> { console.log(e) })
 	  },
 	  deleteMenu() {
-	  	this.$http.delete(this.token("menu")+"&app="+this.menuApp)
+	  	this.$http.delete(this.$tokenadmin("menu")+"&app="+this.menuApp)
 	  	.then(r=>{
 			if (r.data.result){
 	  		  this.modal2=false
@@ -349,15 +349,16 @@ export default {
 	  	.catch(e=> { console.log(e) })
 	  },
 	  getData() {
-	    this.$http.get(this.token("config"))
-		.then(r=> { this.form=r.data.data })
-		.catch(e=> { console.log(e) })
+	  	this.loading = true
+	    this.$http.get(this.$tokenadmin("config"))
+		.then(r=> { this.form=r.data.data; this.loading = false })
+		.catch(e=> { console.log(e); this.loading = false })
 	  },
 	  saveData() {
 	  	  if(this.Pwd1) {
 	  	  	this.form.Pwd=md5(this.Pwd1)
 	  	  }
-	      this.$http.post(this.token("config"), this.form)
+	      this.$http.post(this.$tokenadmin("config"), this.form)
 	      .then(r => {
 	        if (r.data.result){
 	          this.$Message.info('配置成功')
@@ -370,12 +371,12 @@ export default {
 	      .catch(e=> { this.$Message.info(r.data.errmsg)})
 	  },
 	  restartSrv() {
-	     this.$http.post(this.token("restart"), this.form)
+	     this.$http.post(this.$tokenadmin("restart"), this.form)
 	     .then(r => {
 	       if (r.data.result){
-		         this.modal1 = true
+		     this.modal1 = true
 	         this.$Message.info('操作成功')
-			 this.pct=0
+			 this.pct = 0
 	         this.tm1 = setInterval(this.gogogo, 250)
 	       }else{
 	         this.$Message.info("操作失败，请确认是否install了服务 "+r.data.errmsg)
@@ -403,9 +404,6 @@ export default {
 </script>
 
 <style scoped>
-.wrap {
-  margin: 0 15px 15px;
-}
 .hr {
   box-shadow: 3px 3px 3px #999;
 }

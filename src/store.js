@@ -23,14 +23,14 @@ export default new Vuex.Store({
     tableData:[], 
     showPagn:true,
     loading:false,
-    userName: sessionStorage.getItem("user"),
+    userName: sessionStorage.getItem("esap_user"),
   },
   getters: {
     showData: s => s.tableData.slice((s.cPage-1)*s.pSize,s.pSize*s.cPage),
     mtstr: s => s.mts?'multiple':'single',
     isLogin: s => !!s.userName,
     isAdmin: s=> s.userName=="Admin",
-  	token: s=> "?token="+sessionStorage.getItem("token")
+  	token: s=> "?token="+sessionStorage.getItem("esap_token")
   },
   mutations: {
     mtsChg (state) { state.mts=!state.mts },
@@ -85,8 +85,8 @@ export default new Vuex.Store({
   	  .then(r => {
         if (r.data.result) { 
           commit('setUserName', apiParam.user)
-          sessionStorage.setItem("user", apiParam.user)
-          sessionStorage.setItem("token", r.data.token)
+          sessionStorage.setItem("esap_user", apiParam.user)
+          sessionStorage.setItem("esap_token", r.data.token)
           state.loading=false
         } else {
           Message({
@@ -106,8 +106,8 @@ export default new Vuex.Store({
     },
     outlogin( { commit }) {
       commit('setUserName', '')
-      sessionStorage.removeItem("token")
-      sessionStorage.removeItem("user")
+      sessionStorage.removeItem("esap_token")
+      sessionStorage.removeItem("esap_user")
     }
   }
 })
