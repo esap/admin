@@ -1,124 +1,113 @@
 import Vue from 'vue' 
 import Vuex from 'vuex'
 import axios from 'axios'
-import { Message } from 'element-ui';
+import { Message } from 'element-ui'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
+
+function getpath(path) {
+  return process.env.NODE_ENV === 'production' ? "/"+path : "http://localhost:9090/"+path
+}
 
 export default new Vuex.Store({
   state: {
-    apiPath: process.env.NODE_ENV === 'production' ? "/api/" : "http://localhost:9090/api/",
-  	api2Path: process.env.NODE_ENV === 'production' ? "/api2/" : "http://localhost:9090/api2/",
-    esPath: process.env.NODE_ENV === 'production' ? "/es/" : "http://localhost:9090/es/",
-    appUrl: process.env.NODE_ENV === 'production' ? "/" : "http://localhost:9090/",
+    apiPath: getpath("api/"),
+  	api2Path: getpath("api2/"),
+    esPath: getpath("es/"),
+    appUrl: getpath(""),
+    uploadUrl: getpath("upload"),
+    adminUrl: getpath("admin/"),
     mts: false,
     pSize:15,
     cPage:1,
     tableData:[], 
     showPagn:true,
     loading:false,
-    topNav:"/login",
-    userName:'',
-	token:''
+    userName: sessionStorage.getItem("esap_user"),
   },
   getters: {
     showData: s => s.tableData.slice((s.cPage-1)*s.pSize,s.pSize*s.cPage),
     mtstr: s => s.mts?'multiple':'single',
     isLogin: s => !!s.userName,
     isAdmin: s=> s.userName=="Admin",
-	token: s=> "?token="+s.token,
-	tokens: s=> 'Bearer '+s.token
+  	token: s=> "?token="+sessionStorage.getItem("esap_token")
   },
   mutations: {
-	setToken(state, p) {
-	  state.token=p.token
-	},
-    mtsChg (state) {
-      state.mts=!state.mts
-    },
-    sizeChange(state, v) {
-      state.pSize=v;
-    },
-    currentPageChange(state, v) {
-      state.cPage=v;
-      console.log(`当前页: ${v}`);
-    },
-    updateTableData(state, v) {
-      state.tableData=v;
-    },
-    clearTableData(state) {
-      state.tableData=[];
-    },
-    setUserName(state, v) {
-      state.userName=v;
-    }
+    mtsChg (state) { state.mts=!state.mts },
+    sizeChange(state, v) { state.pSize=v },
+    currentPageChange(state, v) { state.cPage=v },
+    updateTableData(state, v) { state.tableData=v },
+    clearTableData(state) { state.tableData=[] },
+    setUserName(state, v) { state.userName=v }
   },
   actions: {
     getApi({ commit, state }, apiParam) {
-      state.loading=true;
-      let apiUrl=state.apiPath;
+      state.loading=true
+      let apiUrl=state.apiPath
       for ( let k in apiParam ) {
         apiUrl = apiUrl + '&' + k + '=' + apiParam[k]
       }
       axios.get(apiUrl)
-	  .then(r => {
+	    .then(r => {
         if (state.loading) {    
-          commit('updateTableData', r.data);    
-          state.loading=false;              
+          commit('updateTableData', r.data)    
+          state.loading=false              
         }
       })
-	  .catch(e => {
+	    .catch(e => {
         if (state.loading) {
-          commit('clearTableData'); 
-          state.loading=false;     
+          commit('clearTableData') 
+          state.loading=false     
         }     
       })       
     },
-    getData({ commit, state }, apiParam ) {
-      state.loading=true;
-      let apiUrl=state.apiPath;
+    getData({ commit, state }, apiParam) {
+      state.loading=true
+      let apiUrl=state.apiPath
       for ( let k in apiParam ) {
-        if (k!="src")
-        apiUrl = apiUrl + '&' + k + '=' + apiParam[k]
+        if (k!="src") apiUrl = apiUrl + '&' + k + '=' + apiParam[k]
       }
       axios.get(apiUrl)
- 	  .then(r => {
-        state.loading=false;              
-        apiParam.src = r.data;   
-        console.log("src:",JSON.stringify(apiParam));     
+ 	    .then(r => {
+        state.loading=false              
+        apiParam.src = r.data   
+        console.log("src:",JSON.stringify(apiParam))     
       })
-	  .catch(e => {
-        state.loading=false;              
-        apiParam.src = [];     
+	   .catch(e => {
+        state.loading=false              
+        apiParam.src = []     
       }) 		
     },
     doLogin({ commit, state }, apiParam) {
-      state.loading=true;
-      let apiUrl=state.apiPath + 'adminlogin';
+      state.loading=true
+      let apiUrl=state.appUrl + 'login'
       axios.post(apiUrl, apiParam)
-	  .then(r => {
+  	  .then(r => {
         if (r.data.result) { 
-          commit('setUserName', r.data.msg[0].dispName);    
-          state.loading=false; 
-		  commit('setToken',r.data) 
+          commit('setUserName', apiParam.user)
+          sessionStorage.setItem("esap_user", apiParam.user)
+          sessionStorage.setItem("esap_token", r.data.token)
+          state.loading=false
         } else {
           Message({
             showClose: true,
             message: '登陆失败',
             duration:1000
-          });
+          })
         }
       })
-	  .catch(e => {
+  	  .catch(e => {
         Message({
             showClose: true,
             message: '登陆失败',
             duration:1000
-        });  
+        })  
       })
     },
     outlogin( { commit }) {
-      commit('setUserName', ''); 
+      commit('setUserName', '')
+      sessionStorage.removeItem("esap_token")
+      sessionStorage.removeItem("esap_user")
     }
   }
 })

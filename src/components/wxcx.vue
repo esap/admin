@@ -1,143 +1,169 @@
 <template>
-  <div v-if="$store.state.userName">
-    
-    <el-button @click="getData">刷新</el-button>
-    <el-button @click="dialogFormVisible = true">+新增</el-button>
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="list.length">
-      </el-pagination>
-    </div>
+  <div>
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+      <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+    </Page>
 
-    <el-dialog title="新增微信查询" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="查询名称" :label-width="formLabelWidth">
-          <el-input v-model="form.qname" placeholder="查询关键字，必填" auto-complete="off"></el-input>
-        </el-form-item>        
-        <el-form-item label="菜单key" :label-width="formLabelWidth">
-          <el-input v-model="form.mkey" placeholder="微信自定义菜单key,选填" auto-complete="off"></el-input>
-        </el-form-item>         
-        <el-form-item label="权限" :label-width="formLabelWidth">
-          <el-input v-model="form.uid" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></el-input>
-        </el-form-item>          
-        <el-form-item label="仅媒体" :label-width="formLabelWidth">
-          <el-input type="number" v-model="form.mediaonly" placeholder="填1时仅返回图片或文件,选填" auto-complete="off"></el-input>
-        </el-form-item>            
-        <el-form-item label="表单模式" :label-width="formLabelWidth">
-          <el-tooltip class="item" effect="dark" content="=2，新建表单模式，SQL为模版名称。=3，打开表单模式，SQL必须返回两个字段,第二个为rcid" placement="top-start">      
-            <el-input type="number" v-model="form.isupdate" placeholder="选填" auto-complete="off"></el-input>
+    <Modal title="新增微信查询" v-model="dialogFormVisible">
+      <Form :model="form" :label-width="80">
+        <Form-item label="查询名称">
+          <Input v-model="form.name" placeholder="查询关键字，必填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="菜单key">
+          <Input v-model="form.mKey" placeholder="微信自定义菜单key,选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="用户权限">
+          <Input v-model="form.aclUser" placeholder="@all表示全体，可用逗号分隔多个用户或用户ID" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="部门权限">
+          <Input v-model="form.aclDept" placeholder="可用逗号分隔多个部门或部门ID" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="标签权限">
+          <Input v-model="form.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
+        </Form-item>
+        <Row>
+          <Col :span="8">
+            <Form-item label="模式">
+              <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
+                <Input-number v-model="form.mode"></Input-number>
+              </Tooltip>
+            </Form-item>
+          </Col>      
+          <Col :span="8">
+          <Form-item label="保密消息">
+            <Input-number v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
+          </Form-item>
+          </Col> 
+        </Row>
+        <Form-item label="进入提示">
+          <el-tooltip class="item" effect="dark" content="可使用sql,选填" placement="top-start">      
+            <Input type="textarea" autosize v-model="form.entermsg" placeholder="选填" auto-complete="off"></Input>
           </el-tooltip>
-        </el-form-item>              
-        <el-form-item label="保密消息" :label-width="formLabelWidth">
-          <el-input type="number" v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></el-input>
-        </el-form-item>        
-        <el-form-item label="描述(提示)" :label-width="formLabelWidth">
-          <el-tooltip class="item" effect="dark" content="进入提示，可使用sql,选填" placement="top-start">      
-            <el-input type="textarea" autosize v-model="form.qcmts" placeholder="选填" auto-complete="off"></el-input>
+        </Form-item>
+        <Form-item label="模板">
+          <el-tooltip class="item" effect="dark" content="支持多重select/update/insert/delete，必填" placement="top-start">      
+            <Input type="textarea" autosize v-model="form.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
-        </el-form-item>       
-        <el-form-item label="sql" :label-width="formLabelWidth">
-          <el-tooltip class="item" effect="dark" content="支持多重select/insert/updates，必填" placement="top-start">      
-            <el-input type="textarea" autosize v-model="form.sqlstr" placeholder="必填" auto-complete="off"></el-input>
-          </el-tooltip>
-        </el-form-item>
-      </el-form>
+        </Form-item>
+        <Form-item label="专属应用">
+            <Input v-model="form.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="数据源">
+            <Input v-model="form.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="原文链接">
+            <Input v-model="form.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
+        </Form-item> 
+        <Form-item label="图片链接">
+            <Input v-model="form.pic" placeholder="文章封面图片链接，选填" auto-complete="off"></Input>
+        </Form-item>      
+      </Form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addRec">确 定</el-button>
+        <Button @click="dialogFormVisible = false">取 消</Button>
+        <Button type="primary" @click="addData">确 定</Button>
       </div>
-    </el-dialog>
+    </Modal>
+
+    <Modal title="修改微信查询" v-model="dialogFormVisible2">
+      <Form :model="formModify" :label-width="80">
+        <Form-item label="查询名称">
+          <Input v-model="formModify.name" placeholder="查询关键字，必填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="菜单key">
+          <Input v-model="formModify.mKey" placeholder="微信自定义菜单key,选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="用户权限">
+          <Input v-model="formModify.aclUser" placeholder="@all表示全体，可用逗号分隔多个用户或用户ID" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="部门权限">
+          <Input v-model="formModify.aclDept" placeholder="可用逗号分隔多个部门或部门ID" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="标签权限">
+          <Input v-model="formModify.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
+        </Form-item>
+        <Row>
+          <Col :span="8">
+            <Form-item label="模式">
+              <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
+                <Input-number v-model="formModify.mode"></Input-number>
+              </Tooltip>
+            </Form-item>
+          </Col>      
+          <Col :span="8">
+          <Form-item label="保密消息">
+            <Input-number v-model="formModify.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
+          </Form-item>
+          </Col> 
+        </Row>
+        <Form-item label="进入提示">
+          <el-tooltip class="item" effect="dark" content="可使用sql,选填" placement="top-start">      
+            <Input type="textarea" autosize v-model="formModify.entermsg" placeholder="选填" auto-complete="off"></Input>
+          </el-tooltip>
+        </Form-item>
+        <Form-item label="模板">
+          <el-tooltip class="item" effect="dark" content="支持多重select/update/insert/delete，必填" placement="top-start">      
+            <Input type="textarea" autosize v-model="formModify.tmpl" placeholder="必填" auto-complete="off"></Input>
+          </el-tooltip>
+        </Form-item>
+        <Form-item label="专属应用">
+            <Input v-model="formModify.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="数据源">
+            <Input v-model="formModify.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="原文链接">
+            <Input v-model="formModify.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
+        </Form-item> 
+        <Form-item label="图片链接">
+            <Input v-model="formModify.pic" placeholder="文章封面图片链接，选填" auto-complete="off"></Input>
+        </Form-item>      
+      </Form>
+      <div slot="footer" class="dialog-footer">
+        <Button @click="dialogFormVisible = false">取 消</Button>
+        <Button type="primary" @click="saveData">确 定</Button>
+      </div>
+    </Modal>
 
     <el-table
       stripe 
       :data="listShow"
       style="width: 100%">   
-      <el-table-column
-        label="菜单"
-        width="100">
-        <template scope="scope">
-          <el-input v-model="scope.row.mKey"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="功能"
-        width="150">
-        <template scope="scope">
-          <el-input v-model="scope.row.qName"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="描述"
-        width="240">
-        <template scope="scope">
-          <el-input type="textarea" autosize v-model="scope.row.qCmts"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="sql"
-        width="360">
-        <template scope="scope">
-          <el-input type="textarea" autosize v-model="scope.row.sqlStr"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="权限"
-        width="100">
-        <template scope="scope">
-          <el-input v-model="scope.row.uid"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="仅媒体"
-        width="100">
-        <template scope="scope">
-          <el-input type="number" v-model="scope.row.mediaOnly"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="表单模式"
-        width="100">
-        <template scope="scope">
-          <el-input type="number" v-model="scope.row.isUpdate"></el-input>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="保密"
-        width="100">
-        <template scope="scope">
-          <el-input type="number" v-model="scope.row.safe"></el-input>
-        </template>
-      </el-table-column>
+      <el-table-column label="菜单" prop="mKey" width="100"></el-table-column>
+      <el-table-column label="功能" prop="name" width="150"></el-table-column>
+      <el-table-column label="进入提醒" prop="entermsg" width="240"></el-table-column>
+      <el-table-column label="模板" show-overflow-tooltip prop="tmpl" width="360"></el-table-column>
+      <el-table-column label="用户权限" prop="aclUser" width="100"></el-table-column>
+      <el-table-column label="部门权限" prop="aclDept" width="100"></el-table-column>
+      <el-table-column label="标签权限" prop="aclTag" width="100"></el-table-column>
+      <el-table-column label="模式" prop="mode" width="100"></el-table-column>
+      <el-table-column label="专用查询" prop="app" width="100"></el-table-column>
+      <el-table-column label="数据源" prop="db" width="100"></el-table-column>
+      <el-table-column label="原文链接" prop="url" width="100"></el-table-column>
+      <el-table-column label="原文封面" prop="pic" width="100"></el-table-column>
+      <el-table-column label="保密" prop="safe" width="100"></el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
-          <el-button
-            size="small"
-            @click="handleSave(scope.$index, scope.row)">保存</el-button>
-          <el-button
-            size="small"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <Button size="small" @click="showModify(scope.row)">编辑</Button>
+          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
         </template>
       </el-table-column>
     </el-table>   
 
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="currentPage"
-        :page-sizes="[10, 20, 50, 100]"
-        :page-size="pagesize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="list.length">
-      </el-pagination>
-    </div>
+    <Page
+      @on-page-size-change="handleSizeChange"
+      @on-change="handleCurrentChange"
+      :current="currentPage"
+      :page-size="pagesize"
+      show-total show-elevator show-sizer
+      :total="list.length">
+    </Page>
   </div>
 </template>
 
@@ -146,41 +172,48 @@
       data() {
         return {
           list: [],
-          pagesize:10,
+          pagesize:15,
           currentPage:1,
+          formModify: {},
           dialogFormVisible: false,
+          dialogFormVisible2: false,
+          loading: false,
           form: {
-            uid: '@all',  
-            qname: '',
-            mkey: '',
-            mediaonly: 0,
-            isupdate: 0,
-            safe: 0,
-            qcmts: '',
-            sqlstr: ''                 
-          },
-        formLabelWidth: '100px'
+            mKey: '',
+            name: '',
+            entermsg: '',
+            tmpl: '',
+            mode: 0,
+            aclUser: '@all',  
+            aclDept: '',  
+            aclTag: '',  
+            app: '',
+            db: '',
+            url: '',
+            pic: '',
+            safe: 0
+          }
         }
       },
       computed:{
-        listShow() {
-          return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize)
-        }
+        listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
       },
       methods: {
-        handleSizeChange(val) {
-          this.pagesize=val
-        },
-        handleCurrentChange(val) {
-          this.currentPage=val
-        },
+        handleSizeChange(val) { this.pagesize=val },
+        handleCurrentChange(val) { this.currentPage=val },
         getData() {
-          this.$http.get(this.$store.state.apiPath +"wxcx")
-  		  	.then(r => { this.list=r.data })
-  			  .catch(e => { console.log(e) })
+          this.$Loading.start()
+          this.loading = true
+          this.$http.get(this.$tokenadmin("wxcx"))
+  		  	.then(r=> { 
+            if (r.data.result)this.list=r.data.data[0]
+            this.loading = false
+            this.$Loading.finish();
+          })
+          .catch(e => { this.$Loading.error(); this.loading = false })
         },
-        handleDelete(i,r) {
-          this.$http.delete(this.$store.state.apiPath+"wxcx?id="+r.ID)
+        deleteData(i,r) {
+          this.$http.delete(this.$tokenadmin("wxcx")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })
@@ -191,20 +224,25 @@
           })
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },      
-        handleSave(i,r) {
-          this.$http.put(this.$store.state.apiPath+"wxcx?id="+r.ID, r)
+        showModify(r){
+          this.dialogFormVisible2=true
+          this.formModify=r
+        },
+        saveData() {
+          this.$http.put(this.$tokenadmin("wxcx")+"&id="+this.formModify.id, this.formModify)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '保存成功' })             
               this.list=r.data.data[0]
+              this.dialogFormVisible2=false
             }else{
               this.$message({  message: r.data.errmsg })
             }
           })
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },
-        addRec(){          
-          this.$http.post(this.$store.state.apiPath+"wxcx", this.form)
+        addData(){          
+          this.$http.post(this.$tokenadmin("wxcx"), this.form)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '新增成功' })            
