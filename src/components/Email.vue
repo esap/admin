@@ -29,7 +29,8 @@
       <el-table-column prop="flag" label="标记" width="80">
       </el-table-column>
       <el-table-column label="操作">
-        <template scope="scope">          
+        <template scope="scope">  
+          <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>        
           <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
         </template>
       </el-table-column>
@@ -51,7 +52,7 @@
       data() {
         return {
           list: [],
-          pagesize: 10,
+          pagesize: 15,
           loading: false,
           currentPage: 1
         }
@@ -62,7 +63,7 @@
         getData() {
           this.$Loading.start()
           this.loading = false
-          this.$http.get(this.$tokenadmin("esmail"))
+          this.$http.get(this.$tokenadmin("email"))
           .then(r=> { 
             if (r.data.result)this.list=r.data.data[0]
             this.$Loading.finish()
@@ -71,7 +72,7 @@
           .catch(e => { this.$Loading.error(); this.loading = false })
         },          
         deleteData(i,r) {
-          this.$http.delete(this.$tokenadmin("esmail")+"&id="+r.id)
+          this.$http.delete(this.$tokenadmin("email")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })
@@ -82,6 +83,19 @@
           })
           .catch(e => { this.$message({  message: r.data.errmsg })})
         }, 
+        saveData(i,r) {
+        r.flag=0
+        this.$http.put(this.$tokenadmin("email")+"&id="+r.id, r)
+        .then(r => { 
+          if (r.data.result){
+            this.$Message.info('保存成功')
+            this.list=r.data.data[0]
+          } else{
+            this.$Message.info(r.data.errmsg)
+          }
+        })
+        .catch(e => { this.$Message.info(r.data.errmsg)})          
+      },
       },
       mounted(){
         this.getData()

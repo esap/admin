@@ -20,13 +20,13 @@
           <Input v-model="form.mKey" placeholder="微信自定义菜单key,选填" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="用户权限">
-          <Input v-model="form.aclUser" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
+          <Input v-model="form.aclUser" placeholder="@all表示全体，可用逗号分隔多个用户或用户ID" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="部门权限">
-          <Input v-model="form.aclDept" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
+          <Input v-model="form.aclDept" placeholder="可用逗号分隔多个部门或部门ID" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="标签权限">
-          <Input v-model="form.aclTag" placeholder="@all表示全体，可用逗号分隔多个部门或用户，必填" auto-complete="off"></Input>
+          <Input v-model="form.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
         </Form-item>
         <Row>
           <Col :span="8">
@@ -52,8 +52,8 @@
             <Input type="textarea" autosize v-model="form.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
         </Form-item>
-        <Form-item label="应用">
-            <Input v-model="form.app" placeholder="数据源配置，选填" auto-complete="off"></Input>
+        <Form-item label="专属应用">
+            <Input v-model="form.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
         </Form-item>
         <Form-item label="数据源">
             <Input v-model="form.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
@@ -71,80 +71,86 @@
       </div>
     </Modal>
 
+    <Modal title="修改微信查询" v-model="dialogFormVisible2">
+      <Form :model="formModify" :label-width="80">
+        <Form-item label="查询名称">
+          <Input v-model="formModify.name" placeholder="查询关键字，必填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="菜单key">
+          <Input v-model="formModify.mKey" placeholder="微信自定义菜单key,选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="用户权限">
+          <Input v-model="formModify.aclUser" placeholder="@all表示全体，可用逗号分隔多个用户或用户ID" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="部门权限">
+          <Input v-model="formModify.aclDept" placeholder="可用逗号分隔多个部门或部门ID" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="标签权限">
+          <Input v-model="formModify.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
+        </Form-item>
+        <Row>
+          <Col :span="8">
+            <Form-item label="模式">
+              <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
+                <Input-number v-model="formModify.mode"></Input-number>
+              </Tooltip>
+            </Form-item>
+          </Col>      
+          <Col :span="8">
+          <Form-item label="保密消息">
+            <Input-number v-model="formModify.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
+          </Form-item>
+          </Col> 
+        </Row>
+        <Form-item label="进入提示">
+          <el-tooltip class="item" effect="dark" content="可使用sql,选填" placement="top-start">      
+            <Input type="textarea" autosize v-model="formModify.entermsg" placeholder="选填" auto-complete="off"></Input>
+          </el-tooltip>
+        </Form-item>
+        <Form-item label="模板">
+          <el-tooltip class="item" effect="dark" content="支持多重select/update/insert/delete，必填" placement="top-start">      
+            <Input type="textarea" autosize v-model="formModify.tmpl" placeholder="必填" auto-complete="off"></Input>
+          </el-tooltip>
+        </Form-item>
+        <Form-item label="专属应用">
+            <Input v-model="formModify.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="数据源">
+            <Input v-model="formModify.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
+        </Form-item>
+        <Form-item label="原文链接">
+            <Input v-model="formModify.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
+        </Form-item> 
+        <Form-item label="图片链接">
+            <Input v-model="formModify.pic" placeholder="文章封面图片链接，选填" auto-complete="off"></Input>
+        </Form-item>      
+      </Form>
+      <div slot="footer" class="dialog-footer">
+        <Button @click="dialogFormVisible = false">取 消</Button>
+        <Button type="primary" @click="saveData">确 定</Button>
+      </div>
+    </Modal>
+
     <el-table
       stripe 
       :data="listShow"
       style="width: 100%">   
-      <el-table-column label="菜单" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.mKey"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="功能" width="150">
-        <template scope="scope">
-          <Input v-model="scope.row.name"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="进入提醒" width="240">
-        <template scope="scope">
-          <Input type="textarea" autosize v-model="scope.row.entermsg"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="模板" width="360">
-        <template scope="scope">
-          <Input type="textarea" autosize v-model="scope.row.tmpl"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="用户权限" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.aclUser"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="部门权限" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.aclDept"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="标签权限" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.aclTag"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="模式" width="100">
-        <template scope="scope">
-          <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
-            <Input-number :max="9999999" :min="0" v-model="scope.row.mode"></Input-number>
-          </Tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="专用查询" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.app"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据源" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.db"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="原文链接" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.url"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="原文封面" width="100">
-        <template scope="scope">
-          <Input v-model="scope.row.pic"></Input>
-        </template>
-      </el-table-column>
-      <el-table-column label="保密" width="100">
-        <template scope="scope">
-          <Input-number v-model="scope.row.safe"></Input-number>
-        </template>
-      </el-table-column>
+      <el-table-column label="菜单" prop="mKey" width="100"></el-table-column>
+      <el-table-column label="功能" prop="name" width="150"></el-table-column>
+      <el-table-column label="进入提醒" prop="entermsg" width="240"></el-table-column>
+      <el-table-column label="模板" show-overflow-tooltip prop="tmpl" width="360"></el-table-column>
+      <el-table-column label="用户权限" prop="aclUser" width="100"></el-table-column>
+      <el-table-column label="部门权限" prop="aclDept" width="100"></el-table-column>
+      <el-table-column label="标签权限" prop="aclTag" width="100"></el-table-column>
+      <el-table-column label="模式" prop="mode" width="100"></el-table-column>
+      <el-table-column label="专用查询" prop="app" width="100"></el-table-column>
+      <el-table-column label="数据源" prop="db" width="100"></el-table-column>
+      <el-table-column label="原文链接" prop="url" width="100"></el-table-column>
+      <el-table-column label="原文封面" prop="pic" width="100"></el-table-column>
+      <el-table-column label="保密" prop="safe" width="100"></el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">
-          <Button size="small" @click="saveData(scope.$index, scope.row)">保存</Button>
+          <Button size="small" @click="showModify(scope.row)">编辑</Button>
           <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
         </template>
       </el-table-column>
@@ -166,9 +172,11 @@
       data() {
         return {
           list: [],
-          pagesize:10,
+          pagesize:15,
           currentPage:1,
+          formModify: {},
           dialogFormVisible: false,
+          dialogFormVisible2: false,
           loading: false,
           form: {
             mKey: '',
@@ -216,12 +224,17 @@
           })
           .catch(e => { this.$message({  message: r.data.errmsg })})
         },      
-        saveData(i,r) {
-          this.$http.put(this.$tokenadmin("wxcx")+"&id="+r.id, r)
+        showModify(r){
+          this.dialogFormVisible2=true
+          this.formModify=r
+        },
+        saveData() {
+          this.$http.put(this.$tokenadmin("wxcx")+"&id="+this.formModify.id, this.formModify)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '保存成功' })             
               this.list=r.data.data[0]
+              this.dialogFormVisible2=false
             }else{
               this.$message({  message: r.data.errmsg })
             }

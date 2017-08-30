@@ -102,7 +102,7 @@
       return {
         list: [],
         currentPage:1,
-        pagesize:10,
+        pagesize:15,
         imageUrl: '',
         loading: false,
         fileUrl: '',

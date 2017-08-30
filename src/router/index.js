@@ -18,6 +18,6 @@ export default new Router({
     include("wxlog"),
     include("info"),
     include("test"),
-    { path: '*', name: 'info', component: info },
+    { path: '*', name: 'info', component: info }
   ]
 })

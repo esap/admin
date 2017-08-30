@@ -11,7 +11,7 @@
     </Page>
 
     <el-table
-      :data="list"
+      :data="listShow"
       v-if="$store.state.userName"
       style="width: 100%">
       <el-table-column prop="userid" label="账号" width="150"></el-table-column>
@@ -39,10 +39,13 @@
         return {
           list: [],
 		      currentPage:1,
-          pagesize:10,
+          pagesize:15,
           loading: false,
         }
       },
+	  computed:{
+		listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
+	  },
       methods: {
 		    handleSizeChange(v) { this.pagesize=v },
       	handleCurrentChange(v) { this.currentPage=v },

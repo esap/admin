@@ -14,11 +14,11 @@
 	      <el-table-column prop="AppType" label="类型" width="100">	      	
 	        <template scope="scope">
 	          <Tooltip content="公众号填pub,可选"> 
-	            <Input v-model="scope.row.AppType"></Input>
+	            <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.AppType"></Input>
 	          </Tooltip>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="AppId" label="AppId" width="150">	      	
+	      <el-table-column prop="AppId" label="AppId/corpId" width="150">	      	
 	        <template scope="scope">
 	        <Input v-model="scope.row.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
 	        </template>
@@ -37,22 +37,22 @@
 	      </el-table-column>
 	      <el-table-column prop="Token" label="Token" width="100">	      	
 	        <template scope="scope">
-	          <Input v-model="scope.row.Token" placeholder="回调Token"></Input>
+	          <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.Token" placeholder="回调Token"></Input>
 	        </template>
 	      </el-table-column>
 	      <el-table-column prop="EncodingAesKey" label="EncodingAesKey" width="200">	      	
 	        <template scope="scope">
-	          <Input v-model="scope.row.EncodingAesKey" show-overflow-tooltip placeholder="回调EncodingAesKey"></Input>
+	          <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.EncodingAesKey" show-overflow-tooltip placeholder="回调EncodingAesKey"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="Disabled" label="禁用" width="80">	      	
+	      <el-table-column prop="IsRun" label="开关" width="80">	      	
 	        <template scope="scope">
-	          <i-switch v-model="scope.row.Disabled"></i-switch>
+	          <i-switch v-model="scope.row.IsRun"></i-switch>
 	        </template>
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
-	          <Button v-show="scope.row.AgentId<3000000" size="small" @click="getMenu(scope.row)">菜单</Button>
+	          <Button :disabled="scope.row.AgentId>3000000" size="small" @click="getMenu(scope.row)">菜单</Button>
 	          <Button size="small" type="error" @click="form.Apps.splice(scope.$index, 1)">删除</Button>
 	        </template>
 	      </el-table-column>
@@ -111,8 +111,8 @@
 		        </Form-item>
 			</Col>
 	        <Col span="1">
-	          <Form-item label="禁用 - Disabled">
-	            <i-switch v-model="v.Disabled"></i-switch>
+	          <Form-item label="开关 - IsRun">
+	            <i-switch v-model="v.IsRun"></i-switch>
 	          </Form-item>
 			</Col>
 		  </Row>
@@ -152,7 +152,7 @@
 	          </Form-item>
 	        </Col>
 	        <Col span="1">
-	          <Form-item label="开关 - isrun">
+	          <Form-item label="开关 - IsRun">
 	            <i-switch v-model="v.IsRun"></i-switch>
 	          </Form-item>
 			</Col>
