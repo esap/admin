@@ -77,7 +77,7 @@
       <el-table-column prop="fh" label="文件" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column sortable prop="ret" label="发送结果" show-overflow-tooltip width="120"></el-table-column>
       <el-table-column sortable prop="flag" label="标记" width="100"></el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column fixed="right" label="操作" width="150">
         <template scope="scope">
           <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>
           <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>

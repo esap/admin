@@ -13,7 +13,8 @@
     data() {
       return {
         form: "",
-        loading: false
+        loading: false,
+        list: {}
       }
     },
     methods: {
@@ -28,6 +29,27 @@
         })
         .catch(e => { this.$Loading.error(); this.loading = false })
       }, 
+      getCount() {
+        this.$http.get(this.$tokenadmin("logct"))
+        .then(r=> { 
+          if (r.data.result){
+            this.list=r.data.data[0][0]
+            var myChart = echarts.init(document.getElementById('mChart'))
+            myChart.setOption({
+              title: { text: '数据分析' },
+              tooltip: {},
+              xAxis: { data: ['查询', '提醒', 'email', '审批','图库'] },
+              yAxis: {},
+              series: [{
+                name: '记录数',
+                type: 'bar',
+                data: [this.list.cx,this.list.tx,this.list.email,this.list.sp,this.list.tk]
+              }]
+            })
+          }
+        })
+        .catch(e => { console.log(e) })
+      },
       clearLog() {
         this.$http.delete(this.$tokenadmin("log"))
 		  	.then(r=> { this.form=r.data })
@@ -36,18 +58,7 @@
     },
     mounted(){
       this.getData()
-      var myChart = echarts.init(document.getElementById('mChart'))
-      myChart.setOption({
-        title: { text: '数据分析' },
-        tooltip: {},
-        xAxis: { data: ['查询', '提醒', 'email', '审批','图库','通讯录'] },
-        yAxis: {},
-        series: [{
-          name: '记录数',
-          type: 'bar',
-          data: [0,0,0,0,0,0]
-        }]
-      })
+      this.getCount()
     }
   }
 </script>

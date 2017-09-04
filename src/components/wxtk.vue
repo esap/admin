@@ -14,20 +14,16 @@
       stripe
       :data="listShow"
       style="width: 100%">
-      <el-table-column prop="cDate" label="日期" width="180">
-      </el-table-column>
-      <el-table-column prop="name" label="上传人" width="180">
-      </el-table-column>
-      <el-table-column prop="app" label="应用" width="180">
-      </el-table-column>
-      <el-table-column prop="pDesc" label="描述">
-      </el-table-column> 
+      <el-table-column prop="cDate" label="日期" width="180"></el-table-column>
+      <el-table-column prop="name" label="上传人" width="180"></el-table-column>
+      <el-table-column prop="app" label="应用" width="180"></el-table-column>
+      <el-table-column prop="pDesc" label="描述"></el-table-column> 
       <el-table-column label="图片">
         <template scope="scope">
           <img style="width:100px" :src="$store.state.appUrl+'p/'+scope.row.pic" />
         </template>
       </el-table-column> 
-      <el-table-column label="操作" width="100">
+      <el-table-column fixed="right" label="操作" width="100">
         <template scope="scope">   
           <el-button
             size="small"

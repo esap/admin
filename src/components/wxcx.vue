@@ -28,6 +28,9 @@
         <Form-item label="标签权限">
           <Input v-model="form.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
         </Form-item>
+        <Form-item label="应用权限">
+          <Input v-model="form.aclApp" placeholder="可用逗号分隔多个应用名称" auto-complete="off"></Input>
+        </Form-item>
         <Row>
           <Col :span="8">
             <Form-item label="模式">
@@ -88,6 +91,9 @@
         <Form-item label="标签权限">
           <Input v-model="formModify.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
         </Form-item>
+        <Form-item label="应用权限">
+          <Input v-model="formModify.aclApp" placeholder="可用逗号分隔多个应用名称" auto-complete="off"></Input>
+        </Form-item>
         <Row>
           <Col :span="8">
             <Form-item label="模式">
@@ -135,20 +141,21 @@
       stripe 
       :data="listShow"
       style="width: 100%">   
-      <el-table-column label="菜单" prop="mKey" width="100"></el-table-column>
-      <el-table-column label="功能" prop="name" width="150"></el-table-column>
+      <el-table-column fixed label="菜单" prop="mKey" width="100"></el-table-column>
+      <el-table-column fixed label="功能" prop="name" width="150"></el-table-column>
       <el-table-column label="进入提醒" prop="entermsg" width="240"></el-table-column>
       <el-table-column label="模板" show-overflow-tooltip prop="tmpl" width="360"></el-table-column>
       <el-table-column label="用户权限" prop="aclUser" width="100"></el-table-column>
       <el-table-column label="部门权限" prop="aclDept" width="100"></el-table-column>
       <el-table-column label="标签权限" prop="aclTag" width="100"></el-table-column>
+      <el-table-column label="应用权限" prop="aclApp" width="100"></el-table-column>
       <el-table-column label="模式" prop="mode" width="100"></el-table-column>
       <el-table-column label="专用查询" prop="app" width="100"></el-table-column>
       <el-table-column label="数据源" prop="db" width="100"></el-table-column>
       <el-table-column label="原文链接" prop="url" width="100"></el-table-column>
       <el-table-column label="原文封面" prop="pic" width="100"></el-table-column>
       <el-table-column label="保密" prop="safe" width="100"></el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column fixed="right" label="操作" width="150">
         <template scope="scope">
           <Button size="small" @click="showModify(scope.row)">编辑</Button>
           <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
