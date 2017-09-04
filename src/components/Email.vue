@@ -15,11 +15,11 @@
       :data="list"
       style="width: 100%">
       <el-table-column prop="cDate" label="日期" width="180"></el-table-column>
-      <el-table-column prop="mailTo" label="收件人" width="100"></el-table-column>
-      <el-table-column prop="Subject" label="主题" width="150"></el-table-column>
-      <el-table-column prop="Content" label="内容"></el-table-column>
-      <el-table-column prop="Pic" show-overflow-tooltip width="100" label="图片"></el-table-column>
-      <el-table-column prop="Files" show-overflow-tooltip width="100" label="文件"></el-table-column>
+      <el-table-column show-overflow-tooltip prop="mailTo" label="收件人" width="100"></el-table-column>
+      <el-table-column show-overflow-tooltip prop="Subject" label="主题" width="150"></el-table-column>
+      <el-table-column show-overflow-tooltip prop="Content" label="内容"></el-table-column>
+      <el-table-column show-overflow-tooltip prop="Pic" show-overflow-tooltip width="100" label="图片"></el-table-column>
+      <el-table-column show-overflow-tooltip prop="Files" show-overflow-tooltip width="100" label="文件"></el-table-column>
       <el-table-column prop="flag" label="标记" width="80"></el-table-column>
       <el-table-column fixed="right" label="操作">
         <template scope="scope">  
