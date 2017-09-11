@@ -179,8 +179,8 @@
       data() {
         return {
           list: [],
-          pagesize:15,
-          currentPage:1,
+          pagesize: 20,
+          currentPage: 1,
           formModify: {},
           dialogFormVisible: false,
           dialogFormVisible2: false,
@@ -194,6 +194,7 @@
             aclUser: '@all',  
             aclDept: '',  
             aclTag: '',  
+            aclApp: '@all',  
             app: '',
             db: '',
             url: '',

@@ -2,10 +2,7 @@
   <div>
     <Form :model="form" :label-width="60">
       <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
-        <el-table
-	      stripe
-	      :data="form.Apps"
-	      style="width: 100%">
+        <el-table stripe :data="form.Apps" style="width: 100%">
 	      <el-table-column prop="AppName" label="应用名" width="100">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.AppName"></Input>
@@ -59,105 +56,102 @@
 	    </el-table>
 
       <Alert class="hr" show-icon>数据库 - database<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Dbs.push({})"></Icon></Alert>
-		<template v-for="v,k in form.Dbs"> 
-		  <Row>
-			<Col :span="1">
-			  <Button shape="circle" type="text" @click.native="form.Dbs.splice(k, 1)">
-			    <Icon :size="20" type="minus-circled" ></Icon>
-			  </Button>
-			</Col>
-	        <Col :span="3">
-	          <Form-item label="数据源名 - DbName">
-	            <Input v-model="v.DbName" placeholder="唯一标识，必填"></Input>
-	          </Form-item>
-	        </Col>
-			<Col :span="3">
-		        <Form-item label="驱动 - Driver">
-		          <Select v-model="v.Driver" placeholder="请选择">
-		            <i-option
-		              v-for="item in options2"
-		              :key="item.value"
-		              :label="item.label"
-		              :value="item.value"
-		              :disabled="item.disabled">
-		            </i-option>
-		          </Select>
-		        </Form-item>
-			</Col>
-			<Col :span="3">
-	          <Form-item label="服务器 - Server">
-	            <Input v-model="v.Server" placeholder="本机可填.号"></Input>
-	          </Form-item>
-	        </Col>
-	        <Col :span="3">
-			  <Form-item label="端口 - Port">
-	            <Input-number v-model="v.Port" placeholder=""></Input-number>
-	          </Form-item>
-	        </Col>
-	        <Col :span="3">
-		        <Form-item label="账号 - User">
-		          <Input v-model="v.User" placeholder=""></Input>
-		        </Form-item>
-			</Col>
-	        <Col :span="3">
-		        <Form-item label="密码 - Pwd">
-		          <Input type="password" v-model="v.Pwd" placeholder=""></Input>
-		        </Form-item>
-			</Col>
-	        <Col :span="2">
-		        <Form-item label="数据库名 - Db">
-		          <Input v-model="v.Db" placeholder="">
-				  </Input>
-		        </Form-item>
-			</Col>
-	        <Col span="1">
-	          <Form-item label="开关 - IsRun">
-	            <i-switch v-model="v.IsRun"></i-switch>
-	          </Form-item>
-			</Col>
-		  </Row>
-		</template>
+        <el-table stripe :data="form.Dbs" style="width: 100%">
+	      <el-table-column prop="DbName" label="数据源名" width="100">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.DbName"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Driver" label="驱动" width="150">	      	
+	        <template scope="scope">
+				<Select v-model="scope.row.Driver" placeholder="请选择">
+					<i-option
+					  v-for="item in options2"
+					  :key="item.value"
+					  :label="item.label"
+					  :value="item.value"
+					  :disabled="item.disabled">
+					</i-option>
+				</Select>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Server" label="服务器" width="150">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.Server" placeholder="本机默认实例可填点号,必填"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Port" label="端口" width="100">	      	
+	        <template scope="scope">
+	          <Input-number :max="65535" :min="1000" v-model="scope.row.Port" placeholder="例如1433,必填"></Input-number>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="User" label="账号" width="100">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.User" placeholder="例如Sa，必填"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Pwd" label="密码" width="100">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.Pwd" type="password" placeholder="例如123"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Db" label="数据库名" width="100">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.Db" show-overflow-tooltip placeholder="例如esapp1"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="State" label="状态" show-overflow-tooltip width="100"> </el-table-column>
+	      <el-table-column prop="IsRun" label="开关" width="80">	      	
+	        <template scope="scope">
+	          <i-switch v-model="scope.row.IsRun"></i-switch>
+	        </template>
+	      </el-table-column>	      
+	      <el-table-column label="操作" width="150">
+	        <template scope="scope">
+	          <Button size="small" @click="testDb(scope.row)">测试</Button>
+	          <Button size="small" type="error" @click="form.Dbs.splice(scope.$index, 1)">删除</Button>
+	        </template>
+	      </el-table-column>
+	    </el-table>
 		
 	  <Alert class="hr" show-icon><Icon type="ios-timer-outline"></Icon> 计划任务 - task<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Tasks.push({})"></Icon></Alert>
-		<template v-for="v,k in form.Tasks">
-		  <Row>
-		  	<Col :span="1">
-			  <Form-item :label-width="1">
-				  <Button shape="circle" type="text" @click.native="form.Tasks.splice(k,1)">
-				    <Icon :size="20" type="minus-circled" ></Icon>
-				  </Button>
-			  </Form-item>
-			</Col>
-	        <Col :span="5">
-	          <Form-item label="计划Id - taskid">
-	            <Input v-model="v.TaskID" placeholder="唯一标识，必填"></Input>
-	          </Form-item>
-	        </Col>
-			<Col :span="5">
-		        <Form-item label="类型 - Handler" >
-		          <Select v-model="v.Handler" placeholder="请选择">
-		            <i-option
-		              v-for="item in options3"
-		              :key="item.value"
-		              :label="item.label"
-		              :value="item.value"
-		              :disabled="item.disabled">
-		            </i-option>
-		          </Select>
-		        </Form-item>
-			</Col>
-			<Col :span="5">
-	          <Form-item label="周期 - express">
-	            <Input v-model="v.Express" placeholder="本机可填.号"></Input>
-	          </Form-item>
-	        </Col>
-	        <Col span="1">
-	          <Form-item label="开关 - IsRun">
-	            <i-switch v-model="v.IsRun"></i-switch>
-	          </Form-item>
-			</Col>
-		  </Row>
-		</template>
+
+	    <el-table stripe :data="form.Tasks" style="width: 100%">
+	      <el-table-column prop="TaskID" label="任务ID" width="300">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.TaskID"></Input>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Handler" label="类型" width="150">	      	
+	        <template scope="scope">
+	          <Select v-model="scope.row.Handler" placeholder="请选择">
+	            <i-option
+	              v-for="item in options3"
+	              :key="item.value"
+	              :label="item.label"
+	              :value="item.value"
+	              :disabled="item.disabled">
+	            </i-option>
+	          </Select>
+	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Express" label="周期" width="250">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.Express" placeholder="例如每分钟：* */1 * * * *"></Input>
+	        </template>
+	      </el-table-column>	      
+	      <el-table-column prop="IsRun" label="开关" width="80">	      	
+	        <template scope="scope">
+	          <i-switch v-model="scope.row.IsRun"></i-switch>
+	        </template>
+	      </el-table-column>	      
+	      <el-table-column label="操作" width="150">
+	        <template scope="scope">
+	          <!-- <Button size="small" @click="getMenu(scope.row)">测试</Button> -->
+	          <Button size="small" type="error" @click="form.Tasks.splice(scope.$index, 1)">删除</Button>
+	        </template>
+	      </el-table-column>
+	    </el-table>
 
       <Alert class="hr">其他 - other</Alert>
         <Row>
@@ -172,11 +166,33 @@
 		        </Form-item>
 		    </Col>
 		    <Col :span="6"> 
-			  <Tooltip content="同步计划的队列间隔，最低100毫秒">      
+			  <Tooltip content="同步计划的队列间隔，最低100毫秒">
 		        <Form-item label="同步间隔(毫秒)">
 		          <Input-number :min="100" v-model="form.SyncDelay"></Input-number>
 		        </Form-item>
 			  </Tooltip>
+		    </Col>
+		</Row>
+        <Row>
+		    <Col :span="2">
+		    	<Button type="warning"><a href="https://ai.baidu.com" target="_blank">百度AI官网</a></Button>
+		    </Col>
+		    <Col :span="6">
+		      <Tooltip content="百度AI开放平台应用id，可前往官网免费申请">    
+		        <Form-item label="百度AI - AppID">
+		          <Input-number v-model="form.AiId" placeholder=""></Input-number>
+		        </Form-item>
+		      </Tooltip>
+	        </Col>
+		    <Col :span="6">      
+		        <Form-item label="百度AI - ApiKey">
+		          <Input v-model="form.AiKey" placeholder=""></Input>
+		        </Form-item>
+		    </Col>
+		    <Col :span="6"> 
+		        <Form-item label="百度AI- SecretKey">
+		          <Input v-model="form.AiSec" placeholder=""></Input>
+		        </Form-item>
 		    </Col>
 		</Row>
 		<Row>
@@ -318,6 +334,17 @@ export default {
 	  	  	  this.menu=JSON.stringify(r.data.data, null, 4)
 	  	  } else {
 	  	  	this.menuErr='获取'+r.data.errmsg
+	  	  } 
+	  	})
+	  	.catch(e=> { console.log(e) })
+	  },
+	  testDb(obj) {	  	
+	  	this.$http.post(this.$tokenadmin("testdb"), obj)
+	  	.then(r=>{ 
+	  	  if (r.data.result){
+	  	  	  this.$Message.info('测试成功')
+	  	  } else {
+	  	  	this.$Message.error('测试失败:' + r.data.errmsg)
 	  	  } 
 	  	})
 	  	.catch(e=> { console.log(e) })

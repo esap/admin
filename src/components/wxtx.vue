@@ -110,12 +110,12 @@
       return {
         list: [],
         currentPage:1,
-        pagesize:15,
+        pagesize: 20,
         imageUrl: '',
         loading: false,
         fileUrl: '',
         dialogFormVisible: false,
-        form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '' },
+        form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '', title: '', url: '' },
         form2: [{}],
       }
     },

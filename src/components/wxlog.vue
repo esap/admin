@@ -3,7 +3,7 @@
     <Button type="error" @click="clearLog" icon="android-delete">清除</Button>
     <Button type="primary" @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
     <div class="chart" id="mChart"></div>
-    <Input type="textarea" autosize v-model="form"></Input>          
+    <div v-for="v in form">{{v}}</div>          
   </div>
 </template>
 
@@ -12,7 +12,7 @@
   export default {
     data() {
       return {
-        form: "",
+        form: [],
         loading: false,
         list: {}
       }
@@ -23,7 +23,9 @@
         this.loading = true
         this.$http.get(this.$tokenadmin("log"))
         .then(r=> { 
-          this.form=r.data
+          if (r.data.result) {
+            this.form=r.data.data
+          }
           this.$Loading.finish()
           this.loading = false
         })
@@ -38,11 +40,21 @@
             myChart.setOption({
               title: { text: '数据分析' },
               tooltip: {},
-              xAxis: { data: ['查询', '提醒', 'email', '审批','图库'] },
-              yAxis: {},
+              xAxis: [{ data: ['查询', '提醒', 'email', '审批','图库'] }],
+              yAxis : [
+                  {
+                      type : 'value'
+                  }
+              ],
               series: [{
                 name: '记录数',
                 type: 'bar',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'inside'
+                    }
+                },
                 data: [this.list.cx,this.list.tx,this.list.email,this.list.sp,this.list.tk]
               }]
             })
@@ -52,7 +64,13 @@
       },
       clearLog() {
         this.$http.delete(this.$tokenadmin("log"))
-		  	.then(r=> { this.form=r.data })
+		  	.then(r=> { 
+          if (r.data.result) {
+            this.form=r.data.data
+          } else {
+            this.form=r.data.errmsg
+          }
+        })
 			  .catch(e => { console.log(e) })
       },
     },

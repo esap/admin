@@ -10,9 +10,8 @@
       <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
     </Page>
 
-    <el-table
+    <el-table stripe border
       :data="listShow"
-      v-if="$store.state.userName"
       style="width: 100%">
       <el-table-column prop="userid" label="账号" width="150"></el-table-column>
       <el-table-column prop="name" label="姓名" width="180"></el-table-column>
@@ -39,12 +38,12 @@
         return {
           list: [],
 		      currentPage:1,
-          pagesize:15,
+          pagesize: 20,
           loading: false,
         }
       },
 	  computed:{
-		listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
+		  listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
 	  },
       methods: {
 		    handleSizeChange(v) { this.pagesize=v },
