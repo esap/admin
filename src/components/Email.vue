@@ -8,6 +8,9 @@
       show-total show-elevator show-sizer
       :total="list.length">
       <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+      <Select v-model="db" style="width:100px">
+        <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
+      </Select>
     </Page>
 
     <el-table
@@ -45,6 +48,7 @@
       data() {
         return {
           list: [],
+          db: 'esap',
           pagesize: 20,
           loading: false,
           currentPage: 1
@@ -59,7 +63,7 @@
         getData() {
           this.$Loading.start()
           this.loading = false
-          this.$http.get(this.$tokenadmin("email"))
+          this.$http.get(this.$tokenadmin("email")+"&db="+this.db)
           .then(r=> { 
             if (r.data.result)this.list=r.data.data[0]
             this.$Loading.finish()
@@ -68,7 +72,7 @@
           .catch(e => { this.$Loading.error(); this.loading = false })
         },          
         deleteData(i,r) {
-          this.$http.delete(this.$tokenadmin("email")+"&id="+r.id)
+          this.$http.delete(this.$tokenadmin("email")+"&id="+r.id+"&db="+this.db)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })
@@ -81,7 +85,7 @@
         }, 
         saveData(i,r) {
         r.flag=0
-        this.$http.put(this.$tokenadmin("email")+"&id="+r.id, r)
+        this.$http.put(this.$tokenadmin("email")+"&id="+r.id, r+"&db="+this.db)
         .then(r => { 
           if (r.data.result){
             this.$Message.info('保存成功')

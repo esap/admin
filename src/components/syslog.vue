@@ -1,7 +1,11 @@
 <template>
   <div>  
-    <Button type="error" @click="clearLog" icon="android-delete">清除</Button>
-    <Button type="primary" @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+    <Affix>
+      <ButtonGroup shape="circle">
+        <Button type="error" @click="clearLog" icon="android-delete">清除</Button>
+        <Button type="primary" @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+      </ButtonGroup>
+    </Affix>
     <div class="chart" id="mChart"></div>
     <div v-for="v in form">{{v}}</div>          
   </div>
@@ -40,7 +44,7 @@
             myChart.setOption({
               title: { text: '数据分析' },
               tooltip: {},
-              xAxis: [{ data: ['查询', '提醒', 'email', '审批','图库'] }],
+              xAxis: [{ data: ['查询', '提醒', 'email', '审批','图库','语音','视频'] }],
               yAxis : [
                   {
                       type : 'value'
@@ -55,7 +59,7 @@
                         position: 'inside'
                     }
                 },
-                data: [this.list.cx,this.list.tx,this.list.email,this.list.sp,this.list.tk]
+                data: [this.list.cx,this.list.tx,this.list.email,this.list.sp,this.list.tk,this.list.yy,this.list.vd]
               }]
             })
           }

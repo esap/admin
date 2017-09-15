@@ -14,10 +14,10 @@ export default new Router({
     include("wxtx"),
     include("wxcx"),
     include("wxtk"),
+    include("esaplog"),
     include("wxtxl"),
-    include("wxlog"),
+    include("syslog"),
     include("info"),
-    include("test"),
     { path: '*', name: 'info', component: info }
   ]
 })

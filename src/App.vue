@@ -31,20 +31,20 @@
 	    </Form-item>
 	  </Form>
 	</Modal>
-	<!-- 内容 -->		
+	<!-- 内容 -->
 	<Row>
 	  <div v-if="$store.getters.isLogin">
 		<Col :span="spanLeft" class="layout-menu-left">
-		<Button type="text" @click="toggleClick"><Icon type="navicon" color="#fff" size="30"></Icon></Button>
-		<span style="color: white;font-size: 14px" v-show="spanLeft>1">ESAP3.0</span>
-		<Menu active-name="info" theme="dark" width="auto" @on-select="go">
+		<Button type="text" @click="toggleClick"><img v-show="spanLeft<=1" src="./assets/esap.png" :width="32"></img><span v-show="spanLeft>1"><span class="hdFont" style="color: #ddd">ESAP</span>3.0</span></Button>	
+		<Menu theme="dark" width="auto" @on-select="go">
 		  <Menu-item name="info"><Icon type="settings" :size="iconSize"></Icon><span v-show="spanLeft>1">设置</span></Menu-item>
 		  <Menu-item name="wxtx"><Icon type="paper-airplane" :size="iconSize"></Icon><span v-show="spanLeft>1">提醒</span></Menu-item>
 		  <Menu-item name="wxcx"><Icon type="social-chrome-outline" :size="iconSize"></Icon><span v-show="spanLeft>1">查询</span></Menu-item>
 		  <Menu-item name="wxtk"><Icon type="image" :size="iconSize"></Icon><span v-show="spanLeft>1">图库</span></Menu-item>
 		  <Menu-item name="wxtxl"><Icon type="ios-people" :size="iconSize"></Icon><span v-show="spanLeft>1">通讯录</span></Menu-item>
 		  <Menu-item name="email"><Icon type="email" :size="iconSize"></Icon><span v-show="spanLeft>1">Email</span></Menu-item>
-		  <Menu-item name="wxlog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">日志</span></Menu-item>
+		  <Menu-item name="esaplog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">API日志</span></Menu-item>
+		  <Menu-item name="syslog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">系统日志</span></Menu-item>
 		</Menu>
 		<hr />
 		<div class="menu-util">
@@ -58,7 +58,7 @@
 		    <Icon type="android-person" :size="iconSize"></Icon>
 			<span v-show="spanLeft>1" style="color: #fff">关于</span>
 		  </a>
-	    </div>			
+	    </div>
 	    <div class="menu-util" v-show="!!$store.state.userName" >
 	      <a style="color: #fff" @click="loginOut">
 		    <Icon type="android-walk" :size="iconSize"></Icon>
@@ -66,15 +66,8 @@
 		  </a>
 	    </div>	
 		</Col>
-	    <Col :span="spanRight">       
-           <!--  <div class="layout-breadcrumb">
-                <Breadcrumb>
-                    <Breadcrumb-item href="#">首页</Breadcrumb-item>
-                    <Breadcrumb-item href="#">应用中心</Breadcrumb-item>
-                    <Breadcrumb-item>某应用</Breadcrumb-item>
-                </Breadcrumb>
-            </div> -->
-            <div class="layout-content">	   			
+	    <Col :span="spanRight">
+            <div class="layout-content">
                 <div class="layout-content-main"><router-view></router-view></div>
             </div>          
         </Col>
@@ -105,6 +98,11 @@ export default {
 		iconSize () { return this.spanLeft === 3 ? 14 : 24 }
 	},
 	methods: {
+		getData() {
+			this.$http.get(this.$tokenadmin("config"))
+			.then(r=> { this.$store.state.form=r.data.data })
+			.catch(e=> { console.log(e)})
+		},
 		doLogin() {
 			this.form.pwd=md5(this.pwd)
 			this.$store.dispatch('doLogin',this.form)
@@ -123,12 +121,16 @@ export default {
 		},
 		about() {
 		  this.$http.get(this.$tokenadmin("getreg"))
-		  	.then(r=> { 
-		    if (r.data.result)this.updateInfo=r.data
-	    	this.$Modal.info({
-                title: '关于',
-                content: '<p>会员等级：'+r.data.desc+'</p><p>当前版本：'+r.data.cver+'</p><p>最新版本：'+r.data.ver+'</p><div class="layout-copy">2015-2017 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div><div>Powered by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>'
-            });
+		  .then(r=> { 
+		    if (r.data.result){
+		    	this.updateInfo=r.data
+		    	this.$Modal.info({
+	                title: '关于',
+	                content: '<p>会员等级：'+r.data.desc+'</p><p>当前版本：'+r.data.cver+'</p><p>最新版本：'+r.data.ver+'</p><div class="layout-copy">2015-2017 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div><div>Powered by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>'
+	            })
+		    } else {
+		    	this.$Message.info(r.data.errmsg)
+		    }
 		  })
 		  .catch(e => { console.log(e)})
 		},
@@ -145,6 +147,9 @@ export default {
             }
         }
 	},
+	mounted(){
+	  this.getData()
+	}
 }
 </script>
 
@@ -153,6 +158,10 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
+.hdFont
+	font-family: AVP
+	font-size: 32px
+	text-shadow: 3px 3px 2px #000
 a
   color: #fff
 .right 

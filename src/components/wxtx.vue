@@ -7,8 +7,13 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
-      <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+      <ButtonGroup>
+        <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+        <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+      </ButtonGroup>
+      <Select v-model="db" style="width:100px">
+        <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
+      </Select>
     </Page>
 
     <Modal title="新增微信提醒" v-model="dialogFormVisible">
@@ -17,7 +22,9 @@
           <Date-picker v-model="form.cdate" type="datetime" placeholder="选择发送日期,选填"></Date-picker>
         </Form-item>
         <Form-item label="接收应用">
-          <Input v-model="form.app" placeholder="默认为esap, 选填" auto-complete="off"></Input>
+          <Select v-model="form.app" style="width:100px">
+            <Option v-for="item in $store.getters.apps" :value="item.AppName" :key="item.AppName">{{ item.AppName }}</Option>
+          </Select>
         </Form-item>
         <Form-item label="接收人">
           <Input v-model="form.touser" placeholder="@all表示全体，可用逗号分隔多个用户，选填"></Input>
@@ -87,8 +94,10 @@
       <el-table-column sortable prop="flag" label="标记" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template scope="scope">
+          <ButtonGroup>
           <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>
           <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+          </ButtonGroup>
         </template>
       </el-table-column>
     </el-table>
@@ -109,6 +118,7 @@
     data() {
       return {
         list: [],
+        db: 'esap',
         currentPage:1,
         pagesize: 20,
         imageUrl: '',
@@ -128,7 +138,7 @@
       getData() {
         this.$Loading.start()
         this.loading = true
-        this.$http.get(this.$tokenadmin("wxtx"))
+        this.$http.get(this.$tokenadmin("wxtx")+"&db="+this.db)
 		  	.then(r=> { 
             if (r.data.result)this.list=r.data.data[0]
             this.loading = false
@@ -137,7 +147,7 @@
           .catch(e => { this.$Loading.error(); this.loading = false })
       },
       deleteData(i,r) {
-        this.$http.delete(this.$tokenadmin("wxtx")+"&id="+r.id)
+        this.$http.delete(this.$tokenadmin("wxtx")+"&db="+this.db+"&id="+r.id)
         .then(r => { 
           if (r.data.result){
             this.$Message.info('删除成功')
@@ -150,7 +160,7 @@
       },
       saveData(i,r) {
         r.flag=0
-        this.$http.put(this.$tokenadmin("wxtx")+"&id="+r.id, r)
+        this.$http.put(this.$tokenadmin("wxtx")+"&db="+this.db+"&id="+r.id, r)
         .then(r => { 
           if (r.data.result){
             this.$Message.info('保存成功')

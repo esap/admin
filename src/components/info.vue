@@ -1,8 +1,17 @@
 <template>
   <div>
-    <Form :model="form" :label-width="60">
-      <Alert class="hr" show-icon>应用 - wechat<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Apps.push({})"></Icon></Alert>
-        <el-table stripe :data="form.Apps" style="width: 100%">
+    <Affix>
+      <ButtonGroup shape="circle">
+        <Button type="success" @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+        <Button type="warning" @click="restartSrv" icon="ios-loop">重启</Button>
+        <Button type="primary"s @click="saveData" icon="ios-download-outline">保存</Button>
+      </ButtonGroup>
+    </Affix>  
+      
+
+    <Tabs value="name1" type="card">
+      <TabPane label="应用 - wechat" name="name1">     
+        <el-table stripe :data="$store.state.form.Apps" style="width: 100%" :height="600">
 	      <el-table-column prop="AppName" label="应用名" width="100">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.AppName"></Input>
@@ -49,14 +58,18 @@
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
-	          <Button :disabled="scope.row.AgentId>3000000" size="small" @click="getMenu(scope.row)">菜单</Button>
-	          <Button size="small" type="error" @click="form.Apps.splice(scope.$index, 1)">删除</Button>
+	          <ButtonGroup>
+	            <Button :disabled="scope.row.AgentId>3000000" size="small" @click="getMenu(scope.row)">菜单</Button>
+	            <Button size="small" type="error" @click="$store.state.form.Apps.splice(scope.$index, 1)">删除</Button>
+	          </ButtonGroup>
 	        </template>
 	      </el-table-column>
 	    </el-table>
+	    <Button icon="plus-circled" @click.native="$store.state.form.Apps.push({})">新增</Button>
+	  </TabPane>
 
-      <Alert class="hr" show-icon>数据库 - database<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Dbs.push({})"></Icon></Alert>
-        <el-table stripe :data="form.Dbs" style="width: 100%">
+      <TabPane label="数据库 - database" name="name2">     
+        <el-table stripe :data="$store.state.form.Dbs" style="width: 100%" :height="600">
 	      <el-table-column prop="DbName" label="数据源名" width="100">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.DbName"></Input>
@@ -100,7 +113,6 @@
 	          <Input v-model="scope.row.Db" show-overflow-tooltip placeholder="例如esapp1"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="State" label="状态" show-overflow-tooltip width="100"> </el-table-column>
 	      <el-table-column prop="IsRun" label="开关" width="80">	      	
 	        <template scope="scope">
 	          <i-switch v-model="scope.row.IsRun"></i-switch>
@@ -108,15 +120,18 @@
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
-	          <Button size="small" @click="testDb(scope.row)">测试</Button>
-	          <Button size="small" type="error" @click="form.Dbs.splice(scope.$index, 1)">删除</Button>
+	          <ButtonGroup>
+	            <Button size="small" @click="testDb(scope.row)">测试</Button>
+	            <Button size="small" type="error" @click="$store.state.form.Dbs.splice(scope.$index, 1)">删除</Button>
+	          </ButtonGroup>
 	        </template>
 	      </el-table-column>
 	    </el-table>
-		
-	  <Alert class="hr" show-icon><Icon type="ios-timer-outline"></Icon> 计划任务 - task<Icon slot="icon" size="20" type="plus-circled" @click.native="form.Tasks.push({})"></Icon></Alert>
+	    <Button icon="plus-circled" @click.native="$store.state.form.Dbs.push({})">新增</Button>
+	  </TabPane>
 
-	    <el-table stripe :data="form.Tasks" style="width: 100%">
+      <TabPane label="计划任务 - task" name="name3">		
+	    <el-table stripe :data="$store.state.form.Tasks" style="width: 100%" :height="600">
 	      <el-table-column prop="TaskID" label="任务ID" width="300">	      	
 	        <template scope="scope">
 	          <Input v-model="scope.row.TaskID"></Input>
@@ -148,16 +163,19 @@
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
 	          <!-- <Button size="small" @click="getMenu(scope.row)">测试</Button> -->
-	          <Button size="small" type="error" @click="form.Tasks.splice(scope.$index, 1)">删除</Button>
+	          <Button size="small" type="error" @click="$store.state.form.Tasks.splice(scope.$index, 1)">删除</Button>
 	        </template>
 	      </el-table-column>
 	    </el-table>
+	    <Button icon="plus-circled" @click.native="$store.state.form.Tasks.push({})">新增</Button>
+	  </TabPane>
 
-      <Alert class="hr">其他 - other</Alert>
+	  <TabPane label="其他 - other" name="name4">
+      <Form :model="$store.state.form" :label-width="60">
         <Row>
 		    <Col :span="12">
 		        <Form-item label="外网域名 - Host">
-		          <Input v-model="form.Host" placeholder=""></Input>
+		          <Input v-model="$store.state.form.Host" placeholder=""></Input>
 		        </Form-item>  
 	        </Col>
 		    <Col :span="6">      
@@ -168,7 +186,7 @@
 		    <Col :span="6"> 
 			  <Tooltip content="同步计划的队列间隔，最低100毫秒">
 		        <Form-item label="同步间隔(毫秒)">
-		          <Input-number :min="100" v-model="form.SyncDelay"></Input-number>
+		          <Input-number :min="100" v-model="$store.state.form.SyncDelay"></Input-number>
 		        </Form-item>
 			  </Tooltip>
 		    </Col>
@@ -180,53 +198,51 @@
 		    <Col :span="6">
 		      <Tooltip content="百度AI开放平台应用id，可前往官网免费申请">    
 		        <Form-item label="百度AI - AppID">
-		          <Input-number v-model="form.AiId" placeholder=""></Input-number>
+		          <Input-number v-model="$store.state.form.AiId" placeholder=""></Input-number>
 		        </Form-item>
 		      </Tooltip>
 	        </Col>
 		    <Col :span="6">      
 		        <Form-item label="百度AI - ApiKey">
-		          <Input v-model="form.AiKey" placeholder=""></Input>
+		          <Input v-model="$store.state.form.AiKey" placeholder=""></Input>
 		        </Form-item>
 		    </Col>
 		    <Col :span="6"> 
 		        <Form-item label="百度AI- SecretKey">
-		          <Input v-model="form.AiSec" placeholder=""></Input>
+		          <Input v-model="$store.state.form.AiSec" placeholder=""></Input>
 		        </Form-item>
 		    </Col>
 		</Row>
 		<Row>
 		    <Col :span="3">
 		        <Form-item label="提醒重试 - ReTryMsg">
-		          <i-switch v-model="form.ReTryMsg" placeholder=""></i-switch>
+		          <i-switch v-model="$store.state.form.ReTryMsg" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
 		    <Col :span="3">
 		        <Form-item label="进入提示 - EnterMsg">
-		          <i-switch v-model="form.ShowFuncListEnter" placeholder=""></i-switch>
+		          <i-switch v-model="$store.state.form.ShowFuncListEnter" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
 		    <Col :span="3">
 		        <Form-item label="自动认证 - NeedWxOAuth2">
-		          <i-switch v-model="form.NeedWxOAuth2" placeholder=""></i-switch>
+		          <i-switch v-model="$store.state.form.NeedWxOAuth2" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
 		    <Col :span="3">
 		        <Form-item label="使用ES库 - IsEs">
-		          <i-switch v-model="form.IsEs" placeholder=""></i-switch>
+		          <i-switch v-model="$store.state.form.IsEs" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
 		    <Col :span="3">
 		        <Form-item label="调试模式 - Debug">
-		          <i-switch v-model="form.Debug"></i-switch>
+		          <i-switch v-model="$store.state.form.Debug"></i-switch>
 		        </Form-item>
 			</Col>
 		</Row>
-           
-      <Button type="success" @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
-      <Button type="warning" @click="restartSrv" icon="ios-loop">重启服务</Button>
-      <Button type="primary" @click="saveData" icon="ios-download-outline">保存</Button>
-    </Form>
+      </Form>
+      </TabPane>
+    </Tabs>
 
     <Modal width="240"
 	  title="重启ESAP中..." 
@@ -262,7 +278,7 @@ import md5 from 'md5'
 export default {
 	data() {
 	  return {
-	    form: {},
+	    // form: {},
 		modal1: false,
 		modal2: false,
 		loading: false,
@@ -276,7 +292,7 @@ export default {
 	      value: 'mssql',
 	      label: 'Sql2005+'
 	    }, {
-	      value: 'Sql2000',
+	      value: 'sql2000',
 	      label: 'Sql2000'
 	    }, {
 	      value: 'mysql',
@@ -374,23 +390,23 @@ export default {
 	        }
 	     })
 	  	.catch(e=> { console.log(e) })
-	  },
+	  },	
 	  getData() {
-	  	this.loading = true
-	    this.$http.get(this.$tokenadmin("config"))
-		.then(r=> { this.form=r.data.data; this.loading = false })
-		.catch(e=> { console.log(e); this.loading = false })
+	  		this.loading=true
+			this.$http.get(this.$tokenadmin("config"))
+			.then(r=> { this.$store.state.form=r.data.data; this.loading=false })
+			.catch(e=> { console.log(e); this.loading=false })
 	  },
 	  saveData() {
 	  	  if(this.Pwd1) {
-	  	  	this.form.Pwd=md5(this.Pwd1)
+	  	  	this.$store.state.form.Pwd=md5(this.Pwd1)
 	  	  }
-	      this.$http.post(this.$tokenadmin("config"), this.form)
+	      this.$http.post(this.$tokenadmin("config"), this.$store.state.form)
 	      .then(r => {
 	        if (r.data.result){
 	          this.$Message.info('配置成功')
-	          this.form=r.data.data
-	          this.form.Pwd=""
+	          this.$store.state.form=r.data.data
+	          this.$store.state.form.Pwd=""
 	        }else{
 	          this.$Message.info(r.data.errmsg)
 	        }
@@ -398,7 +414,7 @@ export default {
 	      .catch(e=> { this.$Message.info(r.data.errmsg)})
 	  },
 	  restartSrv() {
-	     this.$http.post(this.$tokenadmin("restart"), this.form)
+	     this.$http.post(this.$tokenadmin("restart"), this.$store.state.form)
 	     .then(r => {
 	       if (r.data.result){
 		     this.modal1 = true
@@ -420,13 +436,10 @@ export default {
 		  }
 	  },
 	  addAgent(){
-	    this.form.Agents.x1='xx'
-	    console.log(this.form.Agents)
+	    this.$store.state.form.Agents.x1='xx'
+	    console.log(this.$store.state.form.Agents)
 	  }
-	},
-	mounted(){
-	  this.getData()
-	}
+	}	
 }
 </script>
 

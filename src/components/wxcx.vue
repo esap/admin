@@ -7,8 +7,10 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
-      <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+      <ButtonGroup>
+        <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+        <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+      </ButtonGroup>
     </Page>
 
     <Modal title="新增微信查询" v-model="dialogFormVisible">
@@ -55,12 +57,22 @@
             <Input type="textarea" autosize v-model="form.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
         </Form-item>
-        <Form-item label="专属应用">
-            <Input v-model="form.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
-        </Form-item>
-        <Form-item label="数据源">
-            <Input v-model="form.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
-        </Form-item>
+        <Row>
+          <Col :span="8">
+          <Form-item label="专属应用">
+            <Select v-model="form.app" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.apps" :value="item.AppName" :key="item.AppName">{{ item.AppName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+          <Col :span="8">
+          <Form-item label="数据源">
+            <Select v-model="form.db" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+        </Row>
         <Form-item label="原文链接">
             <Input v-model="form.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
         </Form-item> 
@@ -118,12 +130,22 @@
             <Input type="textarea" autosize v-model="formModify.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
         </Form-item>
-        <Form-item label="专属应用">
-            <Input v-model="formModify.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
-        </Form-item>
-        <Form-item label="数据源">
-            <Input v-model="formModify.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
-        </Form-item>
+        <Row>
+          <Col :span="8">
+          <Form-item label="专属应用">
+            <Select v-model="formModify.app" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.apps" :value="item.AppName" :key="item.AppName">{{ item.AppName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+          <Col :span="8">
+          <Form-item label="数据源">
+            <Select v-model="formModify.db" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+        </Row>       
         <Form-item label="原文链接">
             <Input v-model="formModify.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
         </Form-item> 
@@ -152,13 +174,15 @@
       <el-table-column label="模式" prop="mode" width="100"></el-table-column>
       <el-table-column label="专用查询" prop="app" width="100"></el-table-column>
       <el-table-column label="数据源" prop="db" width="100"></el-table-column>
-      <el-table-column label="原文链接" prop="url" width="100"></el-table-column>
-      <el-table-column label="原文封面" prop="pic" width="100"></el-table-column>
+      <el-table-column label="原文链接" show-overflow-tooltip prop="url" width="100"></el-table-column>
+      <el-table-column label="原文封面" show-overflow-tooltip prop="pic" width="100"></el-table-column>
       <el-table-column label="保密" prop="safe" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template scope="scope">
-          <Button size="small" @click="showModify(scope.row)">编辑</Button>
-          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+          <ButtonGroup>
+            <Button size="small" @click="showModify(scope.row)">编辑</Button>
+            <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+          </ButtonGroup>
         </template>
       </el-table-column>
     </el-table>   

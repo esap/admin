@@ -24,13 +24,17 @@ export default new Vuex.Store({
     showPagn:true,
     loading:false,
     userName: sessionStorage.getItem("esap_user"),
+    form: {Dbs:[]}
   },
   getters: {
     showData: s => s.tableData.slice((s.cPage-1)*s.pSize,s.pSize*s.cPage),
     mtstr: s => s.mts?'multiple':'single',
     isLogin: s => !!s.userName,
     isAdmin: s=> s.userName=="Admin",
-  	token: s=> "?token="+sessionStorage.getItem("esap_token")
+  	token: s=> "?token="+sessionStorage.getItem("esap_token"),
+    dbs: s=> s.form.Dbs.filter(v=>v.IsRun),
+    apps: s=> s.form.Apps.filter(v=>v.IsRun),
+    tasks: s=> s.form.Tasks.filter(v=>v.IsRun)
   },
   mutations: {
     mtsChg (state) { state.mts=!state.mts },
