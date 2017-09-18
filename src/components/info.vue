@@ -6,10 +6,9 @@
         <Button type="warning" @click="restartSrv" icon="ios-loop">重启</Button>
         <Button type="primary"s @click="saveData" icon="ios-download-outline">保存</Button>
       </ButtonGroup>
-    </Affix>  
-      
+    </Affix>
 
-    <Tabs value="name1" type="card">
+    <Tabs v-model="name1" type="card">
       <TabPane label="应用 - wechat" name="name1">     
         <el-table stripe :data="$store.state.form.Apps" style="width: 100%" :height="600">
 	      <el-table-column prop="AppName" label="应用名" width="100">	      	
@@ -118,10 +117,12 @@
 	          <i-switch v-model="scope.row.IsRun"></i-switch>
 	        </template>
 	      </el-table-column>	      
-	      <el-table-column label="操作" width="150">
+	      <el-table-column label="操作" width="200">
 	        <template scope="scope">
 	          <ButtonGroup>
 	            <Button size="small" @click="testDb(scope.row)">测试</Button>
+	            <Button size="small" type="warning" @click="createDb(scope.row)">建库</Button>
+	            <Button size="small" type="warning" @click="createTable(scope.row)">建表</Button>
 	            <Button size="small" type="error" @click="$store.state.form.Dbs.splice(scope.$index, 1)">删除</Button>
 	          </ButtonGroup>
 	        </template>
@@ -162,7 +163,6 @@
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
-	          <!-- <Button size="small" @click="getMenu(scope.row)">测试</Button> -->
 	          <Button size="small" type="error" @click="$store.state.form.Tasks.splice(scope.$index, 1)">删除</Button>
 	        </template>
 	      </el-table-column>
@@ -278,7 +278,7 @@ import md5 from 'md5'
 export default {
 	data() {
 	  return {
-	    // form: {},
+	    name1: '',
 		modal1: false,
 		modal2: false,
 		loading: false,
@@ -365,6 +365,44 @@ export default {
 	  	})
 	  	.catch(e=> { console.log(e) })
 	  },
+      createDb (obj) {
+        this.$Modal.confirm({
+            title: '创建新数据库',
+            content: '<p>点击确定将在esap主库实例上创建一个新的空数据库('+obj.Db+')，如已存在则跳过</p>',
+            loading: true,
+            onOk: () => {
+            	this.$http.post(this.$tokenadmin("createdb"), obj)
+			  	.then(r=>{
+			  	  if (r.data.result){
+			  	  	  this.$Message.info('执行成功')
+			  	  	  this.$Modal.remove()
+			  	  } else {
+			  	  	this.$Message.error('执行失败:' + r.data.errmsg)
+			  	  } 
+			  	})
+			  	.catch(e=> { this.$Message.error('执行失败:' + e) })
+            }
+        });
+      },
+      createTable (obj) {
+        this.$Modal.confirm({
+            title: '创建ESAP系统数据表',
+            content: '<p>点击确定将创建“esap_xx”系列数据表，请谨慎操作，执行后会删除已有数据表</p>',
+            loading: true,
+            onOk: () => {
+            	this.$http.post(this.$tokenadmin("createtable"), obj)
+			  	.then(r=>{
+			  	  if (r.data.result){
+			  	  	  this.$Message.info('执行成功')
+			  	  	  this.$Modal.remove()
+			  	  } else {
+			  	  	this.$Message.error('执行失败:' + r.data.errmsg)
+			  	  } 
+			  	})
+			  	.catch(e=> { this.$Message.error('执行失败:' + e) })
+            }
+        });
+      },	  
 	  saveMenu() {
 	  	this.$http.post(this.$tokenadmin("menu")+"&app="+this.menuApp, JSON.parse(this.menu))
 	  	.then(r=>{
