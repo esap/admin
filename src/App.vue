@@ -126,7 +126,7 @@ export default {
 		    	this.updateInfo=r.data
 		    	this.$Modal.info({
 	                title: '关于',
-	                content: '<p>会员等级：'+r.data.desc+'</p><p>当前版本：'+r.data.cver+'</p><p>最新版本：'+r.data.ver+'</p><div class="layout-copy">2015-2017 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div><div>Powered by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>'
+	                content: '<p>用户等级：'+r.data.desc+'</p><p>累计使用：'+r.data.cnt+'天</p><p>当前版本：'+r.data.cver+'</p><p>最新版本：'+r.data.ver+'</p><div class="layout-copy">2015-2017 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div><div>Powered by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>'
 	            })
 		    } else {
 		    	this.$Message.info(r.data.errmsg)
