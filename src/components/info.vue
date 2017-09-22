@@ -16,11 +16,20 @@
 	          <Input v-model="scope.row.AppName"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="AppType" label="类型" width="100">	      	
+	      <el-table-column prop="AppType" label="类型" width="120">	      	
 	        <template scope="scope">
-	          <Tooltip content="公众号填pub,可选"> 
-	            <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.AppType"></Input>
-	          </Tooltip>
+	          <!-- <Tooltip content="公众号填pub,可选">  -->
+	            <!-- <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.AppType"></Input> -->
+	            <Select v-model="scope.row.AppType" placeholder="企业号">
+		            <i-option
+		              v-for="item in options1"
+		              :key="item.value"
+		              :label="item.label"
+		              :value="item.value"
+		              :disabled="item.disabled">
+		            </i-option>
+	          </Select>
+	          <!-- </Tooltip> -->
 	        </template>
 	      </el-table-column>
 	      <el-table-column prop="AppId" label="AppId/corpId" width="150">	      	
@@ -293,6 +302,25 @@ export default {
 		menuApp: '',
 		menuErr: '',
 		pct: 0,
+	    options1:  [{
+	      value: '',
+	      label: '企业号'
+	    }, {
+	      value: 'pub',
+	      label: '公众号'
+	    }, {
+	      value: 'ding',
+	      label: '钉钉',
+	      disabled: true
+	    }, {
+	      value: 'wlw',
+	      label: '物联网',
+	      disabled: true
+	    }, {
+	      value: 'zfb',
+	      label: '支付宝',
+	      disabled: true
+	    }],
 	    options2:  [{
 	      value: 'mssql',
 	      label: 'Sql2005+'
