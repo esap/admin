@@ -230,6 +230,11 @@
 		        </Form-item>
 			</Col>
 		    <Col :span="3">
+		        <Form-item label="自动升级 - AutoUpdate">
+		          <i-switch v-model="$store.state.form.AutoUpdate" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+		    <Col :span="3">
 		        <Form-item label="使用ES库 - IsEs">
 		          <i-switch v-model="$store.state.form.IsEs" placeholder=""></i-switch>
 		        </Form-item>
