@@ -9,7 +9,7 @@
     </Affix>
 
     <Tabs v-model="name1" type="card">
-      <TabPane label="应用 - wechat" name="name1">     
+      <TabPane label="应用 - app" name="name1">
         <el-table stripe :data="$store.state.form.Apps" style="width: 100%" :height="600">
 	      <el-table-column prop="AppName" label="应用名" width="100">	      	
 	        <template scope="scope">
@@ -18,9 +18,7 @@
 	      </el-table-column>
 	      <el-table-column prop="AppType" label="类型" width="120">	      	
 	        <template scope="scope">
-	          <!-- <Tooltip content="公众号填pub,可选">  -->
-	            <!-- <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.AppType"></Input> -->
-	            <Select v-model="scope.row.AppType" placeholder="企业号">
+	            <Select :disabled="scope.row.AgentId>3000000" v-model="scope.row.AppType" placeholder="企业号">
 		            <i-option
 		              v-for="item in options1"
 		              :key="item.value"
@@ -29,7 +27,6 @@
 		              :disabled="item.disabled">
 		            </i-option>
 	          </Select>
-	          <!-- </Tooltip> -->
 	        </template>
 	      </el-table-column>
 	      <el-table-column prop="AppId" label="AppId/corpId" width="150">	      	
