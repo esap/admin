@@ -113,7 +113,7 @@ export default {
 		doLogin() {
 			this.form.pwd=md5(this.pwd)
 			this.$store.dispatch('doLogin',this.form)
-			setTimeout(this.getData, 1000)
+			setTimeout(this.getData, 1500)
 		},
 		loginOut() {
 			this.pwd=''

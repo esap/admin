@@ -377,7 +377,10 @@ export default {
 	  	this.$http.get(this.$tokenadmin("menu")+"&app="+obj.AppName)
 	  	.then(r=>{ 
 	  	  if (r.data.result){
-	  	  	  this.menu=JSON.stringify(r.data.data, null, 4)
+	  	  	if (r.data.data.menu) {
+	  	  		r.data.data=r.data.data.menu
+	  	  	}
+	  	  	this.menu=JSON.stringify(r.data.data, null, 4)	  	  	
 	  	  } else {
 	  	  	this.menuErr='获取'+r.data.errmsg
 	  	  } 
