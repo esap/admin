@@ -179,14 +179,19 @@
 	  <TabPane label="其他 - other" name="name4">
       <Form :model="$store.state.form" :label-width="60">
         <Row>
-		    <Col :span="12">
+		    <Col :span="10">
 		        <Form-item label="外网域名 - Host">
 		          <Input v-model="$store.state.form.Host" placeholder=""></Input>
 		        </Form-item>  
 	        </Col>
-		    <Col :span="6">      
+		    <Col :span="4">      
 		        <Form-item label="管理密码 - Pwd">
 		          <Input type="password" v-model="Pwd1" placeholder=""></Input>
+		        </Form-item>
+		    </Col>
+		    <Col :span="4">      
+		        <Form-item label="脚本前缀  - Prefix">
+		          <Input v-model="$store.state.form.SyncPrefix" placeholder=""></Input>
 		        </Form-item>
 		    </Col>
 		    <Col :span="6"> 
