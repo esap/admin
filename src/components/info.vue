@@ -169,7 +169,13 @@
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
 	        <template scope="scope">
-	          <Button size="small" type="error" @click="$store.state.form.Tasks.splice(scope.$index, 1)">删除</Button>
+	          <Button size="small" type="error" @click="runTask(scope)">测试</Button>
+	        </template>
+	        <template scope="scope">
+	          <ButtonGroup>
+	            <Button size="small" @click="runTask(scope.row)">测试</Button>	                   
+	            <Button size="small" type="error" @click="$store.state.form.Tasks.splice(scope.$index, 1)">删除</Button>
+	          </ButtonGroup>
 	        </template>
 	      </el-table-column>
 	    </el-table>
@@ -370,6 +376,9 @@ export default {
 	    }, {
 	      value: 'WxtxlTask',
 	      label: '通讯录同步'
+	    }, {
+	      value: 'UserTaskScan',
+	      label: '用户任务'
 	    }],
 	  }
 	},
@@ -510,6 +519,17 @@ export default {
 		  }else{
 		    this.pct = this.pct+5
 		  }
+	  },
+	  runTask(t) {
+	  	 this.$http.post(this.$tokenadmin("runtask"), t)
+	     .then(r => {
+	       if (r.data.result){		     
+	         this.$Message.info('操作成功')			
+	       }else{
+	         this.$Message.info("操作失败, "+r.data.errmsg)
+	       }
+	     })
+	     .catch(e => { this.$Message.info("操作失败, "+e) })  
 	  },
 	  addAgent(){
 	    this.$store.state.form.Agents.x1='xx'

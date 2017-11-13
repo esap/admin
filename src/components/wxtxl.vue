@@ -13,14 +13,14 @@
     <el-table stripe border
       :data="listShow"
       style="width: 100%">
-      <el-table-column prop="userid" label="账号" width="150"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="mobile" label="手机" width="180"></el-table-column>
-      <el-table-column prop="position" label="职位" width="180"></el-table-column>
+      <el-table-column prop="userid" label="账号" width="100"></el-table-column>
+      <el-table-column prop="name" label="姓名" width="120"></el-table-column>
+      <el-table-column prop="mobile" label="手机" width="150"></el-table-column>
+      <el-table-column prop="position" label="职位" width="100"></el-table-column>
       <el-table-column prop="gender" label="性别" width="80"></el-table-column>
-      <el-table-column prop="email" label="Email" width="180"></el-table-column>
-      <el-table-column prop="telephone" label="固话" width="180"></el-table-column>
-      <el-table-column prop="department" label="部门" width="180"></el-table-column>
+      <el-table-column prop="email" label="Email" width="120"></el-table-column>
+      <el-table-column prop="telephone" label="固话" width="120"></el-table-column>
+      <el-table-column prop="department" label="部门" width="80"></el-table-column>
     </el-table>
 
     <Page
