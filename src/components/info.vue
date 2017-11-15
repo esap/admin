@@ -230,6 +230,23 @@
 		        </Form-item>
 		    </Col>
 		</Row>
+        <Row>
+		    <Col :span="4">
+		    	<Button type="warning"><a href="https://cloud.tencent.com/product/sms" target="_blank">腾讯云短信官网</a></Button>
+		    </Col>
+		    <Col :span="6">
+		      <Tooltip content="腾讯云应用id，国内每月免费100条">    
+		        <Form-item label="短信应用 - AppID">
+		          <Input v-model="$store.state.form.SmsId" placeholder=""></Input>
+		        </Form-item>
+		      </Tooltip>
+	        </Col>
+		    <Col :span="10">      
+		        <Form-item label="短信应用 - AppKey">
+		          <Input v-model="$store.state.form.SmsKey" placeholder=""></Input>
+		        </Form-item>
+		    </Col>		   
+		</Row>
 		<Row>
 		    <Col :span="3">
 		        <Form-item label="提醒重试 - ReTryMsg">
@@ -373,6 +390,9 @@ export default {
 	    }, {
 	      value: 'WxtxTask',
 	      label: '微信提醒'
+	    }, {
+	      value: 'SmsTask',
+	      label: '短信提醒'
 	    }, {
 	      value: 'WxtxlTask',
 	      label: '通讯录同步'
