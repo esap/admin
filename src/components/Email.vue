@@ -24,6 +24,7 @@
       <el-table-column show-overflow-tooltip prop="Pic" width="100" label="图片"></el-table-column>
       <el-table-column show-overflow-tooltip prop="Files" width="100" label="文件"></el-table-column>
       <el-table-column prop="flag" label="标记" width="80"></el-table-column>
+      <el-table-column show-overflow-tooltip prop="ret" label="结果" width="80"></el-table-column>
       <el-table-column label="操作" width="150">
         <template scope="scope">  
           <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>        

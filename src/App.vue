@@ -41,11 +41,12 @@
 		  <Menu-item name="info"><Icon type="settings" :size="iconSize"></Icon><span v-show="spanLeft>1">设置</span></Menu-item>
 		  <Menu-item name="wxtx"><Icon type="paper-airplane" :size="iconSize"></Icon><span v-show="spanLeft>1">提醒</span></Menu-item>
 		  <Menu-item name="wxcx"><Icon type="social-chrome-outline" :size="iconSize"></Icon><span v-show="spanLeft>1">查询</span></Menu-item>
+		  <Menu-item name="sms"><Icon type="chatbox" :size="iconSize"></Icon><span v-show="spanLeft>1">短信</span></Menu-item>
 		  <Menu-item name="wxtk"><Icon type="image" :size="iconSize"></Icon><span v-show="spanLeft>1">图库</span></Menu-item>
 		  <Menu-item name="wxtxl"><Icon type="ios-people" :size="iconSize"></Icon><span v-show="spanLeft>1">通讯录</span></Menu-item>
 		  <Menu-item name="email"><Icon type="email" :size="iconSize"></Icon><span v-show="spanLeft>1">Email</span></Menu-item>
-		  <Menu-item name="esaplog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">API日志</span></Menu-item>
-		  <Menu-item name="syslog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">系统日志</span></Menu-item>
+		  <Menu-item name="esaplog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">API访问</span></Menu-item>
+		  <Menu-item name="syslog"><Icon type="stats-bars" :size="iconSize"></Icon><span v-show="spanLeft>1">日志</span></Menu-item>
 		</Menu>
 		<hr />
 		<div class="menu-util">

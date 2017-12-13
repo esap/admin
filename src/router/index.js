@@ -12,6 +12,7 @@ export default new Router({
   routes: [  
     include("email"),
     include("wxtx"),
+    include("sms"),
     include("wxcx"),
     include("wxtk"),
     include("esaplog"),

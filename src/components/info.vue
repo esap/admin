@@ -168,12 +168,12 @@
 	        </template>
 	      </el-table-column>	      
 	      <el-table-column label="操作" width="150">
-	        <template scope="scope">
+	       <!--  <template scope="scope">
 	          <Button size="small" type="error" @click="runTask(scope)">测试</Button>
-	        </template>
+	        </template> -->
 	        <template scope="scope">
 	          <ButtonGroup>
-	            <Button size="small" @click="runTask(scope.row)">测试</Button>	                   
+	            <Button size="small" :disabled="!scope.row.IsRun" @click="runTask(scope.row)">测试</Button>	                   
 	            <Button size="small" type="error" @click="$store.state.form.Tasks.splice(scope.$index, 1)">删除</Button>
 	          </ButtonGroup>
 	        </template>
