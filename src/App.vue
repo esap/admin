@@ -26,7 +26,7 @@
 	  <p>累计使用：{{updateInfo.cnt}}天</p>
 	  <p>当前版本：{{updateInfo.cver}}</p>
 	  <p>最新版本：{{updateInfo.ver}}</p>
-	  <div class="layout-copy">2015-2017 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div>
+	  <div class="layout-copy">2015-2018 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div>
 	  <div>Powered by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>
 	  <span slot="footer">
 	    <Button icon="ios-download-outline" type="primary" @click="update">升级</Button>

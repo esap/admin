@@ -161,6 +161,11 @@
 	        <template scope="scope">
 	          <Input v-model="scope.row.Express" placeholder="例如每分钟：* */1 * * * *"></Input>
 	        </template>
+	      </el-table-column>
+	      <el-table-column prop="Data" label="备注" width="250">	      	
+	        <template scope="scope">
+	          <Input v-model="scope.row.Data" placeholder="应用名，数据源，脚本前缀等"></Input>
+	        </template>
 	      </el-table-column>	      
 	      <el-table-column prop="IsRun" label="开关" width="80">	      	
 	        <template scope="scope">
@@ -190,16 +195,11 @@
 		          <Input v-model="$store.state.form.Host" placeholder=""></Input>
 		        </Form-item>  
 	        </Col>
-		    <Col :span="4">      
+		    <Col :span="6">      
 		        <Form-item label="管理密码 - Pwd">
 		          <Input type="password" v-model="Pwd1" placeholder=""></Input>
 		        </Form-item>
-		    </Col>
-		    <Col :span="4">      
-		        <Form-item label="脚本前缀  - Prefix">
-		          <Input v-model="$store.state.form.SyncPrefix" placeholder=""></Input>
-		        </Form-item>
-		    </Col>
+		    </Col>		  
 		    <Col :span="6"> 
 			  <Tooltip content="同步计划的队列间隔，最低100毫秒">
 		        <Form-item label="同步间隔(毫秒)">
@@ -255,7 +255,7 @@
 			</Col>
 		    <Col :span="3">
 		        <Form-item label="进入提示 - EnterMsg">
-		          <i-switch v-model="$store.state.form.ShowFuncListEnter" placeholder=""></i-switch>
+		          <i-switch v-model="$store.state.form.EnterMsg" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
 		    <Col :span="3">
@@ -396,6 +396,9 @@ export default {
 	    }, {
 	      value: 'WxtxlTask',
 	      label: '通讯录同步'
+	    }, {
+	      value: 'UrlGetTask',
+	      label: '执行任务(GET)'
 	    }, {
 	      value: 'UserTaskScan',
 	      label: '用户任务'
