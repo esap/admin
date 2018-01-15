@@ -252,6 +252,11 @@
 		        <Form-item label="提醒重试 - ReTryMsg">
 		          <i-switch v-model="$store.state.form.ReTryMsg" placeholder=""></i-switch>
 		        </Form-item>
+			</Col> 
+			<Col :span="3">
+		        <Form-item label="RPC服务 - Rpc">
+		          <i-switch v-model="$store.state.form.Rpc" placeholder=""></i-switch>
+		        </Form-item>
 			</Col>
 		    <Col :span="3">
 		        <Form-item label="进入提示 - EnterMsg">
@@ -378,6 +383,12 @@ export default {
 	    }, {
 	      value: 'ExecTask',
 	      label: '执行任务' 
+	    }, {
+	      value: 'RpcPost',
+	      label: 'RPC远程发送' 
+	    }, {
+	      value: 'RpcGet',
+	      label: 'RPC远程获取' 
 	    }, {
 	      value: 'WxdkTask',
 	      label: '微信打卡' 
