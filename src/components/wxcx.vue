@@ -40,6 +40,13 @@
                 <Input-number v-model="form.mode"></Input-number>
               </Tooltip>
             </Form-item>
+          </Col>  
+          <Col :span="8">
+            <Form-item label="下一步">
+              <Tooltip content="填写后，任意输入都必然执行该查询,选填" placement="top-start"> 
+                <Input v-model="form.nextfn"></Input>
+              </Tooltip>
+            </Form-item>
           </Col>      
           <Col :span="8">
           <Form-item label="保密消息">
@@ -113,6 +120,13 @@
                 <Input-number v-model="formModify.mode"></Input-number>
               </Tooltip>
             </Form-item>
+          </Col>     
+          <Col :span="8">
+            <Form-item label="下一步">
+              <Tooltip content="填写后，任意输入都必然执行该查询,选填" placement="top-start"> 
+                <Input v-model="formModify.nextFn"></Input>
+              </Tooltip>
+            </Form-item>
           </Col>      
           <Col :span="8">
           <Form-item label="保密消息">
@@ -172,6 +186,7 @@
       <el-table-column label="标签权限" prop="aclTag" width="100"></el-table-column>
       <el-table-column label="应用权限" prop="aclApp" width="100"></el-table-column>
       <el-table-column label="模式" prop="mode" width="100"></el-table-column>
+      <el-table-column label="下一步" prop="nextFn" width="100"></el-table-column>
       <el-table-column label="专用查询" prop="app" width="100"></el-table-column>
       <el-table-column label="数据源" prop="db" width="100"></el-table-column>
       <el-table-column label="原文链接" show-overflow-tooltip prop="url" width="100"></el-table-column>
@@ -215,6 +230,7 @@
             entermsg: '',
             tmpl: '',
             mode: 0,
+            nextfn: '',
             aclUser: '@all',  
             aclDept: '',  
             aclTag: '',  
