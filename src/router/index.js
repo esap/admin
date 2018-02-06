@@ -17,6 +17,7 @@ export default new Router({
     include("wxtk"),
     include("esaplog"),
     include("wxtxl"),
+    include("localtxl"),
     include("syslog"),
     include("info"),
     { path: '*', name: 'info', component: info }

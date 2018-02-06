@@ -188,19 +188,24 @@
 	  </TabPane>
 
 	  <TabPane label="其他 - other" name="name4">
-      <Form :model="$store.state.form" :label-width="60">
+      <Form :model="$store.state.form" :label-width="80">
         <Row>
-		    <Col :span="10">
+		    <Col :span="8">
 		        <Form-item label="外网域名 - Host">
 		          <Input v-model="$store.state.form.Host" placeholder=""></Input>
 		        </Form-item>  
 	        </Col>
 		    <Col :span="6">      
 		        <Form-item label="管理密码 - Pwd">
-		          <Input type="password" v-model="Pwd1" placeholder=""></Input>
+		          <Input type="password" v-model="Pwd1" placeholder="默认为erp8,请及时修改"></Input>
+		        </Form-item>
+		    </Col>
+		    <Col :span="6">      
+		        <Form-item label="脚本前缀 - SqlPrefix">
+		          <Input v-model="$store.state.form.SqlPrefix" placeholder="DIY本地通讯录"></Input>
 		        </Form-item>
 		    </Col>		  
-		    <Col :span="6"> 
+		    <Col :span="4"> 
 			  <Tooltip content="同步计划的队列间隔，最低100毫秒">
 		        <Form-item label="同步间隔(毫秒)">
 		          <Input-number :min="100" v-model="$store.state.form.SyncDelay"></Input-number>
@@ -215,18 +220,18 @@
 		    <Col :span="6">
 		      <Tooltip content="百度AI开放平台应用id，可前往官网免费申请">    
 		        <Form-item label="百度AI - AppID">
-		          <Input-number v-model="$store.state.form.AiId" placeholder=""></Input-number>
+		          <Input-number v-model="$store.state.form.AiId" placeholder="填写您的百度appId"></Input-number>
 		        </Form-item>
 		      </Tooltip>
 	        </Col>
 		    <Col :span="6">      
 		        <Form-item label="百度AI - ApiKey">
-		          <Input v-model="$store.state.form.AiKey" placeholder=""></Input>
+		          <Input v-model="$store.state.form.AiKey" placeholder="填写您的百度apikey"></Input>
 		        </Form-item>
 		    </Col>
 		    <Col :span="6"> 
 		        <Form-item label="百度AI- SecretKey">
-		          <Input v-model="$store.state.form.AiSec" placeholder=""></Input>
+		          <Input v-model="$store.state.form.AiSec" placeholder="填写您的百度secretkey"></Input>
 		        </Form-item>
 		    </Col>
 		</Row>
@@ -253,11 +258,6 @@
 		          <i-switch v-model="$store.state.form.ReTryMsg" placeholder=""></i-switch>
 		        </Form-item>
 			</Col> 
-			<Col :span="3">
-		        <Form-item label="RPC服务 - Rpc">
-		          <i-switch v-model="$store.state.form.Rpc" placeholder=""></i-switch>
-		        </Form-item>
-			</Col>
 		    <Col :span="3">
 		        <Form-item label="进入提示 - EnterMsg">
 		          <i-switch v-model="$store.state.form.EnterMsg" placeholder=""></i-switch>
@@ -273,7 +273,7 @@
 		          <i-switch v-model="$store.state.form.AutoUpdate" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
-		    <Col :span="3">
+			<Col :span="3">	    
 		        <Form-item label="使用ES库 - IsEs">
 		          <i-switch v-model="$store.state.form.IsEs" placeholder=""></i-switch>
 		        </Form-item>
@@ -281,6 +281,18 @@
 		    <Col :span="3">
 		        <Form-item label="调试模式 - Debug">
 		          <i-switch v-model="$store.state.form.Debug"></i-switch>
+		        </Form-item>
+			</Col>
+		</Row>
+		<Row>	
+			<Col :span="3">
+		        <Form-item label="RPC服务 - Rpc">
+		          <i-switch v-model="$store.state.form.Rpc" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+			<Col :span="3">	    
+		        <Form-item label="本地鉴权 - UseLocalUser">
+		          <i-switch v-model="$store.state.form.UseLocalUser" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
 		</Row>

@@ -21,6 +21,8 @@
       <el-table-column prop="email" label="Email" width="120"></el-table-column>
       <el-table-column prop="telephone" label="固话" width="120"></el-table-column>
       <el-table-column prop="department" label="部门" width="80"></el-table-column>
+      <el-table-column prop="isleader" label="上级" width="80"></el-table-column>
+      <el-table-column prop="english_name" label="英文名" width="80"></el-table-column>
     </el-table>
 
     <Page
@@ -60,7 +62,7 @@
             this.loading = false
           })
           .catch(e => { this.$Loading.error(); this.loading = false })
-        },
+        }        
       },
       mounted(){
         this.getData()

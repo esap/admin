@@ -8,8 +8,9 @@
       show-total show-elevator show-sizer
       :total="list.length">
       <ButtonGroup>
-        <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
-        <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+        <Button @click="getData" type="success" icon="ios-reload" :loading="loading">刷新</Button>
+        <Button @click="dialogFormVisible = true" type="primary" icon="plus-circled">新增</Button>
+        <Button @click="cleanData" type="error" icon="close">清空数据</Button>
       </ButtonGroup>
       <Select v-model="db" style="width:100px">
         <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
@@ -139,6 +140,17 @@
         this.$Loading.start()
         this.loading = true
         this.$http.get(this.$tokenadmin("wxtx")+"&db="+this.db)
+        .then(r=> { 
+            if (r.data.result)this.list=r.data.data[0]
+            this.loading = false
+            this.$Loading.finish();
+          })
+          .catch(e => { this.$Loading.error(); this.loading = false })
+      },
+      cleanData() {
+        this.$Loading.start()
+        this.loading = true
+        this.$http.delete(this.$tokenadmin("wxtx_clean")+"&db="+this.db)
 		  	.then(r=> { 
             if (r.data.result)this.list=r.data.data[0]
             this.loading = false
