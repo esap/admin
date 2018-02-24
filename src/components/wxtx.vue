@@ -7,30 +7,38 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
-      <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+      <ButtonGroup>
+        <Button @click="getData" type="success" icon="ios-reload" :loading="loading">刷新</Button>
+        <Button @click="dialogFormVisible = true" type="primary" icon="plus-circled">新增</Button>
+        <Button @click="cleanData" type="error" icon="close">清空数据</Button>
+      </ButtonGroup>
+      <Select v-model="db" style="width:100px">
+        <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
+      </Select>
     </Page>
 
     <Modal title="新增微信提醒" v-model="dialogFormVisible">
       <Form :model="form" :label-width="80">
         <Form-item label="发送日期">
           <Date-picker v-model="form.cdate" type="datetime" placeholder="选择发送日期,选填"></Date-picker>
-        </Form-item>        
+        </Form-item>
         <Form-item label="接收应用">
-          <Input v-model="form.app" placeholder="默认为esap, 选填" auto-complete="off"></Input>
-        </Form-item>            
+          <Select v-model="form.app" style="width:100px">
+            <Option v-for="item in $store.getters.apps" :value="item.AppName" :key="item.AppName">{{ item.AppName }}</Option>
+          </Select>
+        </Form-item>
         <Form-item label="接收人">
           <Input v-model="form.touser" placeholder="@all表示全体，可用逗号分隔多个用户，选填"></Input>
-        </Form-item>            
+        </Form-item>
         <Form-item label="接收部门">
           <Input v-model="form.toparty" placeholder="可用逗号分隔多个部门，选填"></Input>
-        </Form-item>            
+        </Form-item>
         <Form-item label="接收标签">
           <Input v-model="form.totag" placeholder="可用逗号分隔多个标签，选填"></Input>
-        </Form-item>         
+        </Form-item>
         <Form-item label="内容">
           <Input type="textarea" autosize v-model="form.content" placeholder="填入消息内容,选填"></Input>
-        </Form-item>          
+        </Form-item>
         <Form-item label="图片">
           <el-upload
             class="avatar-uploader"
@@ -41,7 +49,7 @@
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-        </Form-item>              
+        </Form-item>
         <Form-item label="附件">
           <el-upload
             class="upload-demo"
@@ -52,10 +60,16 @@
             <div class="el-upload__text">将文件拖入，或<em>点击上传</em></div>
             <div class="el-upload__tip" slot="tip">文件不超过20MB</div>
           </el-upload>
-        </Form-item>    
+        </Form-item>
+        <Form-item label="文章标题">
+          <Input v-model="form.title" placeholder="以文章形式提醒时的文章标题"></Input>
+        </Form-item>
+        <Form-item label="文章链接">
+          <Input v-model="form.url" placeholder="以文章形式提醒时的原文链接"></Input>
+        </Form-item>
         <Form-item label="保密消息">
           <Input-number v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
-        </Form-item>        
+        </Form-item>
       </Form>
       <div slot="footer" class="dialog-footer">
         <Button @click="dialogFormVisible = false">取 消</Button>
@@ -72,15 +86,19 @@
       <el-table-column sortable prop="toUser" label="接收人" width="100"></el-table-column>
       <el-table-column sortable prop="toParty" label="接收部门" width="120"></el-table-column>
       <el-table-column sortable prop="toTag" label="接收标签" width="120"></el-table-column>
-      <el-table-column prop="content" show-overflow-tooltip label="内容"></el-table-column>
+      <el-table-column prop="content" show-overflow-tooltip label="内容" width="200"></el-table-column>
       <el-table-column prop="pic" label="图片" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="fh" label="文件" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="title" label="文章标题" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="url" label="文章链接" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column sortable prop="ret" label="发送结果" show-overflow-tooltip width="120"></el-table-column>
       <el-table-column sortable prop="flag" label="标记" width="100"></el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column fixed="right" label="操作" width="150">
         <template scope="scope">
+          <ButtonGroup>
           <Button size="small" @click="saveData(scope.$index, scope.row)">重发</Button>
           <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+          </ButtonGroup>
         </template>
       </el-table-column>
     </el-table>
@@ -101,13 +119,14 @@
     data() {
       return {
         list: [],
+        db: 'esap',
         currentPage:1,
-        pagesize:15,
+        pagesize: 20,
         imageUrl: '',
         loading: false,
         fileUrl: '',
         dialogFormVisible: false,
-        form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '' },
+        form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '', title: '', url: '' },
         form2: [{}],
       }
     },
@@ -120,7 +139,18 @@
       getData() {
         this.$Loading.start()
         this.loading = true
-        this.$http.get(this.$tokenadmin("wxtx"))
+        this.$http.get(this.$tokenadmin("wxtx")+"&db="+this.db)
+        .then(r=> { 
+            if (r.data.result)this.list=r.data.data[0]
+            this.loading = false
+            this.$Loading.finish();
+          })
+          .catch(e => { this.$Loading.error(); this.loading = false })
+      },
+      cleanData() {
+        this.$Loading.start()
+        this.loading = true
+        this.$http.delete(this.$tokenadmin("wxtx_clean")+"&db="+this.db)
 		  	.then(r=> { 
             if (r.data.result)this.list=r.data.data[0]
             this.loading = false
@@ -129,7 +159,7 @@
           .catch(e => { this.$Loading.error(); this.loading = false })
       },
       deleteData(i,r) {
-        this.$http.delete(this.$tokenadmin("wxtx")+"&id="+r.id)
+        this.$http.delete(this.$tokenadmin("wxtx")+"&db="+this.db+"&id="+r.id)
         .then(r => { 
           if (r.data.result){
             this.$Message.info('删除成功')
@@ -142,7 +172,7 @@
       },
       saveData(i,r) {
         r.flag=0
-        this.$http.put(this.$tokenadmin("wxtx")+"&id="+r.id, r)
+        this.$http.put(this.$tokenadmin("wxtx")+"&db="+this.db+"&id="+r.id, r)
         .then(r => { 
           if (r.data.result){
             this.$Message.info('保存成功')

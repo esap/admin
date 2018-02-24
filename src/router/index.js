@@ -12,12 +12,14 @@ export default new Router({
   routes: [  
     include("email"),
     include("wxtx"),
+    include("sms"),
     include("wxcx"),
     include("wxtk"),
+    include("esaplog"),
     include("wxtxl"),
-    include("wxlog"),
+    include("localtxl"),
+    include("syslog"),
     include("info"),
-    include("test"),
     { path: '*', name: 'info', component: info }
   ]
 })

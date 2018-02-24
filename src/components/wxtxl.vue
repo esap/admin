@@ -10,16 +10,19 @@
       <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
     </Page>
 
-    <el-table
+    <el-table stripe border
       :data="listShow"
-      v-if="$store.state.userName"
       style="width: 100%">
-      <el-table-column prop="userid" label="账号" width="150"></el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-      <el-table-column prop="mobile" label="手机" width="180"></el-table-column>
-      <el-table-column prop="position" label="职位" width="180"></el-table-column>
-      <el-table-column prop="gender" label="性别" width="180"></el-table-column>
-      <el-table-column prop="email" label="Email" width="180"></el-table-column>
+      <el-table-column prop="userid" label="账号" width="100"></el-table-column>
+      <el-table-column prop="name" label="姓名" width="120"></el-table-column>
+      <el-table-column prop="mobile" label="手机" width="150"></el-table-column>
+      <el-table-column prop="position" label="职位" width="100"></el-table-column>
+      <el-table-column prop="gender" label="性别" width="80"></el-table-column>
+      <el-table-column prop="email" label="Email" width="120"></el-table-column>
+      <el-table-column prop="telephone" label="固话" width="120"></el-table-column>
+      <el-table-column prop="department" label="部门" width="80"></el-table-column>
+      <el-table-column prop="isleader" label="上级" width="80"></el-table-column>
+      <el-table-column prop="english_name" label="英文名" width="80"></el-table-column>
     </el-table>
 
     <Page
@@ -39,12 +42,12 @@
         return {
           list: [],
 		      currentPage:1,
-          pagesize:15,
+          pagesize: 20,
           loading: false,
         }
       },
 	  computed:{
-		listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
+		  listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
 	  },
       methods: {
 		    handleSizeChange(v) { this.pagesize=v },
@@ -59,7 +62,7 @@
             this.loading = false
           })
           .catch(e => { this.$Loading.error(); this.loading = false })
-        },
+        }        
       },
       mounted(){
         this.getData()

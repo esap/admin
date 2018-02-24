@@ -15,14 +15,11 @@
       :data="listShow"
       style="width: 100%">
       <el-table-column prop="cDate" label="日期" width="180"></el-table-column>
-      <el-table-column prop="name" label="上传人" width="180"></el-table-column>
       <el-table-column prop="app" label="应用" width="180"></el-table-column>
-      <el-table-column prop="pDesc" label="描述"></el-table-column> 
-      <el-table-column label="图片">
-        <template scope="scope">
-          <img style="width:100px" :src="$store.state.appUrl+'p/'+scope.row.pic" />
-        </template>
-      </el-table-column> 
+      <el-table-column prop="usr" label="用户" width="180"></el-table-column>
+      <el-table-column prop="log" label="描述"></el-table-column>    
+      <el-table-column prop="model" label="模块"></el-table-column>    
+      <el-table-column prop="lvl" label="级别"></el-table-column>    
       <el-table-column fixed="right" label="操作" width="100">
         <template scope="scope">   
           <el-button
@@ -49,7 +46,7 @@
       data() {
         return {
           list: [],
-          pagesize:10,
+          pagesize:20,
           currentPage:1,
           loading: false,
         }
@@ -63,7 +60,7 @@
         getData() {
           this.$Loading.start()
           this.loading = true
-          this.$http.get(this.$tokenadmin("wxtk"))
+          this.$http.get(this.$tokenadmin("esaplog"))
           .then(r=> { 
             if (r.data.result)this.list=r.data.data[0]
             this.$Loading.finish()
@@ -72,7 +69,7 @@
           .catch(e => { this.$Loading.error(); this.loading = false })
         },
         deleteData(i,r) {
-          this.$http.delete(this.$tokenadmin("wxtk")+"&id="+r.id)
+          this.$http.delete(this.$tokenadmin("esaplog")+"&id="+r.id)
           .then(r => { 
             if (r.data.result){
               this.$message({ message: '删除成功' })

@@ -7,8 +7,10 @@
       :page-size="pagesize"
       show-total show-elevator show-sizer
       :total="list.length">
-      <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
-      <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+      <ButtonGroup>
+        <Button @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
+        <Button @click="dialogFormVisible = true" icon="plus-circled">新增</Button>
+      </ButtonGroup>
     </Page>
 
     <Modal title="新增微信查询" v-model="dialogFormVisible">
@@ -28,11 +30,21 @@
         <Form-item label="标签权限">
           <Input v-model="form.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
         </Form-item>
+        <Form-item label="应用权限">
+          <Input v-model="form.aclApp" placeholder="可用逗号分隔多个应用名称" auto-complete="off"></Input>
+        </Form-item>
         <Row>
           <Col :span="8">
             <Form-item label="模式">
               <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
                 <Input-number v-model="form.mode"></Input-number>
+              </Tooltip>
+            </Form-item>
+          </Col>  
+          <Col :span="8">
+            <Form-item label="下一步">
+              <Tooltip content="填写后，任意输入都必然执行该查询,选填" placement="top-start"> 
+                <Input v-model="form.nextfn"></Input>
               </Tooltip>
             </Form-item>
           </Col>      
@@ -52,12 +64,22 @@
             <Input type="textarea" autosize v-model="form.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
         </Form-item>
-        <Form-item label="专属应用">
-            <Input v-model="form.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
-        </Form-item>
-        <Form-item label="数据源">
-            <Input v-model="form.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
-        </Form-item>
+        <Row>
+          <Col :span="8">
+          <Form-item label="专属应用">
+            <Select v-model="form.app" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.apps" :value="item.AppName" :key="item.AppName">{{ item.AppName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+          <Col :span="8">
+          <Form-item label="数据源">
+            <Select v-model="form.db" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+        </Row>
         <Form-item label="原文链接">
             <Input v-model="form.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
         </Form-item> 
@@ -88,11 +110,21 @@
         <Form-item label="标签权限">
           <Input v-model="formModify.aclTag" placeholder="可用逗号分隔多个标签或标签ID" auto-complete="off"></Input>
         </Form-item>
+        <Form-item label="应用权限">
+          <Input v-model="formModify.aclApp" placeholder="可用逗号分隔多个应用名称" auto-complete="off"></Input>
+        </Form-item>
         <Row>
           <Col :span="8">
             <Form-item label="模式">
               <Tooltip content="填1时仅返回图片或文件,选填" placement="top-start"> 
                 <Input-number v-model="formModify.mode"></Input-number>
+              </Tooltip>
+            </Form-item>
+          </Col>     
+          <Col :span="8">
+            <Form-item label="下一步">
+              <Tooltip content="填写后，任意输入都必然执行该查询,选填" placement="top-start"> 
+                <Input v-model="formModify.nextFn"></Input>
               </Tooltip>
             </Form-item>
           </Col>      
@@ -112,12 +144,22 @@
             <Input type="textarea" autosize v-model="formModify.tmpl" placeholder="必填" auto-complete="off"></Input>
           </el-tooltip>
         </Form-item>
-        <Form-item label="专属应用">
-            <Input v-model="formModify.app" placeholder="应用名配置，选填" auto-complete="off"></Input>
-        </Form-item>
-        <Form-item label="数据源">
-            <Input v-model="formModify.db" placeholder="数据源配置，选填" auto-complete="off"></Input>
-        </Form-item>
+        <Row>
+          <Col :span="8">
+          <Form-item label="专属应用">
+            <Select v-model="formModify.app" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.apps" :value="item.AppName" :key="item.AppName">{{ item.AppName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+          <Col :span="8">
+          <Form-item label="数据源">
+            <Select v-model="formModify.db" placeholder="可选" style="width:100px">
+              <Option v-for="item in $store.getters.dbs" :value="item.DbName" :key="item.DbName">{{ item.DbName }}</Option>
+            </Select>
+          </Form-item>
+          </Col>      
+        </Row>       
         <Form-item label="原文链接">
             <Input v-model="formModify.url" placeholder="有值时返回文章方式,此处为文章链接，选填" auto-complete="off"></Input>
         </Form-item> 
@@ -135,23 +177,27 @@
       stripe 
       :data="listShow"
       style="width: 100%">   
-      <el-table-column label="菜单" prop="mKey" width="100"></el-table-column>
-      <el-table-column label="功能" prop="name" width="150"></el-table-column>
+      <el-table-column fixed label="菜单" prop="mKey" width="100"></el-table-column>
+      <el-table-column fixed label="功能" prop="name" width="150"></el-table-column>
       <el-table-column label="进入提醒" prop="entermsg" width="240"></el-table-column>
       <el-table-column label="模板" show-overflow-tooltip prop="tmpl" width="360"></el-table-column>
       <el-table-column label="用户权限" prop="aclUser" width="100"></el-table-column>
       <el-table-column label="部门权限" prop="aclDept" width="100"></el-table-column>
       <el-table-column label="标签权限" prop="aclTag" width="100"></el-table-column>
+      <el-table-column label="应用权限" prop="aclApp" width="100"></el-table-column>
       <el-table-column label="模式" prop="mode" width="100"></el-table-column>
+      <el-table-column label="下一步" prop="nextFn" width="100"></el-table-column>
       <el-table-column label="专用查询" prop="app" width="100"></el-table-column>
       <el-table-column label="数据源" prop="db" width="100"></el-table-column>
-      <el-table-column label="原文链接" prop="url" width="100"></el-table-column>
-      <el-table-column label="原文封面" prop="pic" width="100"></el-table-column>
+      <el-table-column label="原文链接" show-overflow-tooltip prop="url" width="100"></el-table-column>
+      <el-table-column label="原文封面" show-overflow-tooltip prop="pic" width="100"></el-table-column>
       <el-table-column label="保密" prop="safe" width="100"></el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column fixed="right" label="操作" width="150">
         <template scope="scope">
-          <Button size="small" @click="showModify(scope.row)">编辑</Button>
-          <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+          <ButtonGroup>
+            <Button size="small" @click="showModify(scope.row)">编辑</Button>
+            <Button size="small" type="error" @click="deleteData(scope.$index, scope.row)">删除</Button>
+          </ButtonGroup>
         </template>
       </el-table-column>
     </el-table>   
@@ -172,8 +218,8 @@
       data() {
         return {
           list: [],
-          pagesize:15,
-          currentPage:1,
+          pagesize: 20,
+          currentPage: 1,
           formModify: {},
           dialogFormVisible: false,
           dialogFormVisible2: false,
@@ -184,9 +230,11 @@
             entermsg: '',
             tmpl: '',
             mode: 0,
+            nextfn: '',
             aclUser: '@all',  
             aclDept: '',  
             aclTag: '',  
+            aclApp: '@all',  
             app: '',
             db: '',
             url: '',
