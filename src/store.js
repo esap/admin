@@ -93,19 +93,11 @@ export default new Vuex.Store({
           sessionStorage.setItem("esap_token", r.data.token)
           state.loading=false
         } else {
-          Message({
-            showClose: true,
-            message: '登陆失败',
-            duration:1000
-          })
+          Message({ message: '登陆失败:' + r.data.errmsg })
         }
       })
   	  .catch(e => {
-        Message({
-            showClose: true,
-            message: '登陆失败',
-            duration:1000
-        })  
+        Message({ message: '登陆失败' })  
       })
     },
     outlogin( { commit }) {
