@@ -145,7 +145,7 @@ export default {
 				    	this.$Message.info("已成功启动后台升级工具！")
 				    } else {
 				    	this.$Message.info(r.data.errmsg)
-				    }
+				    } 
 				  })
 				  .catch(e => { this.$Message.info(e)})
                 },
