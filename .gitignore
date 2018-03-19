@@ -1,5 +1,11 @@
-.DS_Store
-node_modules/
-dist/
 npm-debug.log
-yarn-error.log
+node_modules
+.project
+.vscode
+.history
+.DS_Store
+\.settings/
+build/env.js
+dist/
+tpl/
+static/
