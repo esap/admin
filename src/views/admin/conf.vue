@@ -80,6 +80,19 @@
 	          <Input v-model="scope.row.DbName"></Input>
 	        </template>
 	      </el-table-column>
+	      <el-table-column prop="Driver" label="类型" width="120">	      	
+	        <template slot-scope="scope">
+				<Select v-model="scope.row.DbType" placeholder="其他">
+					<i-option
+					  v-for="item in optionsDbType"
+					  :key="item.value"
+					  :label="item.label"
+					  :value="item.value"
+					  :disabled="item.disabled">
+					</i-option>
+				</Select>
+	        </template>
+	      </el-table-column>
 	      <el-table-column prop="Driver" label="驱动" width="150">	      	
 	        <template slot-scope="scope">
 				<Select v-model="scope.row.Driver" placeholder="请选择">
@@ -162,9 +175,9 @@
 	          <Input v-model="scope.row.Express" placeholder="例如每分钟：* */1 * * * *"></Input>
 	        </template>
 	      </el-table-column>
-	      <el-table-column prop="Data" label="备注" width="250">	      	
+	      <el-table-column prop="Data" label="配置" width="250">	      	
 	        <template slot-scope="scope">
-	          <Input v-model="scope.row.Data" placeholder="应用名，数据源，脚本前缀等"></Input>
+	          <Input v-model="scope.row.Data" placeholder="脚本前后缀等，一般留空"></Input>
 	        </template>
 	      </el-table-column>	      
 	      <el-table-column prop="IsRun" label="开关" width="80">	      	
@@ -295,6 +308,16 @@
 		          <i-switch v-model="$store.state.app.form.UseLocalUser" placeholder=""></i-switch>
 		        </Form-item>
 			</Col>
+			<Col :span="3">	    
+		        <Form-item label="使用JU盘 - UseJuPath">
+		          <i-switch v-model="$store.state.app.form.UseJuPath" placeholder=""></i-switch>
+		        </Form-item>
+			</Col>
+			<Col :span="12" v-if="$store.state.app.form.UseJuPath">	    
+		        <Form-item label="JU盘路径 - JuPath">
+		          <Input v-model="$store.state.app.form.JuPath" placeholder=""></Input>
+		        </Form-item>
+			</Col>
 		</Row>
       </Form>
       </TabPane>
@@ -386,6 +409,16 @@ export default {
 	    }, {
 	      value: 'excel',
 	      label: 'excel'
+	    }],
+	    optionsDbType:  [{
+	      value: 'ju',
+	      label: 'JU'
+	    }, {
+	      value: 'es',
+	      label: 'ES'
+	    }, {
+	      value: '',
+	      label: '其他'
 	    }],
 		options3:  [{
 	      value: 'QueryTask',
