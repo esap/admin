@@ -110,10 +110,10 @@ export const appRouter = [
         path: '/wxtk',
         icon: 'image',
         name: 'wxtk',
-        title: '图库',
+        title: '多媒体库',
         component: Main,
         children: [
-            { path: 'index', title: '图库', name: 'wxtk_index', component: () => import('@/views/admin/wxtk.vue') }
+            { path: 'index', title: '多媒体库', name: 'wxtk_index', component: () => import('@/views/admin/wxtk.vue') }
         ]
     },
     {
