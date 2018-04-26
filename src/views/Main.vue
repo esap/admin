@@ -167,10 +167,10 @@
                     this.$router.push({
                         name: 'login'
                     });
-                } else if (name === "help") {
-                    window.open("https://esap.erp8.net","_blank")
-                } else if (name === "about") {
-                    this.about()
+                } else if (name === 'help') {
+                    window.open('https://esap.erp8.net', '_blank');
+                } else if (name === 'about') {
+                    this.about();
                 }
             },
             checkTag (name) {
@@ -197,35 +197,34 @@
             fullscreenChange (isFullScreen) {
                 // console.log(isFullScreen);
             },
-            about() {
-              this.$http.get(this.$tokenadmin("getreg"))
-              .then(r=> { 
-                if (r.data.result) {
-                    this.updateInfo=r.data
-                    this.aboutModal=true     
-                } else {
-                    this.$Message.info(r.data.errmsg)
-                }
-              })
-              .catch(e => { console.log(e)})
-            },
-            update() {
-                this.aboutModal = false
-                this.$Modal.confirm({
-                    title:'升级ESAP',
-                    content:'点击确定后台将启动esap-cli升级工具，时间视网络情况而定，通常花费1分钟，此期间请不要重启或清除日志，升级完成后可点【关于】了解详情',
-                    onOk: () => {
-                      this.$http.post(this.$tokenadmin("autoupdate"), this.form)
-                      .then(r=> { 
-                        if (r.data.result){
-                            this.$Message.info("已成功启动后台升级工具！")
+            about () {
+                this.$http.get(this.$tokenadmin('getreg'))
+                    .then(r => {
+                        if (r.data.result) {
+                            this.updateInfo = r.data;
+                            this.aboutModal = true;
                         } else {
-                            this.$Message.info(r.data.errmsg)
+                            this.$Message.info(r.data.errmsg);
                         }
-                      })
-                      .catch(e => { this.$Message.info(e)})
-                    },
-                })       
+                    });
+            },
+            update () {
+                this.aboutModal = false;
+                this.$Modal.confirm({
+                    title: '升级ESAP',
+                    content: '点击确定后台将启动esap-cli升级工具，时间视网络情况而定，通常花费1分钟，此期间请不要重启或清除日志，升级完成后可点【关于】了解详情',
+                    onOk: () => {
+                        this.$http.post(this.$tokenadmin('autoupdate'), this.form)
+                            .then(r => {
+                                if (r.data.result) {
+                                    this.$Message.info('已成功启动后台升级工具！');
+                                } else {
+                                    this.$Message.info(r.data.errmsg);
+                                }
+                            })
+                            .catch(e => { this.$Message.info(e); });
+                    }
+                });
             }
         },
         watch: {

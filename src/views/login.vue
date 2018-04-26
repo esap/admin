@@ -45,9 +45,9 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
-import md5 from 'md5'
-import { Message } from 'element-ui'
+import Cookies from 'js-cookie';
+import md5 from 'md5';
+import { Message } from 'element-ui';
 export default {
     data () {
         return {
@@ -73,50 +73,49 @@ export default {
             Cookies.set('esap_server', this.form.server);
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    this.form.user = this.form.userName
-                    this.form.pwd = md5(this.form.password)
-                    this.form.password = ''
-                    let apiUrl = 'http://' + this.form.server + '/login/'
+                    this.form.user = this.form.userName;
+                    this.form.pwd = md5(this.form.password);
+                    this.form.password = '';
+                    let apiUrl = 'http://' + this.form.server + '/login/';
                     // let apiUrl = this.$store.state.app.appUrl + 'login/'
                     this.$http.post(apiUrl, this.form)
-                    .then(r => {
-                        if (r.data.result) { 
-                            localStorage.token = r.data.token
-                            this.$store.commit('setUserName', this.form.user)
-                            localStorage.setItem("esap_user", this.form.user)
-                            localStorage.setItem("esap_token", r.data.token)
+                        .then(r => {
+                            if (r.data.result) {
+                                localStorage.token = r.data.token;
+                                this.$store.commit('setUserName', this.form.user);
+                                localStorage.setItem('esap_user', this.form.user);
+                                localStorage.setItem('esap_token', r.data.token);
 
-                            Cookies.set('user', this.form.userName);
-                            Cookies.set('password', this.form.pwd);
-                            this.$store.commit('setAvator', 'https://erp8.net/static/img/avatar.jpg');
-                            if (this.form.userName === 'admin') {
-                                Cookies.set('access', 0);
+                                Cookies.set('user', this.form.userName);
+                                Cookies.set('password', this.form.pwd);
+                                this.$store.commit('setAvator', 'https://erp8.net/static/img/avatar.jpg');
+                                if (this.form.userName === 'admin') {
+                                    Cookies.set('access', 0);
+                                } else {
+                                    Cookies.set('access', 1);
+                                }
+                                this.getData();
+                                this.$router.push({
+                                    name: 'home_index'
+                                });
                             } else {
-                                Cookies.set('access', 1);
+                                Message({ message: '登陆失败[1]:' + r.data.errmsg });
                             }
-                            this.getData()
-                            this.$router.push({
-                                name: 'home_index'
-                            });                            
-                        } else {
-                          Message({ message: '登陆失败[1]:' + r.data.errmsg })
-                        }
-                    })
-                    .catch(e => {
-                        Message({ message: '登陆失败[2]:' + e })  
-                    })
+                        })
+                        .catch(e => {
+                            Message({ message: '登陆失败[2]:' + e });
+                        });
                 }
             });
         },
-        getData() {
-            this.$http.get('http://' + this.form.server + "/admin/config")
-            .then(r=> { this.$store.state.app.form=r.data.data })
-            .catch(e=> { console.log(e) })        
-        },
+        getData () {
+            this.$http.get('http://' + this.form.server + '/admin/config')
+                .then(r => { this.$store.state.app.form = r.data.data; });
+        }
     },
-    mounted() {
-        let s = Cookies.get('esap_server')
-        if (s != '' && s != undefined) this.form.server = s
+    mounted () {
+        let s = Cookies.get('esap_server');
+        if (s !== '' && s !== undefined) this.form.server = s;
     }
-}
+};
 </script>

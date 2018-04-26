@@ -43,46 +43,46 @@
 
   <script>
     export default {
-      data() {
-        return {
-          list: [],
-          pagesize:20,
-          currentPage:1,
-          loading: false,
-        }
-      },
-      computed:{
-        listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
-      },
-      methods: {
-        handleSizeChange(v) { this.pagesize=v },
-        handleCurrentChange(v) { this.currentPage=v },
-        getData() {
-          this.$Loading.start()
-          this.loading = true
-          this.$http.get(this.$tokenadmin("esaplog"))
-          .then(r=> { 
-            if (r.data.result)this.list=r.data.data[0]
-            this.$Loading.finish()
-            this.loading = false
-          })
-          .catch(e => { this.$Loading.error(); this.loading = false })
+        data () {
+            return {
+                list: [],
+                pagesize: 20,
+                currentPage: 1,
+                loading: false
+            };
         },
-        deleteData(i,r) {
-          this.$http.delete(this.$tokenadmin("esaplog")+"&id="+r.id)
-          .then(r => { 
-            if (r.data.result){
-              this.$message({ message: '删除成功' })
-              this.list=r.data.data[0]
-            } else{
-              this.$message({  message: r.data.errmsg })
+        computed: {
+            listShow () { return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize); }
+        },
+        methods: {
+            handleSizeChange (v) { this.pagesize = v; },
+            handleCurrentChange (v) { this.currentPage = v; },
+            getData () {
+                this.$Loading.start();
+                this.loading = true;
+                this.$http.get(this.$tokenadmin('esaplog'))
+                    .then(r => {
+                        if (r.data.result) this.list = r.data.data[0];
+                        this.$Loading.finish();
+                        this.loading = false;
+                    })
+                    .catch(e => { this.$Loading.error(); this.loading = false; });
+            },
+            deleteData (i, r) {
+                this.$http.delete(this.$tokenadmin('esaplog') + '&id=' + r.id)
+                    .then(r => {
+                        if (r.data.result) {
+                            this.$message({ message: '删除成功' });
+                            this.list = r.data.data[0];
+                        } else {
+                            this.$message({ message: r.data.errmsg });
+                        }
+                    })
+                    .catch(e => { this.$message({ message: r.data.errmsg }); });
             }
-          })
-          .catch(e => { this.$message({  message: r.data.errmsg })})      
-        },  
-      },
-      mounted(){
-        this.getData()
-      }
-    }
+        },
+        mounted () {
+            this.getData();
+        }
+    };
   </script>

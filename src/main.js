@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import iView from 'iview';
-import ElementUI from 'element-ui'
+import ElementUI from 'element-ui';
 // import axios from 'axios'
-import 'element-ui/lib/theme-default/index.css'
+import 'element-ui/lib/theme-default/index.css';
 import {router} from './router/index';
 import {appRouter} from './router/router';
 import store from './store';
@@ -11,16 +11,16 @@ import '@/locale';
 import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
 import util from './libs/util';
-import AxiosPlugin from './AxiosPlugin'
+import AxiosPlugin from './AxiosPlugin';
 
 // Vue.prototype.$http = axios
-Vue.prototype.$token=function(param) { return store.getters.apiPath + param + "?" }
-Vue.prototype.$tokenadmin=function(param) { return store.getters.adminUrl + param + "?" }
-Vue.prototype.$tokenes=function(param) { return store.getters.esPath + param + "?" }
-Vue.prototype.$tokenup=function() { return store.getters.uploadUrl + "?" }
+Vue.prototype.$token = function (param) { return store.getters.apiPath + param + '?'; };
+Vue.prototype.$tokenadmin = function (param) { return store.getters.adminUrl + param + '?'; };
+Vue.prototype.$tokenes = function (param) { return store.getters.esPath + param + '?'; };
+Vue.prototype.$tokenup = function () { return store.getters.uploadUrl + '?'; };
 
-Vue.use(AxiosPlugin)
-Vue.use(ElementUI)
+Vue.use(AxiosPlugin);
+Vue.use(ElementUI);
 Vue.use(VueI18n);
 Vue.use(iView);
 

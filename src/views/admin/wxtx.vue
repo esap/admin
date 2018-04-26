@@ -125,113 +125,112 @@
 
 <script>
   export default {
-    data() {
-      return {
-        list: [],
-        db: 'esap',
-        currentPage: 1,
-        pagesize: 20,
-        imageUrl: '',
-        loading: false,
-        fileName: '',
-        fileUrl: '',
-        dialogFormVisible: false,
-        form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '', title: '', url: '' },
-        form2: [{}],
-      }
-    },
-    computed: {
-      listShow() { return this.list.slice((this.currentPage-1)*this.pagesize, this.currentPage*this.pagesize) }
-    },
-    methods: {
-      getToken() { return {'Authorization':'Bearer ' + localStorage.token} },
-      handleSizeChange(v) { this.pagesize=v },
-      handleCurrentChange(v) { this.currentPage=v },
-      getData() {
-        this.$Loading.start()
-        this.loading = true
-        this.$http.get(this.$tokenadmin("wxtx")+"&db="+this.db)
-        .then(r=> { 
-            if (r.data.result)this.list=r.data.data[0]
-            this.loading = false
-            this.$Loading.finish();
-          })
-          .catch(e => { this.$Loading.error(); this.loading = false })
+      data () {
+          return {
+              list: [],
+              db: 'esap',
+              currentPage: 1,
+              pagesize: 20,
+              imageUrl: '',
+              loading: false,
+              fileName: '',
+              fileUrl: '',
+              dialogFormVisible: false,
+              form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '', title: '', url: '' },
+              form2: [{}]
+          };
       },
-      cleanData() {
-        this.$Loading.start()
-        this.loading = true
-        this.$http.delete(this.$tokenadmin("wxtx_clean")+"&db="+this.db)
-		  	.then(r=> { 
-            if (r.data.result)this.list=r.data.data[0]
-            this.loading = false
-            this.$Loading.finish();
-          })
-          .catch(e => { this.$Loading.error(); this.loading = false })
+      computed: {
+          listShow () { return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize); }
       },
-      deleteData(i,r) {
-        this.$http.delete(this.$tokenadmin("wxtx")+"&db="+this.db+"&id="+r.id)
-        .then(r => { 
-          if (r.data.result){
-            this.$Message.info('删除成功')
-            this.list=r.data.data[0]
-          }else{
-            this.$Message.info(r.data.errmsg)
-          }
-        })
-        .catch(e => { this.$Message.info(r.data.errmsg)})
-      },
-      saveData(i,r) {
-        r.flag=0
-        this.$http.put(this.$tokenadmin("wxtx")+"&db="+this.db+"&id="+r.id, r)
-        .then(r => { 
-          if (r.data.result){
-            this.$Message.info('保存成功')
-            this.list=r.data.data[0]
-          } else{
-            this.$Message.info(r.data.errmsg)
-          }
-        })
-        .catch(e => { this.$Message.info(r.data.errmsg)})          
-      },
-      handleAvatarSuccess(res, file) { this.imageUrl = res.fileurl },   
-      handleAvatarSuccess2(res, file) { 
-        this.$refs.upload.clearFiles();
-        this.fileUrl = res.fileurl
-        this.fileName = res.message        
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png')
-        const isLt2M = file.size / 1024 / 1024 < 2
+      methods: {
+          getToken () { return {'Authorization': 'Bearer ' + localStorage.token}; },
+          handleSizeChange (v) { this.pagesize = v; },
+          handleCurrentChange (v) { this.currentPage = v; },
+          getData () {
+              this.$Loading.start();
+              this.loading = true;
+              this.$http.get(this.$tokenadmin('wxtx') + '&db=' + this.db)
+                  .then(r => {
+                      if (r.data.result) this.list = r.data.data[0];
+                      this.loading = false;
+                      this.$Loading.finish();
+                  })
+                  .catch(e => { this.$Loading.error(); this.loading = false; });
+          },
+          cleanData () {
+              this.$Loading.start();
+              this.loading = true;
+              this.$http.delete(this.$tokenadmin('wxtx_clean') + '&db=' + this.db)
+                  .then(r => {
+                      if (r.data.result) this.list = r.data.data[0];
+                      this.loading = false;
+                      this.$Loading.finish();
+                  })
+                  .catch(e => { this.$Loading.error(); this.loading = false; });
+          },
+          deleteData (i, r) {
+              this.$http.delete(this.$tokenadmin('wxtx') + '&db=' + this.db + '&id=' + r.id)
+                  .then(r => {
+                      if (r.data.result) {
+                          this.$Message.info('删除成功');
+                          this.list = r.data.data[0];
+                      } else {
+                          this.$Message.info(r.data.errmsg);
+                      }
+                  })
+                  .catch(e => { this.$Message.info(r.data.errmsg); });
+          },
+          saveData (i, r) {
+              r.flag = 0;
+              this.$http.put(this.$tokenadmin('wxtx') + '&db=' + this.db + '&id=' + r.id, r)
+                  .then(r => {
+                      if (r.data.result) {
+                          this.$Message.info('保存成功');
+                          this.list = r.data.data[0];
+                      } else {
+                          this.$Message.info(r.data.errmsg);
+                      }
+                  })
+                  .catch(e => { this.$Message.info(r.data.errmsg); });
+          },
+          handleAvatarSuccess (res, file) { this.imageUrl = res.fileurl; },
+          handleAvatarSuccess2 (res, file) {
+              this.$refs.upload.clearFiles();
+              this.fileUrl = res.fileurl;
+              this.fileName = res.message;
+          },
+          beforeAvatarUpload (file) {
+              const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
+              const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG) {
-          this.$Message.error('上传头像图片只能是 JPG/PNG 格式!')
-        }
-        if (!isLt2M) {
-          this.$Message.error('上传头像图片大小不能超过 2MB!')
-        }
-        return isJPG && isLt2M
-      },
-      addData() {
-        this.form['pic']=this.imageUrl     
-        this.form['fh']=this.fileUrl     
-        this.$http.post(this.$tokenadmin("wxtx"), this.form)
-        .then(r => { 
-          if (r.data.result) {
-            this.$Message.info('新增成功')
-            this.dialogFormVisible = false              
-            this.getData()
-          } else {
-            this.$Message.info(r.data.errmsg)
+              if (!isJPG) {
+                  this.$Message.error('上传头像图片只能是 JPG/PNG 格式!');
+              }
+              if (!isLt2M) {
+                  this.$Message.error('上传头像图片大小不能超过 2MB!');
+              }
+              return isJPG && isLt2M;
+          },
+          addData () {
+              this.form['pic'] = this.imageUrl;
+              this.form['fh'] = this.fileUrl;
+              this.$http.post(this.$tokenadmin('wxtx'), this.form)
+                  .then(r => {
+                      if (r.data.result) {
+                          this.$Message.info('新增成功');
+                          this.dialogFormVisible = false;
+                          this.getData();
+                      } else {
+                          this.$Message.info(r.data.errmsg);
+                      }
+                  });
           }
-        })
-        .catch(e => { this.$Message.info(r.data.errmsg)})
+      },
+      mounted () {
+          this.getData();
       }
-    },
-    mounted() {
-      this.getData()
-    }
-  }
+  };
 </script>
 
 <style scoped>

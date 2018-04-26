@@ -1,15 +1,14 @@
 import {otherRouter, appRouter} from '@/router/router';
 import Util from '@/libs/util';
 import Cookies from 'js-cookie';
-import axios from 'axios'
-import { Message } from 'element-ui'
+import axios from 'axios';
 import Vue from 'vue';
 
-function getpath(path) {
-  // return process.env.NODE_ENV === 'production' ? "/"+path : "http://localhost:9090/"+path
-  let url = "http://" + Cookies.get('esap_server') + "/" + path
-  console.log(url)
-  return url
+function getpath (path) {
+    // return process.env.NODE_ENV === 'production' ? "/"+path : "http://localhost:9090/"+path
+    let url = 'http://' + Cookies.get('esap_server') + '/' + path;
+    // console.log(url);
+    return url;
 }
 
 const app = {
@@ -21,14 +20,13 @@ const app = {
         // uploadUrl: getpath("upload"),
         // adminUrl: getpath("admin/"),
         mts: false,
-        pSize:15,
-        cPage:1,
-        tableData:[], 
-        showPagn:true,
-        loading:false,
-        userName: sessionStorage.getItem("esap_user"),
-        form: { Dbs : [], Apps : [], Tasks : [] },
-
+        pSize: 15,
+        cPage: 1,
+        tableData: [],
+        showPagn: true,
+        loading: false,
+        userName: sessionStorage.getItem('esap_user'),
+        form: { Dbs: [], Apps: [], Tasks: [] },
 
         cachePage: [],
         lang: '',
@@ -59,29 +57,28 @@ const app = {
         dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
     },
     getters: {
-        apiPath: s => getpath("api/"),
-        api2Path: s => getpath("api2/"),
-        esPath: s => getpath("es/"),
-        appUrl: s => getpath(""),
-        uploadUrl: s => getpath("upload"),
-        adminUrl: s => getpath("admin/"),
-        showData: s => s.tableData.slice((s.cPage-1)*s.pSize,s.pSize*s.cPage),
-        mtstr: s => s.mts?'multiple':'single',
+        apiPath: s => getpath('api/'),
+        api2Path: s => getpath('api2/'),
+        esPath: s => getpath('es/'),
+        appUrl: s => getpath(''),
+        uploadUrl: s => getpath('upload'),
+        adminUrl: s => getpath('admin/'),
+        showData: s => s.tableData.slice((s.cPage - 1) * s.pSize, s.pSize * s.cPage),
+        mtstr: s => s.mts ? 'multiple' : 'single',
         isLogin: s => !!s.userName,
-        isAdmin: s=> s.userName=="Admin",
-        token: s=> "?token="+sessionStorage.getItem("esap_token"),
-        dbs: s=> s.form.Dbs.filter(v=>v.IsRun),
-        apps: s=> s.form.Apps.filter(v=>v.IsRun),
-        tasks: s=> s.form.Tasks.filter(v=>v.IsRun)
+        isAdmin: s => s.userName === 'Admin',
+        token: s => '?token=' + sessionStorage.getItem('esap_token'),
+        dbs: s => s.form.Dbs.filter(v => v.IsRun),
+        apps: s => s.form.Apps.filter(v => v.IsRun),
+        tasks: s => s.form.Tasks.filter(v => v.IsRun)
     },
     mutations: {
-        mtsChg (state) { state.mts=!state.mts },
-        sizeChange(state, v) { state.pSize=v },
-        currentPageChange(state, v) { state.cPage=v },
-        updateTableData(state, v) { state.tableData=v },
-        clearTableData(state) { state.tableData=[] },
-        setUserName(state, v) { state.userName=v },
-
+        mtsChg (state) { state.mts = !state.mts; },
+        sizeChange (state, v) { state.pSize = v; },
+        currentPageChange (state, v) { state.cPage = v; },
+        updateTableData (state, v) { state.tableData = v; },
+        clearTableData (state) { state.tableData = []; },
+        setUserName (state, v) { state.userName = v; },
 
         setTagsList (state, list) {
             state.tagsList.push(...list);
@@ -242,51 +239,50 @@ const app = {
         }
     },
     actions: {
-        getApi({ commit, state }, apiParam) {
-          state.loading=true
-          let apiUrl=state.apiPath
-          for ( let k in apiParam ) {
-            apiUrl = apiUrl + '&' + k + '=' + apiParam[k]
-          }
-          axios.get(apiUrl)
-            .then(r => {
-            if (state.loading) {   
-              commit('updateTableData', r.data)    
-              state.loading=false              
+        getApi ({ commit, state }, apiParam) {
+            state.loading = true;
+            let apiUrl = state.apiPath;
+            for (let k in apiParam) {
+                apiUrl = apiUrl + '&' + k + '=' + apiParam[k];
             }
-          })
-            .catch(e => {
-            if (state.loading) {
-              commit('clearTableData') 
-              state.loading=false     
-            }     
-          })       
+            axios.get(apiUrl)
+                .then(r => {
+                    if (state.loading) {
+                        commit('updateTableData', r.data);
+                        state.loading = false;
+                    }
+                })
+                .catch(e => {
+                    if (state.loading) {
+                        commit('clearTableData');
+                        state.loading = false;
+                    }
+                });
         },
-        getData({ commit, state }, apiParam) {
-          state.loading=true
-          let apiUrl=state.apiPath
-          for ( let k in apiParam ) {
-            if (k!="src") apiUrl = apiUrl + '&' + k + '=' + apiParam[k]
-          }
-          axios.get(apiUrl)
-            .then(r => {
-            state.loading=false              
-            apiParam.src = r.data   
-            console.log("src:",JSON.stringify(apiParam))     
-          })
-           .catch(e => {
-            state.loading=false              
-            apiParam.src = []     
-          })        
+        getData ({ commit, state }, apiParam) {
+            state.loading = true;
+            let apiUrl = state.apiPath;
+            for (let k in apiParam) {
+                if (k !== 'src') apiUrl = apiUrl + '&' + k + '=' + apiParam[k];
+            }
+            axios.get(apiUrl)
+                .then(r => {
+                    state.loading = false;
+                    apiParam.src = r.data;
+                    // console.log('src:', JSON.stringify(apiParam));
+                })
+                .catch(e => {
+                    state.loading = false;
+                    apiParam.src = [];
+                });
         },
-        doLogin({ commit, state }, apiParam) {            
-          state.loading=true
-  
+        doLogin ({ commit, state }, apiParam) {
+            state.loading = true;
         },
-        outlogin( { commit }) {
-          commit('setUserName', '')
-          sessionStorage.removeItem("esap_token")
-          sessionStorage.removeItem("esap_user")
+        outlogin ({ commit }) {
+            commit('setUserName', '');
+            sessionStorage.removeItem('esap_token');
+            sessionStorage.removeItem('esap_user');
         }
     }
 };

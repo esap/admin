@@ -176,7 +176,7 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 import cityData from './map-data/get-city-value.js';
 import homeMap from './components/map.vue';
 import dataSourcePie from './components/dataSourcePie.vue';
@@ -236,8 +236,8 @@ export default {
             return localStorage.avatorImgPath;
         },
         serverIp () {
-            return Cookies.get("esap_server")
-        },
+            return Cookies.get('esap_server');
+        }
     },
     methods: {
         addNewToDoItem () {

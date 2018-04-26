@@ -215,96 +215,94 @@
 
   <script>
     export default {
-      data() {
-        return {
-          list: [],
-          pagesize: 20,
-          currentPage: 1,
-          formModify: {},
-          dialogFormVisible: false,
-          dialogFormVisible2: false,
-          loading: false,
-          form: {
-            mKey: '',
-            name: '',
-            entermsg: '',
-            tmpl: '',
-            mode: 0,
-            nextfn: '',
-            aclUser: '@all',  
-            aclDept: '',  
-            aclTag: '',  
-            aclApp: '@all',  
-            app: '',
-            db: '',
-            url: '',
-            pic: '',
-            safe: 0
-          }
+        data () {
+            return {
+                list: [],
+                pagesize: 20,
+                currentPage: 1,
+                formModify: {},
+                dialogFormVisible: false,
+                dialogFormVisible2: false,
+                loading: false,
+                form: {
+                    mKey: '',
+                    name: '',
+                    entermsg: '',
+                    tmpl: '',
+                    mode: 0,
+                    nextfn: '',
+                    aclUser: '@all',
+                    aclDept: '',
+                    aclTag: '',
+                    aclApp: '@all',
+                    app: '',
+                    db: '',
+                    url: '',
+                    pic: '',
+                    safe: 0
+                }
+            };
+        },
+        computed: {
+            listShow () { return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize); }
+        },
+        methods: {
+            handleSizeChange (val) { this.pagesize = val; },
+            handleCurrentChange (val) { this.currentPage = val; },
+            getData () {
+                this.$Loading.start();
+                this.loading = true;
+                this.$http.get(this.$tokenadmin('wxcx'))
+                    .then(r => {
+                        if (r.data.result) this.list = r.data.data[0];
+                        this.loading = false;
+                        this.$Loading.finish();
+                    })
+                    .catch(e => { this.$Loading.error(); this.loading = false; });
+            },
+            deleteData (i, r) {
+                this.$http.delete(this.$tokenadmin('wxcx') + '&id=' + r.id)
+                    .then(r => {
+                        if (r.data.result) {
+                            this.$message({ message: '删除成功' });
+                            this.list = r.data.data[0];
+                        } else {
+                            this.$message({ message: r.data.errmsg });
+                        }
+                    })
+                    .catch(e => { this.$message({ message: r.data.errmsg }); });
+            },
+            showModify (r) {
+                this.dialogFormVisible2 = true;
+                this.formModify = r;
+            },
+            saveData () {
+                this.$http.put(this.$tokenadmin('wxcx') + '&id=' + this.formModify.id, this.formModify)
+                    .then(r => {
+                        if (r.data.result) {
+                            this.$message({ message: '保存成功' });
+                            this.list = r.data.data[0];
+                            this.dialogFormVisible2 = false;
+                        } else {
+                            this.$message({ message: r.data.errmsg });
+                        }
+                    });
+            },
+            addData () {
+                this.$http.post(this.$tokenadmin('wxcx'), this.form)
+                    .then(r => {
+                        if (r.data.result) {
+                            this.$message({ message: '新增成功' });
+                            this.dialogFormVisible = false;
+                            this.getData();
+                        } else {
+                            this.$message({ message: r.data.errmsg });
+                        }
+                    });
+            }
+        },
+        mounted () {
+            this.getData();
         }
-      },
-      computed:{
-        listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
-      },
-      methods: {
-        handleSizeChange(val) { this.pagesize=val },
-        handleCurrentChange(val) { this.currentPage=val },
-        getData() {
-          this.$Loading.start()
-          this.loading = true
-          this.$http.get(this.$tokenadmin("wxcx"))
-  		  	.then(r=> { 
-            if (r.data.result)this.list=r.data.data[0]
-            this.loading = false
-            this.$Loading.finish();
-          })
-          .catch(e => { this.$Loading.error(); this.loading = false })
-        },
-        deleteData(i,r) {
-          this.$http.delete(this.$tokenadmin("wxcx")+"&id="+r.id)
-          .then(r => { 
-            if (r.data.result){
-              this.$message({ message: '删除成功' })
-              this.list=r.data.data[0]
-            }else{
-              this.$message({  message: r.data.errmsg })
-            }
-          })
-          .catch(e => { this.$message({  message: r.data.errmsg })})
-        },      
-        showModify(r){
-          this.dialogFormVisible2=true
-          this.formModify=r
-        },
-        saveData() {
-          this.$http.put(this.$tokenadmin("wxcx")+"&id="+this.formModify.id, this.formModify)
-          .then(r => { 
-            if (r.data.result){
-              this.$message({ message: '保存成功' })             
-              this.list=r.data.data[0]
-              this.dialogFormVisible2=false
-            }else{
-              this.$message({  message: r.data.errmsg })
-            }
-          })
-          .catch(e => { this.$message({  message: r.data.errmsg })})
-        },
-        addData(){          
-          this.$http.post(this.$tokenadmin("wxcx"), this.form)
-          .then(r => { 
-            if (r.data.result){
-              this.$message({ message: '新增成功' })            
-              this.dialogFormVisible = false              
-              this.getData()
-            }else{
-              this.$message({  message: r.data.errmsg })
-            }
-          })
-          .catch(e => { this.$message({  message: r.data.errmsg })})
-        }
-      },
-      mounted(){
-        this.getData()
-      }
-    }
+    };
   </script>

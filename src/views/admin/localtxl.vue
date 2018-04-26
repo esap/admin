@@ -72,63 +72,63 @@
 
   <script>
     export default {
-      data() {
-        return {
-          name1: '',
-          list: [],
-          // userlist: [],
-          deptlist: [],
-          taglist: [],
-          taguserlist: [],
-          currentPage: 1,
-		      currentPage2: 1,
-          pagesize: 20,
-          pagesize2: 20,
-          loading: false,
-        }
-      },
-	  computed:{
-      listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) },
-      listShow2() { return this.taguserlist.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) },
-	  },
-      methods: {
-        handleSizeChange(v) { this.pagesize=v },
-		    handleSizeChange2(v) { this.pagesize2=v },
-        handleCurrentChange(v) { this.currentPage=v },
-      	handleCurrentChange2(v) { this.currentPage2=v },
-        getData() {
-          this.$Loading.start()
-          this.loading = true
-          this.$http.get(this.$tokenadmin("localuserlist"))
-          .then(r=> { 
-            this.list=r.data.data[0]
-            // this.userlist=r.data.data[0]
-            this.deptlist=r.data.data[1]
-            this.taglist=r.data.data[2]
-            this.taguserlist=r.data.data[3]
-            this.$Loading.finish()
-            this.loading = false
-            // this.tabchg()
-          })
-          .catch(e => { this.$Loading.error(); this.loading = false })
+        data () {
+            return {
+                name1: '',
+                list: [],
+                // userlist: [],
+                deptlist: [],
+                taglist: [],
+                taguserlist: [],
+                currentPage: 1,
+                currentPage2: 1,
+                pagesize: 20,
+                pagesize2: 20,
+                loading: false
+            };
         },
-        downloadData() {
-          this.$Loading.start()
-          this.loading = true
-          this.$http.get(this.$tokenadmin("downloadUserlist"))
-          .then(r=> { 
-            this.$Loading.start()
-            this.loading = true
-            this.getData()            
-          })
-          .catch(e => { this.$Loading.error(); this.loading = false })
+        computed: {
+            listShow () { return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize); },
+            listShow2 () { return this.taguserlist.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize); }
         },
+        methods: {
+            handleSizeChange (v) { this.pagesize = v; },
+            handleSizeChange2 (v) { this.pagesize2 = v; },
+            handleCurrentChange (v) { this.currentPage = v; },
+            handleCurrentChange2 (v) { this.currentPage2 = v; },
+            getData () {
+                this.$Loading.start();
+                this.loading = true;
+                this.$http.get(this.$tokenadmin('localuserlist'))
+                    .then(r => {
+                        this.list = r.data.data[0];
+                        // this.userlist=r.data.data[0]
+                        this.deptlist = r.data.data[1];
+                        this.taglist = r.data.data[2];
+                        this.taguserlist = r.data.data[3];
+                        this.$Loading.finish();
+                        this.loading = false;
+                        // this.tabchg()
+                    })
+                    .catch(e => { this.$Loading.error(); this.loading = false; });
+            },
+            downloadData () {
+                this.$Loading.start();
+                this.loading = true;
+                this.$http.get(this.$tokenadmin('downloadUserlist'))
+                    .then(r => {
+                        this.$Loading.start();
+                        this.loading = true;
+                        this.getData();
+                    })
+                    .catch(e => { this.$Loading.error(); this.loading = false; });
+            }
         // tabchg() {
         //   this.list=this[this.name1]
         // }
-      },
-      mounted(){
-        this.getData()
-      }
-    }
+        },
+        mounted () {
+            this.getData();
+        }
+    };
   </script>

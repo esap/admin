@@ -8,13 +8,13 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state: {
-        //        
+        //
     },
 
     mutations: {
         //
     },
-   
+
     modules: {
         app,
         user

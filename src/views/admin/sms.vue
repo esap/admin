@@ -68,78 +68,78 @@
 
 <script>
   export default {
-    data() {
-      return {
-        list: [],
-        db: 'esap',
-        currentPage:1,
-        pagesize: 20,
-        loading: false,
-        dialogFormVisible: false,
-        form: {},
-        form2: [{}],
-      }
-    },
-    computed:{
-      listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
-    },
-    methods: {
-      handleSizeChange(v) { this.pagesize=v },
-      handleCurrentChange(v) { this.currentPage=v },
-      getData() {
-        this.$Loading.start()
-        this.loading = true
-        this.$http.get(this.$tokenadmin("sms")+"&db="+this.db)
-		  	.then(r=> { 
-            if (r.data.result)this.list=r.data.data[0]
-            this.loading = false
-            this.$Loading.finish();
-          })
-          .catch(e => { this.$Loading.error(); this.loading = false })
+      data () {
+          return {
+              list: [],
+              db: 'esap',
+              currentPage: 1,
+              pagesize: 20,
+              loading: false,
+              dialogFormVisible: false,
+              form: {},
+              form2: [{}]
+          };
       },
-      deleteData(i,r) {
-        this.$http.delete(this.$tokenadmin("sms")+"&db="+this.db+"&id="+r.id)
-        .then(r => { 
-          if (r.data.result){
-            this.$Message.info('删除成功')
-            this.list=r.data.data[0]
-          }else{
-            this.$Message.info(r.data.errmsg)
-          }
-        })
-        .catch(e => { this.$Message.info(r.data.errmsg)})
+      computed: {
+          listShow () { return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize); }
       },
-      saveData(i,r) {
-        r.flag=0
-        this.$http.put(this.$tokenadmin("sms")+"&db="+this.db+"&id="+r.id, r)
-        .then(r => { 
-          if (r.data.result){
-            this.$Message.info('保存成功')
-            this.list=r.data.data[0]
-          } else{
-            this.$Message.info(r.data.errmsg)
+      methods: {
+          handleSizeChange (v) { this.pagesize = v; },
+          handleCurrentChange (v) { this.currentPage = v; },
+          getData () {
+              this.$Loading.start();
+              this.loading = true;
+              this.$http.get(this.$tokenadmin('sms') + '&db=' + this.db)
+                  .then(r => {
+                      if (r.data.result) this.list = r.data.data[0];
+                      this.loading = false;
+                      this.$Loading.finish();
+                  })
+                  .catch(e => { this.$Loading.error(); this.loading = false; });
+          },
+          deleteData (i, r) {
+              this.$http.delete(this.$tokenadmin('sms') + '&db=' + this.db + '&id=' + r.id)
+                  .then(r => {
+                      if (r.data.result) {
+                          this.$Message.info('删除成功');
+                          this.list = r.data.data[0];
+                      } else {
+                          this.$Message.info(r.data.errmsg);
+                      }
+                  })
+                  .catch(e => { this.$Message.info(e); });
+          },
+          saveData (i, r) {
+              r.flag = 0;
+              this.$http.put(this.$tokenadmin('sms') + '&db=' + this.db + '&id=' + r.id, r)
+                  .then(r => {
+                      if (r.data.result) {
+                          this.$Message.info('保存成功');
+                          this.list = r.data.data[0];
+                      } else {
+                          this.$Message.info(r.data.errmsg);
+                      }
+                  })
+                  .catch(e => { this.$Message.info(e); });
+          },
+          addData () {
+              this.$http.post(this.$tokenadmin('sms'), this.form)
+                  .then(r => {
+                      if (r.data.result) {
+                          this.$Message.info('新增成功');
+                          this.dialogFormVisible = false;
+                          this.getData();
+                      } else {
+                          this.$Message.info(r.data.errmsg);
+                      }
+                  })
+                  .catch(e => { this.$Message.info(e); });
           }
-        })
-        .catch(e => { this.$Message.info(r.data.errmsg)})          
-      },   
-      addData() {   
-        this.$http.post(this.$tokenadmin("sms"), this.form)
-        .then(r => { 
-          if (r.data.result) {
-            this.$Message.info('新增成功')
-            this.dialogFormVisible = false              
-            this.getData()
-          } else {
-            this.$Message.info(r.data.errmsg)
-          }
-        })
-        .catch(e => { this.$Message.info(r.data.errmsg)})
+      },
+      mounted () {
+          this.getData();
       }
-    },
-    mounted() {
-      this.getData()
-    }
-  }
+  };
 </script>
 
 <style scoped>

@@ -38,33 +38,33 @@
 
   <script>
     export default {
-      data() {
-        return {
-          list: [],
-		      currentPage:1,
-          pagesize: 20,
-          loading: false,
+        data () {
+            return {
+                list: [],
+                currentPage: 1,
+                pagesize: 20,
+                loading: false
+            };
+        },
+        computed: {
+            listShow () { return this.list.slice((this.currentPage - 1) * this.pagesize, this.currentPage * this.pagesize); }
+        },
+        methods: {
+            handleSizeChange (v) { this.pagesize = v; },
+            handleCurrentChange (v) { this.currentPage = v; },
+            getData () {
+                this.$Loading.start();
+                this.loading = true;
+                this.$http.get(this.$tokenadmin('userlist'))
+                    .then(r => {
+                        this.list = r.data.UserList;
+                        this.$Loading.finish();
+                        this.loading = false;
+                    });
+            }
+        },
+        mounted () {
+            this.getData();
         }
-      },
-	  computed:{
-		  listShow() { return this.list.slice((this.currentPage-1)*this.pagesize,this.currentPage*this.pagesize) }
-	  },
-      methods: {
-		    handleSizeChange(v) { this.pagesize=v },
-      	handleCurrentChange(v) { this.currentPage=v },
-        getData() {
-          this.$Loading.start()
-          this.loading = true
-          this.$http.get(this.$tokenadmin("userlist"))
-          .then(r=> { 
-            this.list=r.data.UserList
-            this.$Loading.finish()
-            this.loading = false
-          })          
-        }        
-      },
-      mounted(){
-        this.getData()
-      }
-    }
+    };
   </script>
