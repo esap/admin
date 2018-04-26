@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie';
+import Cookies from 'js-cookie'
+import md5 from 'md5'
 export default {
     name: 'Unlock',
     data () {
@@ -53,7 +54,7 @@ export default {
         validator () {
             // return true; // 你可以在这里写密码验证方式，如发起ajax请求将用户输入的密码this.password与数据库用户密码对比
             let pwd = Cookies.get("password")
-            if (pwd == this.password) {
+            if (pwd == md5(this.password)) {
                 return true
             }
             return false

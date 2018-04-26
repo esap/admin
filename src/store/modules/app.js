@@ -6,17 +6,20 @@ import { Message } from 'element-ui'
 import Vue from 'vue';
 
 function getpath(path) {
-  return process.env.NODE_ENV === 'production' ? "/"+path : "http://localhost:9090/"+path
+  // return process.env.NODE_ENV === 'production' ? "/"+path : "http://localhost:9090/"+path
+  let url = "http://" + Cookies.get('esap_server') + "/" + path
+  console.log(url)
+  return url
 }
 
 const app = {
     state: {
-        apiPath: getpath("api/"),
-        api2Path: getpath("api2/"),
-        esPath: getpath("es/"),
-        appUrl: getpath(""),
-        uploadUrl: getpath("upload"),
-        adminUrl: getpath("admin/"),
+        // apiPath: getpath("api/"),
+        // api2Path: getpath("api2/"),
+        // esPath: getpath("es/"),
+        // appUrl: getpath(""),
+        // uploadUrl: getpath("upload"),
+        // adminUrl: getpath("admin/"),
         mts: false,
         pSize:15,
         cPage:1,
@@ -56,6 +59,12 @@ const app = {
         dontCache: ['text-editor', 'artical-publish'] // 在这里定义你不想要缓存的页面的name属性值(参见路由配置router.js)
     },
     getters: {
+        apiPath: s => getpath("api/"),
+        api2Path: s => getpath("api2/"),
+        esPath: s => getpath("es/"),
+        appUrl: s => getpath(""),
+        uploadUrl: s => getpath("upload"),
+        adminUrl: s => getpath("admin/"),
         showData: s => s.tableData.slice((s.cPage-1)*s.pSize,s.pSize*s.cPage),
         mtstr: s => s.mts?'multiple':'single',
         isLogin: s => !!s.userName,
@@ -241,7 +250,7 @@ const app = {
           }
           axios.get(apiUrl)
             .then(r => {
-            if (state.loading) {    
+            if (state.loading) {   
               commit('updateTableData', r.data)    
               state.loading=false              
             }

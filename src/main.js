@@ -14,10 +14,10 @@ import util from './libs/util';
 import AxiosPlugin from './AxiosPlugin'
 
 // Vue.prototype.$http = axios
-Vue.prototype.$token=function(param) { return store.state.app.apiPath + param + "?" }
-Vue.prototype.$tokenadmin=function(param) { return store.state.app.adminUrl + param + "?" }
-Vue.prototype.$tokenes=function(param) { return store.state.app.esPath + param + "?" }
-Vue.prototype.$tokenup=function() { return store.state.app.uploadUrl + "?" }
+Vue.prototype.$token=function(param) { return store.getters.apiPath + param + "?" }
+Vue.prototype.$tokenadmin=function(param) { return store.getters.adminUrl + param + "?" }
+Vue.prototype.$tokenes=function(param) { return store.getters.esPath + param + "?" }
+Vue.prototype.$tokenup=function() { return store.getters.uploadUrl + "?" }
 
 Vue.use(AxiosPlugin)
 Vue.use(ElementUI)

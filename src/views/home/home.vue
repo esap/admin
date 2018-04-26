@@ -19,7 +19,7 @@
                                     <Row class-name="made-child-con-middle" type="flex" align="middle">
                                         <div>
                                             <b class="card-user-infor-name">Admin</b>
-                                            <p>esap-admin</p>
+                                            <p>{{serverIp}}</p>
                                         </div>
                                     </Row>
                                 </Col>
@@ -176,6 +176,7 @@
 </template>
 
 <script>
+import Cookies from 'js-cookie'
 import cityData from './map-data/get-city-value.js';
 import homeMap from './components/map.vue';
 import dataSourcePie from './components/dataSourcePie.vue';
@@ -233,7 +234,10 @@ export default {
     computed: {
         avatorPath () {
             return localStorage.avatorImgPath;
-        }
+        },
+        serverIp () {
+            return Cookies.get("esap_server")
+        },
     },
     methods: {
         addNewToDoItem () {

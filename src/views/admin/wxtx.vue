@@ -47,7 +47,7 @@
               :show-upload-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload"
-              :action="$store.state.app.uploadUrl">
+              :action="$store.getters.uploadUrl">
               <div>
                   <Icon v-if="!imageUrl" type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                   <p v-if="!imageUrl">点击或拖入图片</p>
@@ -61,7 +61,7 @@
               :headers="getToken()"
               :show-upload-list="false"
               :on-success="handleAvatarSuccess2"
-              :action="$store.state.app.uploadUrl">
+              :action="$store.getters.uploadUrl">
               <div>
                   <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                   <p>{{fileName}}</p>

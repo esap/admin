@@ -21,7 +21,7 @@
       <el-table-column prop="mDesc" label="描述"></el-table-column> 
       <el-table-column label="图片" width="180">
         <template slot-scope="scope">
-          <img style="width:100px" :src="$store.state.app.appUrl+'p/'+scope.row.pic" />
+          <img style="width:100px" :src="$store.getters.appUrl+'p/'+scope.row.pic" />
         </template>
       </el-table-column> 
       <el-table-column prop="fh" label="文件" width="180"></el-table-column>

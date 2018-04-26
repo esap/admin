@@ -136,12 +136,13 @@
 	          <i-switch v-model="scope.row.IsRun"></i-switch>
 	        </template>
 	      </el-table-column>	      
-	      <el-table-column label="操作" width="200">
+	      <el-table-column label="操作" width="250">
 	        <template slot-scope="scope">
 	          <ButtonGroup>
 	            <Button size="small" @click="testDb(scope.row)">测试</Button>
 	            <Button size="small" type="warning" @click="createDb(scope.row)">建库</Button>
 	            <Button size="small" type="warning" @click="createTable(scope.row)">建表</Button>
+	            <Button size="small" type="success" @click="createTableId(scope.row)">JU补丁</Button>
 	            <Button size="small" type="error" @click="$store.state.app.form.Dbs.splice(scope.$index, 1)">删除</Button>
 	          </ButtonGroup>
 	        </template>
@@ -518,6 +519,25 @@ export default {
             loading: true,
             onOk: () => {
             	this.$http.post(this.$tokenadmin("createtable"), obj)
+			  	.then(r=>{
+			  	  if (r.data.result){
+			  	  	  this.$Message.info('执行成功')
+			  	  	  this.$Modal.remove()
+			  	  } else {
+			  	  	this.$Message.error('执行失败:' + r.data.errmsg)
+			  	  } 
+			  	})
+			  	.catch(e=> { this.$Message.error('执行失败:' + e) })
+            }
+        });
+      },
+      createTableId (obj) {
+        this.$Modal.confirm({
+            title: 'JUAP专用补丁',
+            content: '<p>点击确定将对JU库打补丁，新库导入模板后必打，一次即可</p>',
+            loading: true,
+            onOk: () => {
+            	this.$http.post(this.$tokenadmin("createtableid"), obj)
 			  	.then(r=>{
 			  	  if (r.data.result){
 			  	  	  this.$Message.info('执行成功')
