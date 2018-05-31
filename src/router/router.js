@@ -166,7 +166,7 @@ export const appRouter = [
             { path: 'index', title: '日志', name: 'syslog_index', component: () => import('@/views/admin/syslog.vue') }
         ]
     },
-	{
+    {
         path: '/es2ju',
         icon: 'settings',
         name: 'es2ju',
@@ -174,6 +174,16 @@ export const appRouter = [
         component: Main,
         children: [
             { path: 'index', title: 'ES2JU转存工具', name: 'es2ju_index', component: () => import('@/views/admin/es2ju.vue') }
+        ]
+    },
+	{
+        path: '/util',
+        icon: 'settings',
+        name: 'util',
+        title: '常用工具',
+        component: Main,
+        children: [
+            { path: 'index', title: '常用工具', name: 'util_index', component: () => import('@/views/admin/util.vue') }
         ]
     },
     // {
