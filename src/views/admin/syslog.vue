@@ -44,7 +44,7 @@
                           myChart.setOption({
                               title: { text: '数据分析' },
                               tooltip: {},
-                              xAxis: [{ data: ['查询', '提醒', 'email', '审批', '图库', '语音', '视频'] }],
+                              xAxis: [{ data: ['查询', '提醒', 'email', '请假', '图库', '语音', '视频'] }],
                               yAxis: [
                                   {
                                       type: 'value'
