@@ -250,18 +250,35 @@
             </Col>
         </Row>
         <Row>
+            <Col :span="2">
+                <Button type="warning"><a href="https://ai.qq.com" target="_blank">腾讯AI官网</a></Button>
+            </Col>
+            <Col :span="8">
+              <Tooltip content="腾讯AI开放平台应用id，可前往官网免费申请">    
+                <Form-item label="腾讯AI - AppID">
+                  <Input v-model="$store.state.app.form.AppId" placeholder="填写您的腾讯appId"></Input>
+                </Form-item>
+              </Tooltip>
+            </Col>
+            <Col :span="8">      
+                <Form-item label="腾讯AI - AppKey">
+                  <Input v-model="$store.state.app.form.AppKey" placeholder="填写您的腾讯AppKey"></Input>
+                </Form-item>
+            </Col>           
+        </Row>
+        <Row>
             <Col :span="4">
                 <Button type="warning"><a href="https://cloud.tencent.com/product/sms" target="_blank">腾讯云短信官网</a></Button>
             </Col>
             <Col :span="6">
               <Tooltip content="腾讯云应用id，国内每月免费100条">    
-                <Form-item label="短信应用 - AppID">
+                <Form-item label="短信应用 - SmsId">
                   <Input v-model="$store.state.app.form.SmsId" placeholder=""></Input>
                 </Form-item>
               </Tooltip>
             </Col>
             <Col :span="10">      
-                <Form-item label="短信应用 - AppKey">
+                <Form-item label="短信应用 - SmsKey">
                   <Input v-model="$store.state.app.form.SmsKey" placeholder=""></Input>
                 </Form-item>
             </Col>           
