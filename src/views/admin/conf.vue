@@ -204,19 +204,24 @@
       <TabPane label="其他 - other" name="name4">
       <Form :model="$store.state.app.form" :label-width="80">
         <Row>
-            <Col :span="8">
+            <Col :span="4">
                 <Form-item label="外网域名 - Host">
                   <Input v-model="$store.state.app.form.Host" placeholder=""></Input>
                 </Form-item>  
             </Col>
-            <Col :span="6">      
+            <Col :span="4">      
                 <Form-item label="管理密码 - Pwd">
                   <Input type="password" v-model="Pwd1" placeholder="默认为erp8,请及时修改"></Input>
                 </Form-item>
             </Col>
-            <Col :span="6">      
+            <Col :span="4">      
                 <Form-item label="脚本前缀 - SqlPrefix">
                   <Input v-model="$store.state.app.form.SqlPrefix" placeholder="DIY本地通讯录"></Input>
+                </Form-item>
+            </Col> 
+            <Col :span="8">      
+                <Form-item label="上传目录 - UploadPath">
+                  <Input v-model="$store.state.app.form.UploadPath" placeholder="Upload上传目录"></Input>
                 </Form-item>
             </Col>          
             <Col :span="4"> 
