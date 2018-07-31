@@ -1,6 +1,6 @@
 {
   "name": "esap-admin",
-  "version": "3.0.26",
+  "version": "3.0.28",
   "description": "a management bases on iview",
   "main": "index.js",
   "scripts": {
