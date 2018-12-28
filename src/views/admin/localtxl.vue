@@ -27,7 +27,7 @@
         <el-table-column prop="telephone" label="固话" width="120"></el-table-column>
         <el-table-column prop="deptname" label="部门" width="120"></el-table-column>
         <el-table-column prop="isleader" label="上级" width="80"></el-table-column>
-        <el-table-column prop="englishname" label="英文名" width="80"></el-table-column>
+        <el-table-column prop="alias" label="别名" width="80"></el-table-column>
       </el-table>
     </TabPane>
     <TabPane label="部门 - dept" name="deptlist">

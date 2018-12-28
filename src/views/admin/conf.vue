@@ -13,23 +13,25 @@
         <el-table stripe :data="$store.state.app.form.Apps" @cell-mouse-enter="showTableOps" @cell-mouse-leave="hideTableOps">          
           <el-table-column prop="AppName" label="应用名" width="100">              
             <template slot-scope="scope">
-              <Input v-model="scope.row.AppName"></Input>
+    		  <Tooltip content="主应用为esap">
+                <Input v-model="scope.row.AppName"></Input>
+			  </Tooltip>
             </template>
           </el-table-column>
           <el-table-column prop="AppType" label="类型" width="120">              
-            <template slot-scope="scope">
-                <Select :disabled="scope.row.AgentId>3000000" v-model="scope.row.AppType" placeholder="企业号">
+            <template slot-scope="scope">			  
+                <Select v-model="scope.row.AppType" placeholder="企业号">
                     <i-option
-                      v-for="item in options1"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                      :disabled="item.disabled">
+                      v-for="item0 in options1"
+                      :key="item0.value"
+                      :label="item0.label"
+                      :value="item0.value"
+                      :disabled="item0.disabled">
                     </i-option>
-              </Select>
+                </Select>
             </template>
-          </el-table-column>
-          <el-table-column prop="AppId" label="AppId/corpId" width="150">              
+          </el-table-column>          	
+          <el-table-column prop="AppId" label="AppId/CorpId" width="150">              
             <template slot-scope="scope">
             <Input v-model="scope.row.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
             </template>
@@ -43,7 +45,9 @@
           </el-table-column>
           <el-table-column prop="Secret" label="Secret" width="200">              
             <template slot-scope="scope">
-              <Input v-model="scope.row.Secret" show-overflow-tooltip placeholder="应用或管理组Secret，必填"></Input>
+    		  <Tooltip content="通讯录应用(7个9)的Secret在管理工具中">
+                <Input v-model="scope.row.Secret" show-overflow-tooltip placeholder="应用或管理组Secret，必填"></Input>
+			  </Tooltip>
             </template>
           </el-table-column>
           <el-table-column prop="Token" label="Token" width="100">              
@@ -77,7 +81,9 @@
         <el-table stripe :data="$store.state.app.form.Dbs" @cell-mouse-enter="showTableOps" @cell-mouse-leave="hideTableOps">
           <el-table-column prop="DbName" label="数据源名" width="100">              
             <template slot-scope="scope">
-              <Input v-model="scope.row.DbName"></Input>
+			  <Tooltip content="主源为esap"> 
+                <Input v-model="scope.row.DbName"></Input>
+			  </Tooltip>
             </template>
           </el-table-column>
           <el-table-column prop="Driver" label="类型" width="120">              
@@ -326,17 +332,26 @@
                   <i-switch v-model="$store.state.app.form.Rpc" placeholder=""></i-switch>
                 </Form-item>
             </Col>
-            <Col :span="3">        
+            <Col :span="3">     
+			  <Tooltip content="订阅号，服务号，小程序请开启该功能">    
                 <Form-item label="本地鉴权 - UseLocalUser">
                   <i-switch v-model="$store.state.app.form.UseLocalUser" placeholder=""></i-switch>
                 </Form-item>
+			  </Tooltip>
+            </Col>
+            <Col :span="3">    
+			  <Tooltip content="关闭后，发送图片，视频，音频将不再上传。">      
+                <Form-item label="关闭媒体库 - CloseMedia">
+                  <i-switch v-model="$store.state.app.form.CloseMedia" placeholder=""></i-switch>
+                </Form-item>
+			  </Tooltip>
             </Col>
             <Col :span="3">        
                 <Form-item label="使用JU盘 - UseJuPath">
                   <i-switch v-model="$store.state.app.form.UseJuPath" placeholder=""></i-switch>
                 </Form-item>
             </Col>
-            <Col :span="12" v-if="$store.state.app.form.UseJuPath">        
+            <Col :span="9" v-if="$store.state.app.form.UseJuPath">        
                 <Form-item label="JU盘路径 - JuPath">
                   <Input v-model="$store.state.app.form.JuPath" placeholder=""></Input>
                 </Form-item>
@@ -392,23 +407,11 @@ export default {
             menuErr: '',
             pct: 0,
             options1: [{
-                value: '',
-                label: '企业号'
-            }, {
                 value: 'pub',
                 label: '公众号'
-            }, {
-                value: 'ding',
-                label: '钉钉',
-                disabled: true
-            }, {
-                value: 'wlw',
-                label: '物联网',
-                disabled: true
-            }, {
-                value: 'zfb',
-                label: '支付宝',
-                disabled: true
+            },{
+                value: '',
+                label: '企业号'
             }],
             options2: [{
                 value: 'mssql',
