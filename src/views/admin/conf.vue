@@ -60,7 +60,7 @@
               <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.EncodingAesKey" show-overflow-tooltip placeholder="回调EncodingAesKey"></Input>
             </template>
           </el-table-column>
-          <el-table-column prop="IsRun" label="开关" width="80">              
+          <el-table-column prop="IsRun" label="启用" width="80">              
             <template slot-scope="scope">
               <i-switch v-model="scope.row.IsRun"></i-switch>
             </template>
@@ -137,7 +137,7 @@
               <Input v-model="scope.row.Db" show-overflow-tooltip placeholder="例如esapp1"></Input>
             </template>
           </el-table-column>
-          <el-table-column prop="IsRun" label="开关" width="80">              
+          <el-table-column prop="IsRun" label="启用" width="80">              
             <template slot-scope="scope">
               <i-switch v-model="scope.row.IsRun"></i-switch>
             </template>
@@ -187,7 +187,7 @@
               <Input v-model="scope.row.Data" placeholder="脚本前后缀等，一般留空"></Input>
             </template>
           </el-table-column>          
-          <el-table-column prop="IsRun" label="开关" width="80">              
+          <el-table-column prop="IsRun" label="启用" width="80">              
             <template slot-scope="scope">
               <i-switch v-model="scope.row.IsRun"></i-switch>
             </template>
@@ -216,6 +216,11 @@
                 </Form-item>  
             </Col>
             <Col :span="4">      
+                <Form-item label="令牌服务 - TokenServer">
+                  <Input v-model="$store.state.app.form.TokenServer" placeholder=""></Input>
+                </Form-item>
+            </Col>
+            <Col :span="4">      
                 <Form-item label="管理密码 - Pwd">
                   <Input type="password" v-model="Pwd1" placeholder="默认为erp8,请及时修改"></Input>
                 </Form-item>
@@ -225,7 +230,7 @@
                   <Input v-model="$store.state.app.form.SqlPrefix" placeholder="DIY本地通讯录"></Input>
                 </Form-item>
             </Col> 
-            <Col :span="8">      
+            <Col :span="4">      
                 <Form-item label="上传目录 - UploadPath">
                   <Input v-model="$store.state.app.form.UploadPath" placeholder="Upload上传目录"></Input>
                 </Form-item>
@@ -347,7 +352,7 @@
 			  </Tooltip>
             </Col>
             <Col :span="3">        
-                <Form-item label="使用JU盘 - UseJuPath">
+                <Form-item label="启用JU盘 - UseJuPath">
                   <i-switch v-model="$store.state.app.form.UseJuPath" placeholder=""></i-switch>
                 </Form-item>
             </Col>

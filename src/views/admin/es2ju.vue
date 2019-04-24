@@ -39,27 +39,27 @@
         </Row>
         <Row>
             <Col :span="4">
-                <Form-item label="JU库">
+                <Form-item label="JU/NX库">
                   <Input v-model="list.judb" placeholder="填入JU库名"></Input>
                 </Form-item>  
             </Col>
             <Col :span="4">      
-                <Form-item label="JU表">
+                <Form-item label="JU/NX表">
                   <Input v-model="list.jut" placeholder="例如“商品表”"></Input>
                 </Form-item>
             </Col>
             <Col :span="4">      
-                <Form-item label="JU字段">
+                <Form-item label="JU/NX字段">
                   <Input v-model="list.juf" placeholder="例如“图片”"></Input>
                 </Form-item>
             </Col>  
             <Col :span="4">      
-                <Form-item label="JU关联字段">
+                <Form-item label="JU/NX关联字段">
                   <Input v-model="list.jul" placeholder="例如“品号”"></Input>
                 </Form-item>
             </Col>  
             <Col :span="4">      
-                <Form-item label="JU网盘路径">
+                <Form-item label="JU/NX网盘路径">
                   <Input v-model="list.jup" placeholder="例如“d:/judisk”"></Input>
                 </Form-item>
             </Col>
