@@ -99,11 +99,11 @@ export default {
                                     name: 'home_index'
                                 });
                             } else {
-                                Message({ message: '登陆失败[1]:' + r.data.errmsg });
+                                Message({ message: '登陆失败:' + r.data.errmsg });
                             }
                         })
                         .catch(e => {
-                            Message({ message: '登陆失败[2]:' + e });
+                            Message({ message: '连接超时，请检查esap服务是否已启动...\n' + e });
                         });
                 }
             });

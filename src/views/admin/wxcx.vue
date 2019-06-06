@@ -85,6 +85,12 @@
         </Form-item> 
         <Form-item label="图片链接">
             <Input v-model="form.pic" placeholder="文章封面图片链接，选填" auto-complete="off"></Input>
+        </Form-item> 
+        <Form-item label="模板ID">
+            <Input v-model="form.tmpid" placeholder="模板消息ID，选填" auto-complete="off"></Input>
+        </Form-item> 
+        <Form-item label="小程序">
+            <Input v-model="form.appid" placeholder="模板消息跳转小程序，选填" auto-complete="off"></Input>
         </Form-item>      
       </Form>
       <div slot="footer" class="dialog-footer">
@@ -165,7 +171,13 @@
         </Form-item> 
         <Form-item label="图片链接">
             <Input v-model="formModify.pic" placeholder="文章封面图片链接，选填" auto-complete="off"></Input>
-        </Form-item>      
+        </Form-item> 
+        <Form-item label="模板ID">
+            <Input v-model="formModify.tmpid" placeholder="模板消息ID，选填" auto-complete="off"></Input>
+        </Form-item> 
+        <Form-item label="小程序">
+            <Input v-model="formModify.appid" placeholder="模板消息跳转小程序，选填" auto-complete="off"></Input>
+        </Form-item>    
       </Form>
       <div slot="footer" class="dialog-footer">
         <Button @click="dialogFormVisible = false">取 消</Button>
@@ -191,6 +203,8 @@
       <el-table-column label="数据源" prop="db" width="100"></el-table-column>
       <el-table-column label="原文链接" show-overflow-tooltip prop="url" width="100"></el-table-column>
       <el-table-column label="原文封面" show-overflow-tooltip prop="pic" width="100"></el-table-column>
+      <el-table-column label="模板ID" show-overflow-tooltip prop="tmpid" width="100"></el-table-column>
+      <el-table-column label="小程序" show-overflow-tooltip prop="appid" width="100"></el-table-column>
       <el-table-column label="保密" prop="safe" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">

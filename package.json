@@ -1,6 +1,6 @@
 {
   "name": "esap-admin",
-  "version": "3.0.21",
+  "version": "3.0.33",
   "description": "a management bases on iview",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "license": "MIT",
   "dependencies": {
     "area-data": "^1.0.0",
-    "axios": "^0.17.1",
+    "axios": "^0.18.1",
     "clipboard": "^1.7.1",
     "countup": "^1.8.2",
     "cropperjs": "^1.2.2",
@@ -31,11 +31,13 @@
     "js-cookie": "^2.2.0",
     "md5": "^2.2.1",
     "npm": "^5.7.1",
+    "qrcodejs2": "0.0.2",
     "rasterizehtml": "^1.2.4",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",
     "tinymce": "^4.7.4",
     "vue": "^2.5.13",
+    "vue-qart": "^2.2.0",
     "vue-router": "^3.0.1",
     "vue-virtual-scroller": "^0.10.6",
     "vuex": "^3.0.1",
@@ -84,7 +86,7 @@
     "vue-style-loader": "^3.0.3",
     "vue-template-compiler": "^2.5.13",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^2.10.1",
+    "webpack-dev-server": "^3.1.11",
     "webpack-merge": "^4.1.1",
     "webpack-uglify-parallel": "^0.1.4"
   }
