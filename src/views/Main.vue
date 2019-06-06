@@ -5,20 +5,15 @@
     <div class="main" :class="{'main-hide-text': shrink}">
 
         <Modal title="关于" v-model="aboutModal">
-		  <span>
-	          <p>用户等级：{{updateInfo.desc}}</p>
-	          <p>累计使用：{{updateInfo.cnt}}天</p>
-	          <p>当前版本：{{updateInfo.cver}}</p>
-	          <p>最新版本：{{updateInfo.ver}}</p>
-	          <div class="layout-copy">2015-2018 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div>
-	          <div>Designed by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>
-		  </span>
-		  <hr style="margin:5px" />		  
-		  <span>				
-			  <div>成为会员(微信支付)</div>
-	          <div style="padding:5px" id="qrcode" ref="qrcode"></div>
-		  	  <div>此功能由ESAP提供</div>
-		</span>
+          <span>
+              <p>用户等级：{{updateInfo.desc}}</p>
+              <p>累计使用：{{updateInfo.cnt}}天</p>
+              <p>当前版本：{{updateInfo.cver}}</p>
+              <p>最新版本：{{updateInfo.ver}}</p>
+              <div class="layout-copy">2015-2018 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div>
+              <div>Designed by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>
+          </span>
+          <hr style="margin:5px" /> 
           <span slot="footer">
             <Button icon="ios-download-outline" type="primary" @click="update">升级</Button>
           </span>
@@ -97,7 +92,6 @@
     import messageTip from './main-components/message-tip.vue';
     import themeSwitch from './main-components/theme-switch/theme-switch.vue';
     import Cookies from 'js-cookie';
-    import QRCode from 'qrcodejs2'
     import util from '@/libs/util.js';
     
     export default {
@@ -108,8 +102,7 @@
             fullScreen,
             lockScreen,
             messageTip,
-            themeSwitch,
-			QRCode
+            themeSwitch
         },
         data () {
             return {
@@ -118,7 +111,7 @@
                 isFullScreen: false,
                 openedSubmenuArr: this.$store.state.app.openedSubmenuArr,
                 aboutModal: false,
-                updateInfo: {}				
+                updateInfo: {}
             };
         },
         computed: {
@@ -148,17 +141,10 @@
             }
         },
         methods: {
-			qrcode () {
-			  let qrcode = new QRCode('qrcode', {  
-			      width: 232,  // 设置宽度 
-			      height: 232, // 设置高度
-			      text: 'https://baidu.com'
-			  })  
-			},
             init () {
-				this.$nextTick (function () {
-				   this.qrcode();
-				})
+                this.$nextTick(function () {
+                    this.qrcode();
+                });
                 let pathArr = util.setCurrentPath(this, this.$route.name);
                 this.$store.commit('updateMenulist');
                 if (pathArr.length >= 2) {

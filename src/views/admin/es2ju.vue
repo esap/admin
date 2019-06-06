@@ -100,27 +100,35 @@ export default {
     data () {
         return {
             list: {
-              esdb: 'es2', est: '品', esf: '图片', esl: '号', esp:'c:/esdisk',
-              judb: 'ju', jut: '商品表', juf: '图片', jul: '品号', jup:'c:/jdisk/ju',              
+                esdb: 'es2',
+                est: '品',
+                esf: '图片',
+                esl: '号',
+                esp: 'c:/esdisk',
+                judb: 'ju',
+                jut: '商品表',
+                juf: '图片',
+                jul: '品号',
+                jup: 'c:/jdisk/ju'
             },
             name1: '',
             modal1: false,
             modal2: false,
-            loading: false,           
+            loading: false
         };
     },
-    methods: {        
-        saveData (suffix) {          
+    methods: {
+        saveData (suffix) {
             this.$http.post(this.$tokenadmin('es2ju.' + suffix), this.list)
                 .then(r => {
                     if (r.data.result) {
-                        this.$Message.info('转存成功');                        
+                        this.$Message.info('转存成功');
                     } else {
                         this.$Message.info(r.data.errmsg);
                     }
                 })
                 .catch(e => { this.$Message.info(e); });
-        }        
+        }
     }
 };
 </script>

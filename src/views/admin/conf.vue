@@ -414,7 +414,7 @@ export default {
             options1: [{
                 value: 'pub',
                 label: '公众号'
-            },{
+            }, {
                 value: '',
                 label: '企业号'
             }],
