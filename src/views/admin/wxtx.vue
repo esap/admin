@@ -76,6 +76,12 @@
         <Form-item label="文章链接">
           <Input v-model="form.url" placeholder="以文章形式提醒时的原文链接"></Input>
         </Form-item>
+        <Form-item label="模板ID">
+          <Input v-model="form.tmpid" placeholder="模板ID"></Input>
+        </Form-item>
+        <Form-item label="模板参数">
+          <Input v-model="form.tmpparams" placeholder="模板参数"></Input>
+        </Form-item>
         <Form-item label="保密消息">
           <Input-number v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
         </Form-item>
@@ -100,6 +106,8 @@
       <el-table-column prop="fh" label="文件" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="title" label="文章标题" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="url" label="文章链接" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="tmpid" label="模板ID" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="tmpparams" label="模板参数" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column sortable prop="ret" label="发送结果" show-overflow-tooltip width="120"></el-table-column>
       <el-table-column sortable prop="flag" label="标记" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
