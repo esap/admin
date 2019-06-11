@@ -146,16 +146,16 @@ export const appRouter = [
             { path: 'index', title: 'Email', name: 'email_index', component: () => import('@/views/admin/email.vue') }
         ]
     },
-    {
-        path: '/esaplog',
-        icon: 'stats-bars',
-        name: 'esaplog',
-        title: 'API访问',
-        component: Main,
-        children: [
-            { path: 'index', title: 'API访问', name: 'esaplog_index', component: () => import('@/views/admin/esaplog.vue') }
-        ]
-    },
+//    {
+//        path: '/esaplog',
+//        icon: 'stats-bars',
+//        name: 'esaplog',
+//        title: 'API访问',
+//        component: Main,
+//        children: [
+//            { path: 'index', title: 'API访问', name: 'esaplog_index', component: () => import('@/views/admin/esaplog.vue') }
+//        ]
+//    },
     {
         path: '/syslog',
         icon: 'stats-bars',
@@ -176,16 +176,16 @@ export const appRouter = [
             { path: 'index', title: 'ES2JU转存工具', name: 'es2ju_index', component: () => import('@/views/admin/es2ju.vue') }
         ]
     },
-	{
-        path: '/util',
-        icon: 'settings',
-        name: 'util',
-        title: '常用工具',
-        component: Main,
-        children: [
-            { path: 'index', title: '常用工具', name: 'util_index', component: () => import('@/views/admin/util.vue') }
-        ]
-    },
+//	{
+//        path: '/util',
+//        icon: 'settings',
+//        name: 'util',
+//        title: '常用工具',
+//        component: Main,
+//        children: [
+//            { path: 'index', title: '常用工具', name: 'util_index', component: () => import('@/views/admin/util.vue') }
+//        ]
+//    },
     // {
     //     path: '/access',
     //     icon: 'key',

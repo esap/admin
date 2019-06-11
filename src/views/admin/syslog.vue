@@ -6,7 +6,7 @@
         <Button type="primary" @click="getData" icon="ios-reload" :loading="loading">刷新</Button>
       </ButtonGroup>
     </Affix>
-    <div class="chart" id="mChart"></div>
+    <!--div class="chart" id="mChart"></div-->
     <div v-for="v in form">{{v}}</div>          
   </div>
 </template>
@@ -78,7 +78,7 @@
       },
       mounted () {
           this.getData();
-          this.getCount();
+          // this.getCount();
       }
   };
 </script>
