@@ -22,7 +22,7 @@
             <template slot-scope="scope">			  
                 <Select v-model="scope.row.AppType" placeholder="企业号">
                     <i-option
-                      v-for="item0 in options1"
+                      v-for="item0 in appTypeOpts"
                       :key="item0.value"
                       :label="item0.label"
                       :value="item0.value"
@@ -31,7 +31,7 @@
                 </Select>
             </template>
           </el-table-column>          	
-          <el-table-column prop="AppId" label="AppId/CorpId" width="150">              
+          <el-table-column prop="AppId" label="AppId/CorpId" width="120">              
             <template slot-scope="scope">
             <Input v-model="scope.row.AppId" placeholder="企业号填corpid,公众号填appid,必填"></Input>
             </template>
@@ -43,7 +43,7 @@
               </Tooltip>
             </template>
           </el-table-column>
-          <el-table-column prop="Secret" label="Secret" width="200">              
+          <el-table-column prop="Secret" label="Secret" width="160">              
             <template slot-scope="scope">
     		  <Tooltip content="通讯录应用(7个9)的Secret在管理工具中">
                 <Input v-model="scope.row.Secret" show-overflow-tooltip placeholder="应用或管理组Secret，必填"></Input>
@@ -55,7 +55,7 @@
               <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.Token" placeholder="回调Token"></Input>
             </template>
           </el-table-column>
-          <el-table-column prop="EncodingAesKey" label="EncodingAesKey" width="200">              
+          <el-table-column prop="EncodingAesKey" label="EncodingAesKey" width="160">              
             <template slot-scope="scope">
               <Input :disabled="scope.row.AgentId>3000000" v-model="scope.row.EncodingAesKey" show-overflow-tooltip placeholder="回调EncodingAesKey"></Input>
             </template>
@@ -65,7 +65,7 @@
               <i-switch v-model="scope.row.IsRun"></i-switch>
             </template>
           </el-table-column>
-          <el-table-column width="120">
+          <el-table-column >
             <template slot-scope="scope">
               <ButtonGroup v-if="scope.row.AppName==selectName">
                 <Button :disabled="scope.row.AgentId>3000000" type="success" size="small" @click="getMenu(scope.row)">菜单</Button>
@@ -88,9 +88,9 @@
           </el-table-column>
           <el-table-column prop="Driver" label="类型" width="120">              
             <template slot-scope="scope">
-                <Select v-model="scope.row.DbType" placeholder="其他">
+                <Select v-model="scope.row.DbType" placeholder="请选择">
                     <i-option
-                      v-for="item in optionsDbType"
+                      v-for="item in dbTypeOpts"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"
@@ -99,11 +99,11 @@
                 </Select>
             </template>
           </el-table-column>
-          <el-table-column prop="Driver" label="驱动" width="150">              
+          <el-table-column prop="Driver" label="驱动" width="130">              
             <template slot-scope="scope">
                 <Select v-model="scope.row.Driver" placeholder="请选择">
                     <i-option
-                      v-for="item in options2"
+                      v-for="item in dbDriverOpts"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"
@@ -112,12 +112,12 @@
                 </Select>
             </template>
           </el-table-column>
-          <el-table-column prop="Server" label="服务器" width="150">              
+          <el-table-column prop="Server" label="服务器" width="140">              
             <template slot-scope="scope">
               <Input v-model="scope.row.Server" placeholder="本机默认实例可填点号,必填"></Input>
             </template>
           </el-table-column>
-          <el-table-column prop="Port" label="端口" width="100">              
+          <el-table-column prop="Port" label="端口" width="80">              
             <template slot-scope="scope">
               <Input-number :max="65535" :min="1000" v-model="scope.row.Port" placeholder="例如1433,必填"></Input-number>
             </template>
@@ -142,7 +142,7 @@
               <i-switch v-model="scope.row.IsRun"></i-switch>
             </template>
           </el-table-column>          
-          <el-table-column label="操作" width="250">
+          <el-table-column label="操作">
             <template slot-scope="scope">
               <ButtonGroup>
                 <Button size="small" @click="testDb(scope.row)">测试</Button>
@@ -159,16 +159,16 @@
 
       <TabPane label="计划任务 - task" name="name3">        
         <el-table stripe :data="$store.state.app.form.Tasks" @cell-mouse-enter="showTableOps" @cell-mouse-leave="hideTableOps">
-          <el-table-column prop="TaskID" label="任务ID" width="300">              
+          <el-table-column prop="TaskID" label="任务ID" width="250">              
             <template slot-scope="scope">
               <Input v-model="scope.row.TaskID"></Input>
             </template>
           </el-table-column>
-          <el-table-column prop="Handler" label="类型" width="150">              
+          <el-table-column prop="Handler" label="类型" width="120">              
             <template slot-scope="scope">
               <Select v-model="scope.row.Handler" placeholder="请选择">
                 <i-option
-                  v-for="item in options3"
+                  v-for="item in taskOpts"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -177,12 +177,12 @@
               </Select>
             </template>
           </el-table-column>
-          <el-table-column prop="Express" label="周期" width="250">              
+          <el-table-column prop="Express" label="周期" width="150">              
             <template slot-scope="scope">
               <Input v-model="scope.row.Express" placeholder="例如每分钟：* */1 * * * *"></Input>
             </template>
           </el-table-column>
-          <el-table-column prop="Data" label="配置" width="250">              
+          <el-table-column prop="Data" label="配置" width="200">              
             <template slot-scope="scope">
               <Input v-model="scope.row.Data" placeholder="脚本前后缀等，一般留空"></Input>
             </template>
@@ -192,7 +192,7 @@
               <i-switch v-model="scope.row.IsRun"></i-switch>
             </template>
           </el-table-column>          
-          <el-table-column label="操作" width="150">
+          <el-table-column label="操作">
            <!--  <template slot-scope="scope">
               <Button size="small" type="error" @click="runTask(scope)">测试</Button>
             </template> -->
@@ -215,86 +215,59 @@
                   <Input v-model="$store.state.app.form.Host" placeholder=""></Input>
                 </Form-item>  
             </Col>
-            <Col :span="4">      
+			<Col :span="4">
+                <Form-item label="外网https - Tls">
+                  <i-switch v-model="$store.state.app.form.Tls"></i-switch>
+                </Form-item>
+            </Col>
+            <Col :span="4" >        
+                <Form-item label="远程令牌 - UseToken">
+                  <i-switch v-model="$store.state.app.form.UseToken" placeholder=""></i-switch>                  
+                </Form-item>
+            </Col>
+            <Col :span="6" v-if="$store.state.app.form.UseToken">      
                 <Form-item label="令牌服务 - TokenServer">
                   <Input v-model="$store.state.app.form.TokenServer" placeholder=""></Input>
                 </Form-item>
             </Col>
+        </Row>
+        <Row>
+            <Col :span="8">      
+                <Form-item label="上传目录 - UploadPath">
+                  <Input v-model="$store.state.app.form.UploadPath" placeholder="Upload上传目录"></Input>
+                </Form-item>
+            </Col>          
             <Col :span="4">      
                 <Form-item label="管理密码 - Pwd">
                   <Input type="password" v-model="Pwd1" placeholder="默认为erp8,请及时修改"></Input>
                 </Form-item>
             </Col>
-            <Col :span="4">      
+            <Col :span="3">      
                 <Form-item label="脚本前缀 - SqlPrefix">
                   <Input v-model="$store.state.app.form.SqlPrefix" placeholder="DIY本地通讯录"></Input>
                 </Form-item>
             </Col> 
-            <Col :span="4">      
-                <Form-item label="上传目录 - UploadPath">
-                  <Input v-model="$store.state.app.form.UploadPath" placeholder="Upload上传目录"></Input>
-                </Form-item>
-            </Col>          
-            <Col :span="4"> 
-              <Tooltip content="同步计划的队列间隔，最低100毫秒">
-                <Form-item label="同步间隔(毫秒)">
+            <Col :span="3"> 
+              <Tooltip content="同步计划的队列间隔，单位毫秒，最低100毫秒">
+                <Form-item label="同步间隔 - SyncDelay">
                   <Input-number :min="100" v-model="$store.state.app.form.SyncDelay"></Input-number>
                 </Form-item>
               </Tooltip>
             </Col>
-        </Row>
+        </Row>       
         <Row>
             <Col :span="2">
-                <Button type="warning"><a href="https://ai.baidu.com" target="_blank">百度AI官网</a></Button>
-            </Col>
-            <Col :span="6">
-              <Tooltip content="百度AI开放平台应用id，可前往官网免费申请">    
-                <Form-item label="百度AI - AppID">
-                  <Input-number v-model="$store.state.app.form.AiId" placeholder="填写您的百度appId"></Input-number>
-                </Form-item>
-              </Tooltip>
-            </Col>
-            <Col :span="6">      
-                <Form-item label="百度AI - ApiKey">
-                  <Input v-model="$store.state.app.form.AiKey" placeholder="填写您的百度apikey"></Input>
-                </Form-item>
-            </Col>
-            <Col :span="6"> 
-                <Form-item label="百度AI- SecretKey">
-                  <Input v-model="$store.state.app.form.AiSec" placeholder="填写您的百度secretkey"></Input>
-                </Form-item>
-            </Col>
-        </Row>
-        <Row>
-            <Col :span="2">
-                <Button type="warning"><a href="https://ai.qq.com" target="_blank">腾讯AI官网</a></Button>
-            </Col>
-            <Col :span="8">
-              <Tooltip content="腾讯AI开放平台应用id，可前往官网免费申请">    
-                <Form-item label="腾讯AI - AppID">
-                  <Input v-model="$store.state.app.form.AppId" placeholder="填写您的腾讯appId"></Input>
-                </Form-item>
-              </Tooltip>
-            </Col>
-            <Col :span="8">      
-                <Form-item label="腾讯AI - AppKey">
-                  <Input v-model="$store.state.app.form.AppKey" placeholder="填写您的腾讯AppKey"></Input>
-                </Form-item>
-            </Col>           
-        </Row>
-        <Row>
-            <Col :span="4">
-                <Button type="warning"><a href="https://cloud.tencent.com/product/sms" target="_blank">腾讯云短信官网</a></Button>
+                <Button type="warning"><a href="https://cloud.tencent.com/product/sms" target="_blank">腾讯云官网</a></Button>
             </Col>
             <Col :span="6">
               <Tooltip content="腾讯云应用id，国内每月免费100条">    
-                <Form-item label="短信应用 - SmsId">
+                <Form-item label="短信ID - SmsId">
                   <Input v-model="$store.state.app.form.SmsId" placeholder=""></Input>
                 </Form-item>
               </Tooltip>
             </Col>
             <Col :span="10">      
-                <Form-item label="短信应用 - SmsKey">
+                <Form-item label="短信Key - SmsKey">
                   <Input v-model="$store.state.app.form.SmsKey" placeholder=""></Input>
                 </Form-item>
             </Col>           
@@ -320,23 +293,13 @@
                   <i-switch v-model="$store.state.app.form.AutoUpdate" placeholder=""></i-switch>
                 </Form-item>
             </Col>
-            <Col :span="3">        
-                <Form-item label="使用ES库 - IsEs">
-                  <i-switch v-model="$store.state.app.form.IsEs" placeholder=""></i-switch>
-                </Form-item>
-            </Col>
             <Col :span="3">
                 <Form-item label="调试模式 - Debug">
                   <i-switch v-model="$store.state.app.form.Debug"></i-switch>
                 </Form-item>
             </Col>
         </Row>
-        <Row>    
-            <Col :span="3">
-                <Form-item label="RPC服务 - Rpc">
-                  <i-switch v-model="$store.state.app.form.Rpc" placeholder=""></i-switch>
-                </Form-item>
-            </Col>
+        <Row>
             <Col :span="3">     
 			  <Tooltip content="订阅号，服务号，小程序请开启该功能">    
                 <Form-item label="本地鉴权 - UseLocalUser">
@@ -352,13 +315,13 @@
 			  </Tooltip>
             </Col>
             <Col :span="3">        
-                <Form-item label="启用JU盘 - UseJuPath">
-                  <i-switch v-model="$store.state.app.form.UseJuPath" placeholder=""></i-switch>
+                <Form-item label="启用网盘 - UseNetPath">
+                  <i-switch v-model="$store.state.app.form.UseNetPath" placeholder=""></i-switch>
                 </Form-item>
             </Col>
-            <Col :span="9" v-if="$store.state.app.form.UseJuPath">        
-                <Form-item label="JU盘路径 - JuPath">
-                  <Input v-model="$store.state.app.form.JuPath" placeholder=""></Input>
+            <Col :span="9" v-if="$store.state.app.form.UseNetPath">        
+                <Form-item label="网盘路径 - NetPath">
+                  <Input v-model="$store.state.app.form.NetPath" placeholder=""></Input>
                 </Form-item>
             </Col>
         </Row>
@@ -411,19 +374,20 @@ export default {
             menuApp: '',
             menuErr: '',
             pct: 0,
-            options1: [{
+            appTypeOpts: [{
                 value: 'pub',
                 label: '公众号'
             }, {
                 value: '',
                 label: '企业号'
             }],
-            options2: [{
+            dbDriverOpts: [{
                 value: 'mssql',
                 label: 'Sql2005+'
             }, {
                 value: 'sql2000',
-                label: 'Sql2000'
+                label: 'Sql2000',
+				disabled: true
             }, {
                 value: 'mysql',
                 label: 'mysql'
@@ -436,22 +400,24 @@ export default {
                 disabled: true
             }, {
                 value: 'access',
-                label: 'access'
+                label: 'access',
+				disabled: true
             }, {
                 value: 'excel',
-                label: 'excel'
+                label: 'excel',
+				disabled: true
             }],
-            optionsDbType: [{
+            dbTypeOpts: [{
                 value: 'ju',
-                label: 'JU'
+                label: 'JU/NX'
             }, {
                 value: 'es',
                 label: 'ES'
             }, {
-                value: '',
+                value: 'other',
                 label: '其他'
             }],
-            options3: [{
+            taskOpts: [{
                 value: 'QueryTask',
                 label: '查询任务'
             }, {
@@ -460,12 +426,6 @@ export default {
             }, {
                 value: 'ExecTask',
                 label: '执行任务'
-            }, {
-                value: 'RpcPost',
-                label: 'RPC远程发送'
-            }, {
-                value: 'RpcGet',
-                label: 'RPC远程获取'
             }, {
                 value: 'WxdkTask',
                 label: '微信打卡'
@@ -484,12 +444,6 @@ export default {
             }, {
                 value: 'WxtxlTask',
                 label: '通讯录同步'
-            }, {
-                value: 'UrlGetTask',
-                label: '执行任务(GET)'
-            }, {
-                value: 'UserTaskScan',
-                label: '用户任务'
             }]
         };
     },

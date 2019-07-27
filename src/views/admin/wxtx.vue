@@ -36,6 +36,14 @@
         <Form-item label="接收标签">
           <Input v-model="form.totag" placeholder="可用逗号分隔多个标签，选填"></Input>
         </Form-item>
+        <Form-item label="消息类型">
+          <Select v-model="form.msgtype" style="width:100px">
+            <Option v-for="item in msgTypeOpts" :value="item.value" :key="item.label">{{ item.label }}</Option>
+          </Select>
+        </Form-item>
+        <Form-item label="MSGID">
+          <Input v-model="form.msgid" placeholder="模板ID"></Input>
+        </Form-item>
         <Form-item label="内容">
           <Input type="textarea" autosize v-model="form.content" placeholder="填入消息内容,选填"></Input>
         </Form-item>
@@ -70,17 +78,14 @@
           </Upload>
         
         </Form-item>
-        <Form-item label="文章标题">
-          <Input v-model="form.title" placeholder="以文章形式提醒时的文章标题"></Input>
+        <Form-item label="标题">
+          <Input v-model="form.title" placeholder="文章标题"></Input>
         </Form-item>
-        <Form-item label="文章链接">
-          <Input v-model="form.url" placeholder="以文章形式提醒时的原文链接"></Input>
+        <Form-item label="描述">
+          <Input v-model="form.description" placeholder="文章描述"></Input>
         </Form-item>
-        <Form-item label="模板ID">
-          <Input v-model="form.tmpid" placeholder="模板ID"></Input>
-        </Form-item>
-        <Form-item label="模板参数">
-          <Input v-model="form.tmpparams" placeholder="模板参数"></Input>
+        <Form-item label="链接">
+          <Input v-model="form.url" placeholder="文章原文链接"></Input>
         </Form-item>
         <Form-item label="保密消息">
           <Input-number v-model="form.safe" placeholder="填1时返保密消息,选填" auto-complete="off"></Input-number>
@@ -104,10 +109,11 @@
       <el-table-column prop="content" show-overflow-tooltip label="内容" width="200"></el-table-column>
       <el-table-column prop="pic" label="图片" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column prop="fh" label="文件" show-overflow-tooltip width="100"></el-table-column>
-      <el-table-column prop="title" label="文章标题" show-overflow-tooltip width="100"></el-table-column>
-      <el-table-column prop="url" label="文章链接" show-overflow-tooltip width="100"></el-table-column>
-      <el-table-column prop="tmpid" label="模板ID" show-overflow-tooltip width="100"></el-table-column>
-      <el-table-column prop="tmpparams" label="模板参数" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="title" label="标题" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="description" label="描述" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="url" label="链接" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="msgId" label="MSGID" show-overflow-tooltip width="100"></el-table-column>
+      <el-table-column prop="msgtype" label="类型" show-overflow-tooltip width="100"></el-table-column>
       <el-table-column sortable prop="ret" label="发送结果" show-overflow-tooltip width="120"></el-table-column>
       <el-table-column sortable prop="flag" label="标记" width="100"></el-table-column>
       <el-table-column fixed="right" label="操作" width="150">
@@ -135,17 +141,36 @@
   export default {
       data () {
           return {
-              list: [],
-              db: 'esap',
-              currentPage: 1,
-              pagesize: 20,
-              imageUrl: '',
-              loading: false,
-              fileName: '',
-              fileUrl: '',
-              dialogFormVisible: false,
-              form: { cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '', title: '', url: '' },
-              form2: [{}]
+			list: [],
+			db: 'esap',
+			currentPage: 1,
+			pagesize: 20,
+			imageUrl: '',
+			loading: false,
+			fileName: '',
+			fileUrl: '',
+			dialogFormVisible: false,
+			form: { msgtype: '', description: '', msgid: '', cdate: '', touser: '@all', toparty: '', totag: '', content: '', app: 'esap', pic: '', safe: 0, fh: '', title: '', url: '' },
+			form2: [{}],
+			msgTypeOpts: [{
+			  value: 'text',
+			  label: '文字'
+			}, {
+			  value: 'image',
+			  label: '图片'
+			}, {
+			  value: 'file',
+			  label: '文件'
+			}, {
+			  value: 'news',
+			  label: '文章'
+			}, {
+			  value: 'markdown',
+			  label: 'MarkDown'
+			}, {
+			  value: 'template',
+			  label: '模板'
+			}]
           };
       },
       computed: {

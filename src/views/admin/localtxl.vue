@@ -22,12 +22,8 @@
         <el-table-column prop="name" label="姓名" width="120"></el-table-column>
         <el-table-column prop="mobile" label="手机" width="150"></el-table-column>
         <el-table-column prop="position1" label="职位" width="100"></el-table-column>
-        <el-table-column prop="gender" label="性别" width="80"></el-table-column>
         <el-table-column prop="email" label="Email" width="120"></el-table-column>
-        <el-table-column prop="telephone" label="固话" width="120"></el-table-column>
         <el-table-column prop="deptname" label="部门" width="120"></el-table-column>
-        <el-table-column prop="isleader" label="上级" width="80"></el-table-column>
-        <el-table-column prop="alias" label="别名" width="80"></el-table-column>
       </el-table>
     </TabPane>
     <TabPane label="部门 - dept" name="deptlist">
@@ -36,7 +32,7 @@
         style="width: 100%">
         <el-table-column prop="id" label="ID" width="100"></el-table-column>
         <el-table-column prop="name" label="部门名称" width="150"></el-table-column>
-        <el-table-column prop="parentId" label="上级" width="150"></el-table-column>
+        <el-table-column prop="parentid" label="上级" width="150"></el-table-column>
         <el-table-column prop="order1" label="排序" width="100"></el-table-column>       
       </el-table>
     </TabPane>

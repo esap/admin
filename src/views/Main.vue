@@ -10,7 +10,7 @@
               <p>累计使用：{{updateInfo.cnt}}天</p>
               <p>当前版本：{{updateInfo.cver}}</p>
               <p>最新版本：{{updateInfo.ver}}</p>
-              <div class="layout-copy">2015-2018 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div>
+              <div class="layout-copy">2015-2019 &copy; <a href="https://erp8.net" target="_blank">尹林信科</a></div>
               <div>Designed by <a href="http://ylin.wang" target="_blank">@一零村长</a></div>
           </span>
           <hr style="margin:5px" /> 
@@ -59,7 +59,7 @@
                                     <Icon type="arrow-down-b"></Icon>
                                 </a>
                                 <DropdownMenu slot="list">
-                                    <!-- <DropdownItem name="ownSpace">个人中心</DropdownItem> -->
+                                    <!--DropdownItem name="ownSpace">个人中心</DropdownItem-->
                                     <DropdownItem name="help">帮助</DropdownItem>
                                     <DropdownItem name="about">关于</DropdownItem>
                                     <DropdownItem name="loginout" divided>退出登录</DropdownItem>
@@ -143,7 +143,7 @@
         methods: {
             init () {
                 this.$nextTick(function () {
-                    this.qrcode();
+                    // this.qrcode();
                 });
                 let pathArr = util.setCurrentPath(this, this.$route.name);
                 this.$store.commit('updateMenulist');
@@ -160,13 +160,12 @@
                 this.shrink = !this.shrink;
             },
             handleClickUserDropdown (name) {
-                // if (name === 'ownSpace') {
-                //     util.openNewPage(this, 'ownspace_index');
-                //     this.$router.push({
-                //         name: 'ownspace_index'
-                //     });
-                // } else
-                if (name === 'loginout') {
+                if (name === 'ownSpace') {
+                    util.openNewPage(this, 'ownspace_index');
+                    this.$router.push({
+                        name: 'ownspace_index'
+                    });
+                } else if (name === 'loginout') {
                     // 退出登录
                     this.$store.commit('logout', this);
                     this.$store.commit('clearOpenedSubmenu');

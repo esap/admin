@@ -69,7 +69,7 @@ const app = {
         isAdmin: s => s.userName === 'Admin',
         token: s => '?token=' + sessionStorage.getItem('esap_token'),
         dbs: s => s.form.Dbs.filter(v => v.IsRun),
-        apps: s => s.form.Apps.filter(v => v.IsRun),
+        apps: s => {let a = s.form.Apps.filter(v => v.IsRun);a.push({AppName:''});return a},
         tasks: s => s.form.Tasks.filter(v => v.IsRun)
     },
     mutations: {

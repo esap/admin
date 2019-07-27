@@ -28,7 +28,7 @@
               this.$http.get(this.$tokenadmin('log'))
                   .then(r => {
                       if (r.data.result) {
-                          this.form = r.data.data;
+                          this.form = r.data.data.reverse();
                       }
                       this.$Loading.finish();
                       this.loading = false;

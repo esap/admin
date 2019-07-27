@@ -13,7 +13,7 @@
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <FormItem prop="server">
-                            <Input v-model="form.server" placeholder="请填入ESAP服务器地址，如erp8.net:9090">
+                            <Input v-model="form.server" placeholder="请填入ESAP服务器地址，如localhost:9090">
                                 <span slot="prepend">
                                     <Icon :size="16" type="person"></Icon>
                                 </span>
@@ -52,7 +52,7 @@ export default {
     data () {
         return {
             form: {
-                server: '',
+                server: 'localhost:9090',
                 userName: 'admin',
                 password: '',
                 user: '',
@@ -99,7 +99,7 @@ export default {
                                     name: 'home_index'
                                 });
                             } else {
-                                Message({ message: '登陆失败:' + r.data.errmsg });
+                                Message({ message: '登陆失败:' + r.data.msg });
                             }
                         })
                         .catch(e => {
